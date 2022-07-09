@@ -3,13 +3,12 @@
 > base
     * react
     * react-router-dom(路由)
-    * i18a(国际化)
+    * i18next react-i18next(国际化)
 > ui
     * antd
     * tailwindcss
 > lint
     * typescript
-    * prettier
 ## 项目结构
 ├─assets 静态资源
 ├─common 可复用组件
@@ -18,4 +17,6 @@
 ├─hooks 复用hooks
 ├─layout 页面布局
 ├─pages 路由组件
-└─route base路由
+├─route base路由
+├─util 复用工具
+└─
