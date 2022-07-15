@@ -1,6 +1,6 @@
-import Container from "src/components/layout/content";
-import Foot from "src/components/layout/footer";
-import Head from "src/components/layout/header";
+import Container from "@/components/layout/content";
+import Foot from "@/components/layout/footer";
+import Head from "@/components/layout/header";
 import { Layout } from "antd";
 export default function PageLayout() {
   return (
