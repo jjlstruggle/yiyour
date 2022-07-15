@@ -53,7 +53,6 @@ specifiers:
   tailwindcss: ^3.1.5
   terser-webpack-plugin: ^5.3.3
   typescript: ^4.7.4
-  web-vitals: ^2.1.4
   webpack: ^5.73.0
   webpack-dev-server: ^4.9.3
   webpack-manifest-plugin: ^5.0.0
@@ -115,7 +114,6 @@ devDependencies:
   tailwindcss: 3.1.5
   terser-webpack-plugin: 5.3.3_webpack@5.73.0
   typescript: 4.7.4
-  web-vitals: 2.1.4
   webpack: 5.73.0
   webpack-dev-server: 4.9.3_webpack@5.73.0
   webpack-manifest-plugin: 5.0.0_webpack@5.73.0
@@ -7456,10 +7454,6 @@ packages:
     resolution: {integrity: sha512-O84QOnr0icsbFGLS0O3bI5FswxzRr8/gHwWkDlQFskhSPryQXvrTMxjxGP4+iWYoauLoBvfDpkrOauZ+0iZpDA==}
     dependencies:
       minimalistic-assert: 1.0.1
-    dev: true
-
-  /web-vitals/2.1.4:
-    resolution: {integrity: sha512-sVWcwhU5mX6crfI5Vd2dC4qchyTqxV8URinzt25XqVh+bHEPGH4C3NPrNionCP7Obx59wrYEbNlw4Z8sjALzZg==}
     dev: true
 
   /webidl-conversions/4.0.2:
