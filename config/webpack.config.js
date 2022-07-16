@@ -55,11 +55,6 @@ const imageInlineSizeLimit = parseInt(
 // Check if TypeScript is setup
 const useTypeScript = fs.existsSync(paths.appTsConfig);
 
-// Check if Tailwind config exists
-const useTailwind = fs.existsSync(
-  path.join(paths.appPath, 'tailwind.config.js')
-);
-
 // Get the path to the uncompiled service worker (if it exists).
 const swSrc = paths.swSrc;
 
@@ -133,10 +128,10 @@ module.exports = function (webpackEnv) {
           options: {
             sourceMap: true,
             lessOptions: {
-              javascriptEnabled: true,
-              // modifyVars: getThemeVariables({
-              //   dark: true,
-              // }),
+              javascriptEnabled: true, modifyVars: {
+                'primary-color': '#8A5DC4',
+                'border-radius-base': '5px',
+              },
             }
           },
         }
@@ -381,21 +376,10 @@ module.exports = function (webpackEnv) {
                 cacheDirectory: true,
                 // See #6846 for context on why cacheCompression is disabled
                 cacheCompression: false,
-
-                // Babel sourcemaps are needed for debugging into node_modules
-                // code.  Without the options below, debuggers like VSCode
-                // show incorrect code and set breakpoints on the wrong lines.
                 sourceMaps: shouldUseSourceMap,
                 inputSourceMap: shouldUseSourceMap,
               },
             },
-            // "postcss" loader applies autoprefixer to our CSS.
-            // "css" loader resolves paths in CSS and adds assets as dependencies.
-            // "style" loader turns CSS into JS modules that inject <style> tags.
-            // In production, we use MiniCSSExtractPlugin to extract that CSS
-            // to a file, but in development "style" loader enables hot editing
-            // of CSS.
-            // By default we support CSS Modules with the extension .module.css
             {
               test: cssRegex,
               exclude: cssModuleRegex,
@@ -408,14 +392,8 @@ module.exports = function (webpackEnv) {
                   mode: 'icss',
                 },
               }),
-              // Don't consider CSS imports dead code even if the
-              // containing package claims to have no side effects.
-              // Remove this when webpack adds a warning or an error for this.
-              // See https://github.com/webpack/webpack/issues/6571
               sideEffects: true,
             },
-            // Adds support for CSS Modules (https://github.com/css-modules/css-modules)
-            // using the extension .module.css
             {
               test: cssModuleRegex,
               use: getStyleLoaders({

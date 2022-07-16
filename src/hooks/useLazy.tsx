@@ -1,14 +1,12 @@
 import { ComponentType, lazy, Suspense } from "react";
 import { Spin } from "antd";
-export default function LazyComponent({
-  Component,
-}: {
-  Component: Promise<{ default: ComponentType<any> }>;
-}) {
+export default function useLazy(
+  Component: Promise<{ default: ComponentType }>
+) {
   const Lazy = lazy(() => Component);
-  return (
+  return (props?: any) => (
     <Suspense fallback={<Spin />}>
-      <Lazy />
+      <Lazy {...props} />
     </Suspense>
   );
 }
