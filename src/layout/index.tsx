@@ -5,7 +5,7 @@ import "@/styles/layout.less";
 import { Layout } from "antd";
 export default function PageLayout() {
   return (
-    <Layout>
+    <Layout className="flex-1 overflow-x-hidden overflow-y-auto">
       <Head />
       <Container />
       <Foot />
