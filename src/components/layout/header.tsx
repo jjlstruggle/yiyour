@@ -5,8 +5,11 @@ const { Header } = Layout;
 export default function Head() {
   return (
     <Header className="head flex items-center justify-between px-12 bg-main">
-      <Button className="text-main">我要发布</Button>
-      <div className="w-96">
+      <div className=" flex justify-between">
+        <Button className="text-main">我要发布</Button>
+        <Button className="text-main left-7 relative   ">版权帮助</Button>
+      </div>
+      <div className="w-96 ">
         <HeaderInput />
       </div>
       <div className="flex items-center">
