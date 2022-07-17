@@ -26,6 +26,7 @@ const ForkTsCheckerWebpackPlugin =
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 const createEnvironmentHash = require('./webpack/persistentCache/createEnvironmentHash');
+const CompressionPlugin = require('compression-webpack-plugin')
 const WebpackBar = require('webpackbar')
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
@@ -584,7 +585,14 @@ module.exports = function (webpackEnv) {
           infrastructure: 'silent',
         },
       }),
-      isEnvDevelopment && new WebpackBar()
+      isEnvDevelopment && new WebpackBar(),
+      isEnvProduction && new CompressionPlugin({
+        filename: '[path][base].gz[query]',
+        algorithm: 'gzip',
+        test: /\.js$|\.css$/,
+        threshold: 10240,
+        minRatio: 0.8,
+      })
     ].filter(Boolean),
     performance: false,
   };

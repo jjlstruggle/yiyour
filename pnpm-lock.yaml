@@ -19,6 +19,7 @@ specifiers:
   browserslist: ^4.21.1
   camelcase: ^7.0.0
   case-sensitive-paths-webpack-plugin: ^2.4.0
+  compression-webpack-plugin: ^10.0.0
   cross-env: ^7.0.3
   css-loader: ^6.7.1
   css-minimizer-webpack-plugin: ^4.0.0
@@ -85,6 +86,7 @@ devDependencies:
   browserslist: 4.21.1
   camelcase: 7.0.0
   case-sensitive-paths-webpack-plugin: 2.4.0
+  compression-webpack-plugin: 10.0.0_webpack@5.73.0
   cross-env: 7.0.3
   css-loader: 6.7.1_webpack@5.73.0
   css-minimizer-webpack-plugin: 4.0.0_webpack@5.73.0
@@ -2886,6 +2888,17 @@ packages:
     engines: {node: '>= 0.6'}
     dependencies:
       mime-db: 1.52.0
+    dev: true
+
+  /compression-webpack-plugin/10.0.0_webpack@5.73.0:
+    resolution: {integrity: sha512-wLXLIBwpul/ALcm7Aj+69X0pYT3BYt6DdPn3qrgBIh9YejV9Bju9ShhlAsjujLyWMo6SAweFIWaUoFmXZNuNrg==}
+    engines: {node: '>= 14.15.0'}
+    peerDependencies:
+      webpack: ^5.1.0
+    dependencies:
+      schema-utils: 4.0.0
+      serialize-javascript: 6.0.0
+      webpack: 5.73.0
     dev: true
 
   /compression/1.7.4:
