@@ -1,6 +1,10 @@
 @tailwind base;
 @tailwind utilities;
 
+* {
+  user-select: none;
+}
+
 #root {
   width: 100vw;
   height: 100vh;
