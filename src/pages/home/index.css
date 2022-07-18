@@ -1,4 +1,4 @@
-.ant-tabs-large > .ant-tabs-nav .ant-tabs-tab {
+.ant-tabs-large > div > .ant-tabs-nav .ant-tabs-tab {
   font-size: 1.5rem;
   padding: 8px 0;
 }

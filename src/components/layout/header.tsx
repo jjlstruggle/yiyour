@@ -1,10 +1,9 @@
-import { Button, Layout } from "antd";
+import { Button } from "antd";
 import HeaderInput from "./header/input";
 import { MailOutlined } from "@ant-design/icons";
-const { Header } = Layout;
 export default function Head() {
   return (
-    <Header className="head flex items-center justify-between px-12 bg-main">
+    <div className="head flex items-center justify-between px-12 bg-main">
       <div className=" flex justify-between">
         <Button className="text-main">我要发布</Button>
         <Button className="text-main left-7 relative   ">版权帮助</Button>
@@ -22,6 +21,6 @@ export default function Head() {
         </div>
         <MailOutlined className="text-white text-2xl flex items-center cursor-pointer" />
       </div>
-    </Header>
+    </div>
   );
 }

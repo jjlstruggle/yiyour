@@ -5,7 +5,7 @@ import "./index.css";
 import { Carousel, Tabs, Dropdown, Menu, Button } from "antd";
 import img from "@/assets/temp/shell.jpg";
 import useLazy from "@/hooks/useLazy";
-import { Fragment, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { DownOutlined } from "@ant-design/icons";
 
 const imgs = [img, img, img];
@@ -55,9 +55,11 @@ export default function Index() {
           size="large"
           tabBarGutter={96}
           className="text-xl"
-          tabBarExtraContent={
-            <Fragment>
+          renderTabBar={(props, DefaultTabbar) => (
+            <div className="flex justify-center items-center">
+              <DefaultTabbar {...props} />
               <Dropdown
+                className="ml-10"
                 overlay={menu}
                 trigger={["click"]}
                 children={
@@ -67,8 +69,8 @@ export default function Index() {
                   </Button>
                 }
               />
-            </Fragment>
-          }
+            </div>
+          )}
         >
           <TabPane tab="任务集市" key="1">
             <Bazaar />
