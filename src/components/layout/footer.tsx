@@ -1,8 +1,13 @@
 import { Divider } from "antd";
+import { ForwardedRef, forwardRef, memo } from "react";
 
-export default function Foot() {
+function Foot({
+  footContainer,
+}: {
+  footContainer: ForwardedRef<HTMLDivElement>;
+}) {
   return (
-    <div className="px-40 bg-main">
+    <div className="px-40 bg-main py-8" ref={footContainer}>
       <div className="flex">
         <div>
           <div>特征</div>
@@ -26,3 +31,9 @@ export default function Foot() {
     </div>
   );
 }
+
+export default memo(
+  forwardRef((props, ref: ForwardedRef<HTMLDivElement>) => (
+    <Foot {...props} footContainer={ref} />
+  ))
+);

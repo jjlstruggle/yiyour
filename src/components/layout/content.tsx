@@ -1,8 +1,26 @@
+import useMounted from "@/hooks/useMounted";
 import Routes from "@/route/index";
-export default function Container() {
+import { useState } from "react";
+interface ContainerProps {
+  heightInfo: {
+    wh: number;
+    headerHeight: number;
+    footerHeight: number;
+  };
+}
+
+function Container({ heightInfo }: ContainerProps) {
+  const [minHeight, setMinHeight] = useState(0);
+  useMounted(() => {
+    setMinHeight(
+      heightInfo.wh - heightInfo.footerHeight - heightInfo.headerHeight
+    );
+  });
   return (
-    <div>
+    <div style={{ minHeight }}>
       <Routes />
     </div>
   );
 }
+
+export default Container;
