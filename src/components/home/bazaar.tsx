@@ -13,7 +13,10 @@ const imgs = [img, img3, img5, img6, img4, img7, img8, img2, img1];
 
 export default function Bazaar() {
   return (
-    <div className="columns-5 gap-x-2-3 mt-6" style={{ columnFill: "auto" }}>
+    <div
+      className="columns-5 gap-x-2-3 mt-6 mx-40"
+      style={{ columnFill: "auto" }}
+    >
       {imgs.map((item, index) => (
         <div key={index} className="mb-5 relative inline-block mt-1">
           <img src={item} style={{ objectFit: "cover" }} />
