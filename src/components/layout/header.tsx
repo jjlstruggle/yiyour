@@ -10,7 +10,7 @@ function Head({
 }) {
   return (
     <div
-      className="head flex items-center justify-between px-12 bg-main"
+      className="head flex items-center justify-between px-12 bg-main pt-8 pb-6"
       ref={headerContainer}
     >
       <div className=" flex justify-between">

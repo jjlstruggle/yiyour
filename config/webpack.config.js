@@ -27,6 +27,7 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 
 const createEnvironmentHash = require('./webpack/persistentCache/createEnvironmentHash');
 const CompressionPlugin = require('compression-webpack-plugin')
+const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin');
 const WebpackBar = require('webpackbar')
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
@@ -592,7 +593,8 @@ module.exports = function (webpackEnv) {
         test: /\.js$|\.css$/,
         threshold: 10240,
         minRatio: 0.8,
-      })
+      }),
+      new AntdDayjsWebpackPlugin()
     ].filter(Boolean),
     performance: false,
   };

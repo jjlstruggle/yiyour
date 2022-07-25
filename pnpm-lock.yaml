@@ -10,6 +10,7 @@ specifiers:
   '@types/react': ^18.0.15
   '@types/react-dom': ^18.0.6
   antd: ^4.21.5
+  antd-dayjs-webpack-plugin: ^1.0.6
   autoprefixer: ^10.4.7
   babel-loader: ^8.2.5
   babel-plugin-import: ^1.13.5
@@ -24,6 +25,7 @@ specifiers:
   css-loader: ^6.7.1
   css-minimizer-webpack-plugin: ^4.0.0
   cssnano: ^5.1.12
+  dayjs: ^1.11.4
   dotenv: ^16.0.1
   dotenv-expand: ^8.0.3
   file-loader: ^6.2.0
@@ -63,6 +65,7 @@ specifiers:
 dependencies:
   '@ant-design/icons': 4.7.0_biqbaboplfbrettd7655fr4n2y
   antd: 4.21.5_biqbaboplfbrettd7655fr4n2y
+  dayjs: 1.11.4
   i18next: 21.8.13
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
@@ -77,6 +80,7 @@ devDependencies:
   '@types/node': 18.0.3
   '@types/react': 18.0.15
   '@types/react-dom': 18.0.6
+  antd-dayjs-webpack-plugin: 1.0.6_dayjs@1.11.4
   autoprefixer: 10.4.7_postcss@8.4.14
   babel-loader: 8.2.5_fswvdo7jykdwhfxrdcvghfn6pa
   babel-plugin-import: 1.13.5
@@ -2389,6 +2393,14 @@ packages:
       color-convert: 2.0.1
     dev: true
 
+  /antd-dayjs-webpack-plugin/1.0.6_dayjs@1.11.4:
+    resolution: {integrity: sha512-UlK3BfA0iE2c5+Zz/Bd2iPAkT6cICtrKG4/swSik5MZweBHtgmu1aUQCHvICdiv39EAShdZy/edfP6mlkS/xXg==}
+    peerDependencies:
+      dayjs: '*'
+    dependencies:
+      dayjs: 1.11.4
+    dev: true
+
   /antd/4.21.5_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-S6L29rmbiQvE4/kn1hPBscHFZ405Pbtuw3DCpXVnMt409JtY6sDaUbUcWfl4i21XkABEogKzqxjYVGogf1QIWQ==}
     peerDependencies:
@@ -3226,9 +3238,8 @@ packages:
     engines: {node: '>=0.11'}
     dev: false
 
-  /dayjs/1.11.3:
-    resolution: {integrity: sha512-xxwlswWOlGhzgQ4TKzASQkUhqERI3egRNqgV4ScR8wlANA/A9tZ7miXa44vTTKEq5l7vWoL5G57bG3zA+Kow0A==}
-    dev: false
+  /dayjs/1.11.4:
+    resolution: {integrity: sha512-Zj/lPM5hOvQ1Bf7uAvewDaUcsJoI6JmNqmHhHl3nyumwe0XHwt8sWdOVAPACJzCebL8gQCi+K49w7iKWnGwX9g==}
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
@@ -6176,7 +6187,7 @@ packages:
       '@babel/runtime': 7.18.6
       classnames: 2.3.1
       date-fns: 2.28.0
-      dayjs: 1.11.3
+      dayjs: 1.11.4
       moment: 2.29.4
       rc-trigger: 5.3.1_biqbaboplfbrettd7655fr4n2y
       rc-util: 5.22.5_biqbaboplfbrettd7655fr4n2y
