@@ -8,6 +8,7 @@ import LocaleProvider from "@/components/index/LocaleProvider";
 import "dayjs/locale/zh-cn";
 import dayjs from "dayjs";
 dayjs.locale("zh-cn");
+
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
