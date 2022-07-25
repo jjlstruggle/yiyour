@@ -120,7 +120,8 @@ function Detail(){
               <div className="font-bold text-base">收一份情书模板</div>
               <div className="text-xs text-gray-400">2022/5/12 12:00截止 </div>
               <div className="text-xs text-gray-400">文本/文案</div>
-              <div className="text-main text-base">悬赏： 20元</div>
+                   <div className="text-main text-base">悬赏： 20元</div>
+                   
              </div>
              </div>
     </div>
