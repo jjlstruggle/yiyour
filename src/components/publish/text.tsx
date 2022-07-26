@@ -1,12 +1,14 @@
 import { Input } from "antd";
-import { useState } from "react";
+import { TextAreaRef } from "antd/lib/input/TextArea";
+import { ForwardedRef, forwardRef, useState } from "react";
 
-export default function Text() {
+function Text(props: { text: ForwardedRef<TextAreaRef> }) {
   const [value, setValue] = useState("");
   return (
     <div className="flex mb-4 text-base font-normal">
       <div className="w-3/4 relative">
         <Input.TextArea
+          ref={props.text}
           autoSize={{ minRows: 2, maxRows: 3 }}
           allowClear
           maxLength={200}
@@ -25,3 +27,7 @@ export default function Text() {
     </div>
   );
 }
+
+export default forwardRef((props, ref: ForwardedRef<TextAreaRef>) => (
+  <Text {...props} text={ref} />
+));

@@ -1,125 +1,60 @@
 /**
  * 发布页
  */
-import { DownOutlined } from "@ant-design/icons";
+
 import Select from "@/components/publish/select";
 import GoodUpload from "@/components/publish/upload";
-import { Input, TimePicker, DatePicker, InputNumber } from "antd";
-import { Dayjs } from "dayjs";
-import { useState } from "react";
+import { InputNumber, Checkbox, Button } from "antd";
+import { useRef } from "react";
 import Text from "@/components/publish/text";
+import TimeSelect from "@/components/publish/timeSelect";
+import NameInput from "@/components/publish/nameInput";
 
 export default function Publish() {
-  const [name, setName] = useState("");
-  const [value, setValue] = useState<Dayjs | null>(null);
-  const onChange = (type: "time" | "date" | "month" | "year") => {
-    return (time: any) => {
-      switch (type) {
-        case "time":
-          return;
-        case "date":
-          return;
-        case "month":
-          return;
-        case "year":
-          return;
-      }
-    };
-  };
+  const timeRef = useRef(null);
+  const nameRef = useRef(null);
+  const taskRef = useRef(null);
+  const typeRef = useRef(null);
+  const textRef = useRef(null);
 
   return (
     <div className="bg-slate-50">
       <div className="w-4/5 shadow-xl mx-auto pt-4 px-6 text-2xl font-bold mt-8 mb-10 pb-6 bg-white">
         <div className="flex items-center mb-6">
-          <div className="bg-main w-3 h-7 mr-2"></div>
+          <div className="bg-ger w-3 h-7 mr-2"></div>
           <div className="mr-16">您选择发布一个</div>
-          <Select item={["任务", "作品"]} />
+          <Select item={["任务", "作品"]} ref={taskRef} />
         </div>
         <div className="flex items-center">
-          <div className="bg-main w-3 h-7 mr-2"></div>
+          <div className="bg-ger w-3 h-7 mr-2"></div>
           <div className="mr-16">您需要哪类作品</div>
-          <Select item={["文本文案", "图片", "音频"]} />
+          <Select item={["文本文案", "图片", "音频"]} ref={typeRef} />
         </div>
       </div>
       <div className="w-4/5 shadow-xl mx-auto pt-4 px-6 text-2xl font-bold mt-8 mb-10 pb-6 bg-white">
-        <div className="flex items-center mb-12 ">
-          <div className="bg-main w-3 h-7 mr-2"></div>
-          <div className="mr-16">请填写任务标题</div>
-          <Input
-            style={{ width: 300 }}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="请输入作品名称"
-          />
-        </div>
+        <NameInput ref={nameRef} />
         <div className="mb-12">
           <div className="flex">
-            <div className="bg-main w-3 h-7 mr-2"></div>
+            <div className="bg-ger w-3 h-7 mr-2"></div>
             <div className="mr-16">请上传封面作品</div>
           </div>
           <div>
             <GoodUpload />
           </div>
         </div>
+        <TimeSelect ref={timeRef} />
         <div className="mb-12">
           <div className="flex items-center mb-4">
-            <div className="bg-main w-3 h-7 mr-2"></div>
-            <div className="mr-16">
-              请选择任务截止时间
-              <span className="font-normal text-sm">
-                （截止后请在72小时内确定获奖作品，超时将由后台随机评定）
-              </span>
-            </div>
-          </div>
-          <div className="flex mb-4">
-            <TimePicker
-              format="HH:mm"
-              // @ts-ignore
-              value={value}
-              onChange={onChange("time")}
-              className="mr-6"
-            />
-
-            <DatePicker
-              mode="date"
-              format="DD"
-              suffixIcon={<DownOutlined />}
-              className="mr-6"
-              onChange={onChange("date")}
-            />
-            <DatePicker
-              format="MM"
-              className="mr-6"
-              onChange={onChange("month")}
-              picker="month"
-              suffixIcon={<DownOutlined />}
-            />
-            <DatePicker
-              format="YYYY"
-              className="mr-6"
-              onChange={onChange("year")}
-              picker="year"
-              suffixIcon={<DownOutlined />}
-            />
-          </div>
-        </div>
-        <div className="flex items-center mb-12">
-          <div className="bg-main w-3 h-7 mr-2"></div>
-          <div className="mr-16">您需要哪类作品</div>
-          <Select item={["文本文案", "图片", "音频"]} />
-        </div>
-        <div className="mb-12">
-          <div className="flex items-center mb-4">
-            <div className="bg-main w-3 h-7 mr-2"></div>
+            <div className="bg-ger w-3 h-7 mr-2"></div>
             <div className="mr-16">请尽可能详细的描述您的需求</div>
           </div>
-          <Text />
+          <Text ref={textRef} />
         </div>
       </div>
       <div className="w-4/5 shadow-xl mx-auto pt-4 px-6 text-2xl font-bold mt-8 mb-10 pb-6 bg-white">
         <div className="mb-12">
           <div className="flex items-center mb-6">
-            <div className="bg-main w-3 h-7 mr-2"></div>
+            <div className="bg-ger w-3 h-7 mr-2"></div>
             <div className="mr-16">请输入悬赏金额</div>
             <InputNumber addonBefore="￥" />
           </div>
@@ -141,6 +76,51 @@ export default function Publish() {
             （提示：广告内容如需更换，请联系我们）
           </div>
         </div>
+        <div className="flex items-center justify-between">
+          <div>
+            <Checkbox>
+              <div className="flex items-center">
+                <div className="text-gray-400 text-base font-normal">
+                  我已同意
+                </div>
+                <div className="text-lg font-normal text-black">
+                  《用户协议》
+                </div>
+              </div>
+            </Checkbox>
+          </div>
+          <div className="flex items-center">
+            <div className="text-base font-normal">合计</div>
+            <div className="text-3xl text-yel mr-5">￥0.00</div>
+            <Button type="primary" className="bg-yel font-bold">
+              结算
+            </Button>
+          </div>
+        </div>
+      </div>
+      <div className="w-4/5 shadow-xl mx-auto pt-4 px-6 text-2xl font-bold mt-8 mb-10 pb-6 bg-white">
+        <div className="flex items-center mb-6">
+          <div className="bg-ger w-3 h-7 mr-2"></div>
+          <div className="mr-16">发布流程</div>
+        </div>
+        <div className="ml-5 font-normal text-lg mb-2">发布任务：</div>
+        <div className="ml-5 font-normal text-lg">
+          填写任务信息→设定悬赏金额（平台扣除5%）→发布→挑选作品→公布选中作品
+        </div>
+      </div>
+      <div className="flex items-center justify-around mb-12 w-80 mx-auto">
+        <Button
+          type="primary"
+          className="bg-ger"
+          onClick={() => {
+            console.log(timeRef);
+          }}
+        >
+          保存
+        </Button>
+        <Button type="primary" className="bg-ger">
+          发布
+        </Button>
       </div>
     </div>
   );
