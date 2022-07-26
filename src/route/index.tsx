@@ -7,9 +7,11 @@ const About = useLazy(import("../pages/about"));
 const Detail = useLazy(import("../pages/home/detail/detail"));
 const Person = useLazy(import("../pages/user/person/index"));
 const Collect = useLazy(import("../pages/user/collect/index"));
+const Navigater = useLazy(import("../pages/navigate"));
 export default function Router() {
   return (
     <Routes>
+      <Route path="/" element={<Navigater />} />
       <Route path="publish/*" element={<Publish />} />
       <Route path="user/" element={<User />} />
       <Route path="user/person" element={<Person />} />
@@ -17,7 +19,7 @@ export default function Router() {
       <Route path="home" element={<Home />} />
       <Route path="home/detail" element={<Detail />} />
       <Route path="about" element={<About />} />
-      <Route path="*" element={<Navigate to="home" />} />
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 }
