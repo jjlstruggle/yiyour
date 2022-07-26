@@ -7,7 +7,7 @@ import { useState } from "react";
 const uploadButton = (
   <div>
     <PlusCircleFilled className="text-yel text-lg" />
-    <div className="mt-2 text-base font-normal">上传封面</div>
+    <div className="mt-2 text-base font-normal text-black">上传封面</div>
   </div>
 );
 
