@@ -3,36 +3,31 @@ import { Image } from "antd";
 
 import { useNavigate } from "react-router-dom";
 
-function UserHeader() {
+function UserHeader(props: any) {
   const navigate = useNavigate();
   const data = [
     {
-      status: false,
-      icon: "camera2",
+      icon: props.camera ? "camera1" : "camera2",
       content: "我的发布",
       key: "/user/publish",
     },
     {
-      status: false,
-      icon: "web2",
+      icon: props.web ? "web1" : "web2",
       content: "我参与的",
       key: "/user/join",
     },
     {
-      status: false,
-      icon: "love2",
+      icon: props.love ? "love1" : "love2",
       content: "我的收藏",
       key: "/user/collect",
     },
     {
-      status: false,
-      icon: "message2",
+      icon: props.message ? "message1" : "message2",
       content: "我的消息",
       key: "/user/message",
     },
     {
-      status: false,
-      icon: "star2",
+      icon: props.star ? "star1" : "star2",
       content: "个人信息",
       key: "/user/person",
     },
@@ -49,7 +44,7 @@ function UserHeader() {
       }}
     >
       {data.map((item, index) => {
-        const { status, icon, content, key } = item;
+        const { icon, content, key } = item;
         return (
           <div
             key={index}

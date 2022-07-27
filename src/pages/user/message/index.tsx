@@ -82,7 +82,7 @@ const ContentRight = () => {
           <Avatar size={64} />
           <div className="text-blank text-xl ml-8 flex flex-col justify-around">
             <div className="flex justify-between">
-              <div className=" font-semibold">一云立画</div>
+              <div className=" font-semibold">一隅立画</div>
               <div className="text-stone-400">2022/05/01</div>
             </div>
             <div className=" font-semibold text-base">
@@ -130,7 +130,7 @@ export default function Message() {
         padding: "4vh 5vw",
       }}
     >
-      <Header />
+      <Header message={true} />
       <div
         className="flex  mt-6 h-4/5"
         style={{

@@ -82,7 +82,7 @@ export default function Person() {
         padding: "4vh 5vw",
       }}
     >
-      <Header />
+      <Header star={true} />
       <Content />
     </div>
   );

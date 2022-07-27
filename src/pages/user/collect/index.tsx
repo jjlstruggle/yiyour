@@ -159,7 +159,7 @@ export default function Collect() {
         padding: "4vh 5vw",
       }}
     >
-      <Header />
+      <Header love={true} />
       <div
         className="flex  mt-6 h-4/5"
         style={{

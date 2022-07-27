@@ -1,7 +1,6 @@
 import useLazy from "@/hooks/useLazy";
 import { Routes, Route, Navigate } from "react-router-dom";
 const Publish = useLazy(import("../pages/publish"));
-const User = useLazy(import("../pages/user"));
 const Home = useLazy(import("../pages/home"));
 const About = useLazy(import("../pages/about"));
 const Detail = useLazy(import("../pages/home/detail/detail"));
@@ -17,7 +16,7 @@ export default function Router() {
     <Routes>
       <Route path="/" element={<Navigater />} />
       <Route path="publish/*" element={<Publish />} />
-      <Route path="user/" element={<User />} />
+      <Route path="user/" element={<Person />} />
       <Route path="user/person" element={<Person />} />
       <Route path="user/collect" element={<Collect />} />
       <Route path="user/publish" element={<Userpublish />} />

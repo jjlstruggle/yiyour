@@ -159,7 +159,7 @@ export default function Join() {
         padding: "4vh 5vw",
       }}
     >
-      <Header />
+      <Header web={true} />
       <div
         className="flex  mt-6 h-4/5"
         style={{
