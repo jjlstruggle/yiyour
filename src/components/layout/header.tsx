@@ -2,6 +2,7 @@ import { Button } from "antd";
 import HeaderInput from "./header/input";
 import { MailOutlined } from "@ant-design/icons";
 import { ForwardedRef, forwardRef, memo } from "react";
+import { Link } from "react-router-dom";
 
 function Head({
   headerContainer,
@@ -14,20 +15,24 @@ function Head({
       ref={headerContainer}
     >
       <div className=" flex justify-between">
-        <Button className="text-main">我要发布</Button>
+        <Link to="/publish">
+          <Button className="text-main">我要发布</Button>
+        </Link>
         <Button className="text-main left-7 relative   ">版权帮助</Button>
       </div>
       <div className="w-96 ">
         <HeaderInput />
       </div>
       <div className="flex items-center">
-        <div className="flex items-center cursor-pointer mr-8">
-          <img
-            className="w-7 h-7 rounded-full mr-3"
-            src="https://www.mooyuu.com/uploadfile/2021/1011/thumb_1000_0_20211011032316905.png"
-          />
-          <div className=" text-white flex items-center">秦海峰</div>
-        </div>
+        <Link to="/user">
+          <div className="flex items-center cursor-pointer mr-8">
+            <img
+              className="w-7 h-7 rounded-full mr-3"
+              src="https://www.mooyuu.com/uploadfile/2021/1011/thumb_1000_0_20211011032316905.png"
+            />
+            <div className=" text-white flex items-center">秦海峰</div>
+          </div>
+        </Link>
         <MailOutlined className="text-white text-2xl flex items-center cursor-pointer" />
       </div>
     </div>
