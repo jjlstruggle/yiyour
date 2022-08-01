@@ -3,7 +3,7 @@ import "./index.css";
 import Layout from "@/layout";
 import { Provider } from "@/context/i18a";
 import { BrowserRouter } from "react-router-dom";
-import LocaleProvider from "@/components/index/LocaleProvider";
+import LocaleProvider from "@/context/LocaleProvider";
 
 import "dayjs/locale/zh-cn";
 import dayjs from "dayjs";

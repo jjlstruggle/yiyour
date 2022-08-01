@@ -51,13 +51,13 @@ function Foot({
         {footData.map((item, index) => (
           <Item mainTitle={item.title} key={index} item={item.item} />
         ))}
-        <div className="relative flex-1">
+        <div className="relative flex-1 flex flex-col justify-between">
           <div className="text-base text-white mb-2 font-bold">一隅立画</div>
-          <div className="text-gray-300 my-1">
+          <div className="text-gray-300 mt-1 mb-4">
             再繁华的落笔也不能尽数表达此刻似澎湃，似思念的心音。感觉我们是很老的朋友
             再繁华的落笔也不能尽数表达此刻似澎湃，似思念的心音。感觉我们是很老的朋友
           </div>
-          <div className="absolute left-0 bottom-0 flex text-lg text-white">
+          <div className="flex text-lg text-white">
             <div className="rounded-full w-10 h-10 flex justify-center items-center bg-yel cursor-pointer mr-4">
               <WechatFilled />
             </div>
