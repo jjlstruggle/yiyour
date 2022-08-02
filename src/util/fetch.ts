@@ -4,13 +4,13 @@ interface RequestConfig {
 }
 
 interface RequestGetConfig {
-  headers: HeadersInit;
-  timeout: number;
+  headers?: HeadersInit;
+  timeout?: number;
 }
 
 interface RequestPostConfig {
-  headers: HeadersInit;
-  timeout: number;
+  headers?: HeadersInit;
+  timeout?: number;
 }
 
 const getBaseConfig: RequestInit = {
