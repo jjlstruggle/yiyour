@@ -2,7 +2,7 @@ import { Input, Tabs, Button } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import img from "@/assets/temp/icon.avif";
 import { Dispatch, SetStateAction, useState } from "react";
-
+import { sendCode, login } from "@/api/auth";
 const { TabPane } = Tabs;
 
 export default function Login({
@@ -11,7 +11,10 @@ export default function Login({
   setVisble: Dispatch<SetStateAction<boolean>>;
 }) {
   const [mode, setMode] = useState<"code" | "password" | "register">("code");
-
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [code, setCode] = useState("");
+  const [psword, setPassword] = useState("");
   return (
     <div>
       <div className="flex items-center relative">
@@ -32,13 +35,20 @@ export default function Login({
           <>
             <Tabs defaultActiveKey="1" centered className="mt-4">
               <TabPane tab="手机快速登录" key="1" className="mt-4">
-                <Input placeholder="手机号" />
+                <Input
+                  placeholder="手机号"
+                  value={phone}
+                  onChange={(e) => {
+                    setPhone(e.target.value);
+                  }}
+                />
                 <div className="relative flex items-center my-4">
-                  <Input.Password
+                  <Input
                     placeholder="请输入验证码"
                     autoComplete="off"
+                    value={code}
                   />
-                  <div className="absolute right-10 cursor-pointer z-10 hover:text-main transition-colors ">
+                  <div className="absolute right-4 cursor-pointer z-10 hover:text-main transition-colors ">
                     获取验证码
                   </div>
                 </div>

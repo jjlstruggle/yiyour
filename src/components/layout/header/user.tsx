@@ -1,15 +1,16 @@
 import { Modal } from "antd";
 import useLazy from "@/hooks/useLazy";
-import { useContext, useState, Dispatch, SetStateAction } from "react";
+import { useContext, useState } from "react";
 import UserContext from "@/context/user";
 import userImg from "@/assets/image/user.avif";
-
 const Login = useLazy(import("./login"));
 
 export default function User() {
   const [visible, setVisble] = useState(false);
   const { user } = useContext(UserContext);
   const { hasLogin, userInfo } = user;
+
+  console.log(visible);
 
   return (
     <div
