@@ -3,6 +3,7 @@ import HeaderInput from "./header/input";
 import { MailOutlined } from "@ant-design/icons";
 import { ForwardedRef, forwardRef, memo } from "react";
 import { Link } from "react-router-dom";
+import User from "./header/user";
 
 function Head({
   headerContainer,
@@ -24,15 +25,7 @@ function Head({
         <HeaderInput />
       </div>
       <div className="flex items-center">
-        <Link to="/user">
-          <div className="flex items-center cursor-pointer mr-8">
-            <img
-              className="w-7 h-7 rounded-full mr-3"
-              src="https://www.mooyuu.com/uploadfile/2021/1011/thumb_1000_0_20211011032316905.png"
-            />
-            <div className=" text-white flex items-center">秦海峰</div>
-          </div>
-        </Link>
+        <User />
         <MailOutlined className="text-white text-2xl flex items-center cursor-pointer" />
       </div>
     </div>

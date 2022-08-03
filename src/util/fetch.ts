@@ -34,6 +34,12 @@ function initalRequest() {
   const baseUrl = "http://47.96.86.132:88";
   function request(config: RequestConfig) {}
   request.get = async (url: string, config?: RequestGetConfig) => {
+    if ((config && !config.headers) || !config) {
+      config = {};
+      config.headers = {
+        "Content-Type": "application/json",
+      };
+    }
     const res = await Promise.race([
       fetch(baseUrl + url, Object.assign(getBaseConfig, config)),
       sleep(config?.timeout || 5000),
@@ -49,6 +55,12 @@ function initalRequest() {
     data?: BodyInit,
     config?: RequestPostConfig
   ) => {
+    if ((config && !config.headers) || !config) {
+      config = {};
+      config.headers = {
+        "Content-Type": "application/json",
+      };
+    }
     const res = await Promise.race([
       fetch(
         baseUrl + url,

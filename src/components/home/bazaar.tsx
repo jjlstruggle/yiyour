@@ -5,9 +5,7 @@ import { getList } from "@/api";
 import { GetList } from "@/interface/api";
 
 export default function Bazaar() {
-  const { data, loading, error } = useRequest<GetList>(() =>
-    getList({ currentPage: 1, pageSize: 20 })
-  );
+  const { data, loading, error } = useRequest<GetList>(() => getList(1));
 
   if (data && data.code == "0") {
     return (
