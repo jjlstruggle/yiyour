@@ -1,7 +1,7 @@
 import { Input, Tabs, Button } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import img from "@/assets/temp/icon.avif";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { sendCode, login } from "@/api/auth";
 const { TabPane } = Tabs;
 
@@ -15,6 +15,18 @@ export default function Login({
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [psword, setPassword] = useState("");
+  const [hasSendCode, setHasSendCode] = useState(false);
+  const [time, setTime] = useState(60);
+  const timer = useRef<ReturnType<typeof setTimeout>>();
+
+  useEffect(() => {
+    if (time == 0) {
+      clearInterval(timer.current);
+      setHasSendCode(false);
+      setTime(60);
+    }
+  }, [time]);
+
   return (
     <div>
       <div className="flex items-center relative">
@@ -39,7 +51,11 @@ export default function Login({
                   placeholder="手机号"
                   value={phone}
                   onChange={(e) => {
-                    setPhone(e.target.value);
+                    if (
+                      !isNaN(e.target.value as unknown as number) &&
+                      e.target.value.length <= 11
+                    )
+                      setPhone(e.target.value);
                   }}
                 />
                 <div className="relative flex items-center my-4">
@@ -48,8 +64,16 @@ export default function Login({
                     autoComplete="off"
                     value={code}
                   />
-                  <div className="absolute right-4 cursor-pointer z-10 hover:text-main transition-colors ">
-                    获取验证码
+                  <div
+                    className="absolute right-4 cursor-pointer z-10 hover:text-main transition-colors "
+                    onClick={async () => {
+                      setHasSendCode(true);
+                      timer.current = setInterval(() => {
+                        setTime((time) => time - 1);
+                      }, 1000);
+                    }}
+                  >
+                    {hasSendCode ? time : "获取验证码"}
                   </div>
                 </div>
               </TabPane>
