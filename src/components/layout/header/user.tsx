@@ -21,6 +21,7 @@ export default function User() {
         bodyStyle={{
           padding: 0,
         }}
+        destroyOnClose
       >
         <Login setVisble={setVisble} />
       </Modal>

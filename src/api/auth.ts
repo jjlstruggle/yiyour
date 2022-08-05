@@ -5,8 +5,13 @@ export const login = (email: string, psword: string) => {
   return request.post("/api-auth/login", JSON.stringify(data));
 };
 
-export const register = (phone: string, psword: string, email: string) => {
-  const data = { email, password: psword, phone };
+export const register = (
+  phone: string,
+  psword: string,
+  email: string,
+  code: string
+) => {
+  const data = { email, password: psword, phone, code };
   return request.post("/api-auth/register", JSON.stringify(data));
 };
 
