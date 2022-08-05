@@ -6,17 +6,33 @@ export const publish = (data: PublishParams) => {
 };
 
 export const getTaskInfo = (id: string) => {
-  return request.get(`/api-task/info?id=${id}`);
+  return request.get(`/api-task/info?id=${id}`, {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  });
 };
 
 export const searchList = (page: number) => {
-  return request.get(`/api-task/list?lint=10&page=${page}`);
+  return request.get(`/api-task/list?lint=10&page=${page}`, {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  });
 };
 
 export const getUserPublish = (page: number, id: string) => {
-  return request.get(`/api-task/publisher/${page}/8?publisherId=${id}`);
+  return request.get(`/api-task/publisher/${page}/8?publisherId=${id}`, {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  });
 };
 
 export const getRecommend = () => {
-  return request.get("/api-task/recommend");
+  return request.get("/api-task/recommend", {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  });
 };

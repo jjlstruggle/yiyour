@@ -1,6 +1,6 @@
 interface RequestConfig {
   url?: string;
-  method?: "POST" | "GET";
+  method?: "POST" | "GET" | "PUT";
 }
 
 interface RequestGetConfig {
@@ -13,6 +13,11 @@ interface RequestPostConfig {
   timeout?: number;
 }
 
+interface RequestPutConfig {
+  headers?: HeadersInit;
+  timeout?: number;
+}
+
 const getBaseConfig: RequestInit = {
   credentials: "include",
   method: "GET",
@@ -21,6 +26,16 @@ const getBaseConfig: RequestInit = {
 const postBaseConfig: RequestInit = {
   credentials: "include",
   method: "POST",
+};
+
+const putBaseConfig: RequestInit = {
+  credentials: "include",
+  method: "PUT",
+};
+
+const deleteBaseConfig: RequestInit = {
+  credentials: "include",
+  method: "DELETE",
 };
 
 const sleep = (time: number) =>
@@ -87,6 +102,44 @@ function initalRequest() {
         Object.assign(resolveConfig(config), { body: data }, postBaseConfig)
       ),
       sleep(config?.timeout || 8000),
+    ]);
+    if (typeof res === "number") {
+      throw "timeout";
+    } else {
+      return res.json();
+    }
+  };
+  request.put = async (
+    url: string,
+    data?: BodyInit,
+    config?: RequestPutConfig
+  ) => {
+    if ((config && !config.headers) || !config) {
+      config = {};
+      config.headers = {
+        "Content-Type": "application/json",
+      };
+    }
+    const res = await Promise.race([
+      fetch(
+        baseUrl + url,
+        Object.assign(resolveConfig(config), { body: data }, putBaseConfig)
+      ),
+      sleep(config?.timeout || 8000),
+    ]);
+    if (typeof res === "number") {
+      throw "timeout";
+    } else {
+      return res.json();
+    }
+  };
+  request.delete = async (url: string, config?: RequestGetConfig) => {
+    const res = await Promise.race([
+      fetch(
+        baseUrl + url,
+        Object.assign(resolveConfig(config), deleteBaseConfig)
+      ),
+      sleep(config?.timeout || 5000),
     ]);
     if (typeof res === "number") {
       throw "timeout";

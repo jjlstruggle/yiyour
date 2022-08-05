@@ -28,3 +28,47 @@ export interface PublishParams {
   type: string;
   typeId: number;
 }
+
+export interface OperateWorksParams {
+  previewUrl: string;
+  realUrl: string;
+  remark: string;
+  subtype: string;
+  subtypeId: string;
+  type: string;
+  typeId: string;
+  worksCover: string;
+  worksDeadline: string;
+  worksDemand: string;
+  worksName: string;
+  worksPrice: number;
+  worksProcess: string;
+  worksStatus: number;
+}
+
+export interface UpdateWorksParams {
+  id: string;
+  previewUrl: string;
+  realUrl: string;
+  remark: string;
+  subtype: string;
+  subtypeId: string;
+  type: string;
+  typeId: string;
+  worksCover: string;
+  worksDeadline: string;
+  worksDemand: string;
+  worksName: string;
+  worksPrice: number;
+  worksProcess: string;
+  worksStatus: number;
+}
+
+export interface SearchWorksByPageParams {
+  currentPage: number;
+  pageSize: number;
+  priceSort: number;
+  subtypeId: string;
+  timeSort: number;
+  typeId: string;
+}
