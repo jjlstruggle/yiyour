@@ -1,9 +1,10 @@
 import { Input, Tabs, Button, message } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import img from "@/assets/temp/icon.avif";
-import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState, useContext } from "react";
 import { login } from "@/api/auth";
 import useLazy from "@/hooks/useLazy";
+import UserContext from "@/context/user";
 const { TabPane } = Tabs;
 const Register = useLazy(import("./register"));
 
@@ -23,9 +24,10 @@ export default function Login({
   const [emaile, setEmaile] = useState({ e: false, t: "" });
   const [psworde, setPsworde] = useState({ e: false, t: "" });
 
+  const { dispatchUserInfo } = useContext(UserContext);
+
   const handleLogin = async () => {
     let can = true;
-    console.log(mode);
 
     if (mode === "password") {
       if (!email) {
@@ -44,6 +46,13 @@ export default function Login({
           message.success("登录成功");
           localStorage.setItem("token", res.data.token);
           localStorage.setItem("header", res.data.tokenHead);
+          dispatchUserInfo({
+            hasLogin: true,
+            userInfo: {
+              name: phone,
+            },
+          });
+          setVisble(false);
         } else if (res.code == "1000") {
           setPsworde({ e: true, t: res.msg });
         } else {
