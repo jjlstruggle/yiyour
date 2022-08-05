@@ -18,3 +18,7 @@ export const register = (
 export const sendCode = (phone: string) => {
   return request.post(`/api-auth/send/phone?phone=${phone}`);
 };
+
+export const getUserInfo = () => {
+  return request.get("/api-user/info");
+};

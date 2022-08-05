@@ -15,3 +15,16 @@ export interface GetList {
   currentPage: number;
   totalPage: number;
 }
+export interface PublishParams {
+  bottomAds: number;
+  frontPageAds: number;
+  publisherId: number;
+  taskDeadline: string;
+  taskDemands: string;
+  taskName: string;
+  taskPicture: string;
+  taskPrice: number;
+  taskStatus: number;
+  type: string;
+  typeId: number;
+}

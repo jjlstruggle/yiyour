@@ -5,7 +5,7 @@ import Admin from "./pages/admin";
 import { Provider } from "@/context/i18a";
 import { BrowserRouter } from "react-router-dom";
 import LocaleProvider from "@/context/LocaleProvider";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import "dayjs/locale/zh-cn";
 import dayjs from "dayjs";
