@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
+    "@ant-design/pro-components": "^1.1.15",
     "antd": "^4.21.5",
     "dayjs": "^1.11.4",
     "i18next": "^21.8.13",
