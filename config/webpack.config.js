@@ -7,6 +7,7 @@ const resolve = require('resolve');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
@@ -23,16 +24,16 @@ const ForkTsCheckerWebpackPlugin =
     ? require('react-dev-utils/ForkTsCheckerWarningWebpackPlugin')
     : require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
-
+const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
+const smp = new SpeedMeasurePlugin()
 const createEnvironmentHash = require('./webpack/persistentCache/createEnvironmentHash');
 const CompressionPlugin = require('compression-webpack-plugin')
 const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin');
 const WebpackBar = require('webpackbar')
-const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
 
-const smp = new SpeedMeasurePlugin()
+// Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
-const { ESBuildMinifyPlugin } = require('esbuild-loader')
+
 const reactRefreshRuntimeEntry = require.resolve('react-refresh/runtime');
 const reactRefreshWebpackPluginRuntimeEntry = require.resolve(
   '@pmmmwh/react-refresh-webpack-plugin'
@@ -45,6 +46,11 @@ const babelRuntimeEntryHelpers = require.resolve(
 const babelRuntimeRegenerator = require.resolve('@babel/runtime/regenerator', {
   paths: [babelRuntimeEntry],
 });
+
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+
+// 是否开启分析
+const shouldAnalyze = process.env.ANALYZER === 'true'
 
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
 
@@ -63,6 +69,19 @@ const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
 const lessRegex = /\.(less)$/;
 const lessModuleRegex = /\.module\.(less)$/;
+
+const hasJsxRuntime = (() => {
+  if (process.env.DISABLE_NEW_JSX_TRANSFORM === 'true') {
+    return false;
+  }
+
+  try {
+    require.resolve('react/jsx-runtime');
+    return true;
+  } catch (e) {
+    return false;
+  }
+})();
 
 module.exports = function (webpackEnv) {
   const isEnvDevelopment = webpackEnv === 'development';
@@ -185,11 +204,37 @@ module.exports = function (webpackEnv) {
       level: 'none',
     },
     optimization: {
+      minimize: isEnvProduction,
       minimizer: [
-        new ESBuildMinifyPlugin({
-          target: 'es2015',
+        // This is only used in production mode
+        new TerserPlugin({
+          terserOptions: {
+            parse: {
+              ecma: 8,
+            },
+            compress: {
+              ecma: 5,
+              warnings: false,
+              comparisons: false,
+              inline: 2,
+            },
+            mangle: {
+              safari10: true,
+            },
+            // Added for profiling in devtools
+            keep_classnames: isEnvProductionProfile,
+            keep_fnames: isEnvProductionProfile,
+            output: {
+              ecma: 5,
+              comments: false,
+              // Turned on because emoji and regex is not minified properly using default
+              // https://github.com/facebook/create-react-app/issues/2488
+              ascii_only: true,
+            },
+          },
         }),
-        new CssMinimizerPlugin()
+        // This is only used in production mode
+        new CssMinimizerPlugin(),
       ],
     },
     resolve: {
@@ -229,7 +274,12 @@ module.exports = function (webpackEnv) {
           loader: require.resolve('source-map-loader'),
         },
         {
+          // "oneOf" will traverse all following loaders until one will
+          // match the requirements. When no loader matches it will fall
+          // back to the "file" loader at the end of the loader list.
           oneOf: [
+            // TODO: Merge this config once `image/avif` is in the mime-db
+            // https://github.com/jshttp/mime-db
             {
               test: [/\.avif$/],
               type: 'asset',
@@ -240,6 +290,9 @@ module.exports = function (webpackEnv) {
                 },
               },
             },
+            // "url" loader works like "file" loader except that it embeds assets
+            // smaller than specified limit in bytes as data URLs to avoid requests.
+            // A missing `test` is equivalent to a match.
             {
               test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
               type: 'asset',
@@ -275,31 +328,61 @@ module.exports = function (webpackEnv) {
                 and: [/\.(ts|tsx|js|jsx|md|mdx)$/],
               },
             },
+            // Process application JS with Babel.
+            // The preset includes JSX, Flow, TypeScript, and some ESnext features.
             {
-              test: /\.(js|jsx|ts|tsx)$/,
+              test: /\.(js|mjs|jsx|ts|tsx)$/,
               include: paths.appSrc,
-              use: [
-                {
-                  loader: "babel-loader",
-                  options: {
-                    plugins: [
-                      isEnvDevelopment &&
-                      shouldUseReactRefresh &&
-                      require.resolve('react-refresh/babel'),
-                    ].filter(Boolean),
-                    cacheDirectory: true,
-                    cacheCompression: false,
-                    compact: isEnvProduction,
-                  }
-                },
-                {
-                  loader: 'esbuild-loader',
-                  options: {
-                    loader: 'tsx',
-                    target: 'es2015',
-                    tsconfigRaw: require(path.join(__dirname, "../tsconfig.json"))
-                  }
-                }]
+              loader: require.resolve('babel-loader'),
+              options: {
+                customize: require.resolve(
+                  'babel-preset-react-app/webpack-overrides'
+                ),
+                presets: [
+                  [
+                    require.resolve('babel-preset-react-app'),
+                    {
+                      runtime: hasJsxRuntime ? 'automatic' : 'classic',
+                    },
+                  ],
+                ],
+
+                plugins: [
+                  isEnvDevelopment &&
+                  shouldUseReactRefresh &&
+                  require.resolve('react-refresh/babel'),
+                ].filter(Boolean),
+                // This is a feature of `babel-loader` for webpack (not Babel itself).
+                // It enables caching results in ./node_modules/.cache/babel-loader/
+                // directory for faster rebuilds.
+                cacheDirectory: true,
+                // See #6846 for context on why cacheCompression is disabled
+                cacheCompression: false,
+                compact: isEnvProduction,
+              },
+            },
+            // Process any JS outside of the app with Babel.
+            // Unlike the application JS, we only compile the standard ES features.
+            {
+              test: /\.(js|mjs)$/,
+              exclude: /@babel(?:\/|\\{1,2})runtime/,
+              loader: require.resolve('babel-loader'),
+              options: {
+                babelrc: false,
+                configFile: false,
+                compact: false,
+                presets: [
+                  [
+                    require.resolve('babel-preset-react-app/dependencies'),
+                    { helpers: true },
+                  ],
+                ],
+                cacheDirectory: true,
+                // See #6846 for context on why cacheCompression is disabled
+                cacheCompression: false,
+                sourceMaps: shouldUseSourceMap,
+                inputSourceMap: shouldUseSourceMap,
+              },
             },
             {
               test: cssRegex,
@@ -364,9 +447,15 @@ module.exports = function (webpackEnv) {
               ),
             },
             {
+              // Exclude `js` files to keep "css" loader working as it injects
+              // its runtime that would otherwise be processed through "file" loader.
+              // Also exclude `html` and `json` extensions so they get processed
+              // by webpacks internal loaders.
               exclude: [/^$/, /\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
               type: 'asset/resource',
             },
+            // ** STOP ** Are you adding a new loader?
+            // Make sure to add the new loader(s) before the "file" loader.
           ],
         },
       ].filter(Boolean),
@@ -440,7 +529,6 @@ module.exports = function (webpackEnv) {
         resourceRegExp: /^\.\/locale$/,
         contextRegExp: /moment$/,
       }),
-      new CssMinimizerPlugin(),
       isEnvProduction &&
       fs.existsSync(swSrc) &&
       new WorkboxWebpackPlugin.InjectManifest({
@@ -507,7 +595,8 @@ module.exports = function (webpackEnv) {
         threshold: 10240,
         minRatio: 0.8,
       }),
-      new AntdDayjsWebpackPlugin()
+      new AntdDayjsWebpackPlugin(),
+      shouldAnalyze && new BundleAnalyzerPlugin()
     ].filter(Boolean),
     performance: false,
   })
@@ -570,11 +659,37 @@ module.exports = function (webpackEnv) {
       level: 'none',
     },
     optimization: {
+      minimize: isEnvProduction,
       minimizer: [
-        new ESBuildMinifyPlugin({
-          target: 'es2015',
+        // This is only used in production mode
+        new TerserPlugin({
+          terserOptions: {
+            parse: {
+              ecma: 8,
+            },
+            compress: {
+              ecma: 5,
+              warnings: false,
+              comparisons: false,
+              inline: 2,
+            },
+            mangle: {
+              safari10: true,
+            },
+            // Added for profiling in devtools
+            keep_classnames: isEnvProductionProfile,
+            keep_fnames: isEnvProductionProfile,
+            output: {
+              ecma: 5,
+              comments: false,
+              // Turned on because emoji and regex is not minified properly using default
+              // https://github.com/facebook/create-react-app/issues/2488
+              ascii_only: true,
+            },
+          },
         }),
-        new CssMinimizerPlugin()
+        // This is only used in production mode
+        new CssMinimizerPlugin(),
       ],
     },
     resolve: {
@@ -614,7 +729,12 @@ module.exports = function (webpackEnv) {
           loader: require.resolve('source-map-loader'),
         },
         {
+          // "oneOf" will traverse all following loaders until one will
+          // match the requirements. When no loader matches it will fall
+          // back to the "file" loader at the end of the loader list.
           oneOf: [
+            // TODO: Merge this config once `image/avif` is in the mime-db
+            // https://github.com/jshttp/mime-db
             {
               test: [/\.avif$/],
               type: 'asset',
@@ -625,6 +745,9 @@ module.exports = function (webpackEnv) {
                 },
               },
             },
+            // "url" loader works like "file" loader except that it embeds assets
+            // smaller than specified limit in bytes as data URLs to avoid requests.
+            // A missing `test` is equivalent to a match.
             {
               test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
               type: 'asset',
@@ -660,31 +783,61 @@ module.exports = function (webpackEnv) {
                 and: [/\.(ts|tsx|js|jsx|md|mdx)$/],
               },
             },
+            // Process application JS with Babel.
+            // The preset includes JSX, Flow, TypeScript, and some ESnext features.
             {
-              test: /\.(js|jsx|ts|tsx)$/,
+              test: /\.(js|mjs|jsx|ts|tsx)$/,
               include: paths.appSrc,
-              use: [
-                {
-                  loader: "babel-loader",
-                  options: {
-                    plugins: [
-                      isEnvDevelopment &&
-                      shouldUseReactRefresh &&
-                      require.resolve('react-refresh/babel'),
-                    ].filter(Boolean),
-                    cacheDirectory: true,
-                    cacheCompression: false,
-                    compact: isEnvProduction,
-                  }
-                },
-                {
-                  loader: 'esbuild-loader',
-                  options: {
-                    loader: 'tsx',
-                    target: 'es2015',
-                    tsconfigRaw: require(path.join(__dirname, "../tsconfig.json"))
-                  }
-                }]
+              loader: require.resolve('babel-loader'),
+              options: {
+                customize: require.resolve(
+                  'babel-preset-react-app/webpack-overrides'
+                ),
+                presets: [
+                  [
+                    require.resolve('babel-preset-react-app'),
+                    {
+                      runtime: hasJsxRuntime ? 'automatic' : 'classic',
+                    },
+                  ],
+                ],
+
+                plugins: [
+                  isEnvDevelopment &&
+                  shouldUseReactRefresh &&
+                  require.resolve('react-refresh/babel'),
+                ].filter(Boolean),
+                // This is a feature of `babel-loader` for webpack (not Babel itself).
+                // It enables caching results in ./node_modules/.cache/babel-loader/
+                // directory for faster rebuilds.
+                cacheDirectory: true,
+                // See #6846 for context on why cacheCompression is disabled
+                cacheCompression: false,
+                compact: isEnvProduction,
+              },
+            },
+            // Process any JS outside of the app with Babel.
+            // Unlike the application JS, we only compile the standard ES features.
+            {
+              test: /\.(js|mjs)$/,
+              exclude: /@babel(?:\/|\\{1,2})runtime/,
+              loader: require.resolve('babel-loader'),
+              options: {
+                babelrc: false,
+                configFile: false,
+                compact: false,
+                presets: [
+                  [
+                    require.resolve('babel-preset-react-app/dependencies'),
+                    { helpers: true },
+                  ],
+                ],
+                cacheDirectory: true,
+                // See #6846 for context on why cacheCompression is disabled
+                cacheCompression: false,
+                sourceMaps: shouldUseSourceMap,
+                inputSourceMap: shouldUseSourceMap,
+              },
             },
             {
               test: cssRegex,
@@ -749,9 +902,15 @@ module.exports = function (webpackEnv) {
               ),
             },
             {
+              // Exclude `js` files to keep "css" loader working as it injects
+              // its runtime that would otherwise be processed through "file" loader.
+              // Also exclude `html` and `json` extensions so they get processed
+              // by webpacks internal loaders.
               exclude: [/^$/, /\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
               type: 'asset/resource',
             },
+            // ** STOP ** Are you adding a new loader?
+            // Make sure to add the new loader(s) before the "file" loader.
           ],
         },
       ].filter(Boolean),
@@ -825,7 +984,6 @@ module.exports = function (webpackEnv) {
         resourceRegExp: /^\.\/locale$/,
         contextRegExp: /moment$/,
       }),
-      new CssMinimizerPlugin(),
       isEnvProduction &&
       fs.existsSync(swSrc) &&
       new WorkboxWebpackPlugin.InjectManifest({
@@ -892,7 +1050,8 @@ module.exports = function (webpackEnv) {
         threshold: 10240,
         minRatio: 0.8,
       }),
-      new AntdDayjsWebpackPlugin()
+      new AntdDayjsWebpackPlugin(),
+      shouldAnalyze && new BundleAnalyzerPlugin()
     ].filter(Boolean),
     performance: false,
   }

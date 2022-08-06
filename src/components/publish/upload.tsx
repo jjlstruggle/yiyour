@@ -1,6 +1,6 @@
 import { PlusCircleFilled } from "@ant-design/icons";
 import { Modal, Upload } from "antd";
-import type { RcFile } from "antd/es/upload";
+import type { RcFile, UploadProps } from "antd/es/upload";
 import type { UploadFile } from "antd/es/upload/interface";
 import { useState } from "react";
 
@@ -24,12 +24,13 @@ export default function GoodUpload() {
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [uploading, setUploading] = useState(false);
+
   const handleCancel = () => setPreviewVisible(false);
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj as RcFile);
     }
-
     setPreviewImage(file.url || (file.preview as string));
     setPreviewVisible(true);
     setPreviewTitle(
@@ -37,7 +38,9 @@ export default function GoodUpload() {
     );
   };
 
-  const handleUpload = (file: any) => {};
+  const handleUpload = () => {
+    // 上传到图床
+  };
 
   return (
     <div>
@@ -45,7 +48,15 @@ export default function GoodUpload() {
         listType="picture-card"
         fileList={fileList}
         onPreview={handlePreview}
-        customRequest={handleUpload}
+        beforeUpload={(file) => {
+          setFileList([...fileList, file]);
+        }}
+        onRemove={(file) => {
+          const index = fileList.indexOf(file);
+          const newFileList = fileList.slice();
+          newFileList.splice(index, 1);
+          setFileList(newFileList);
+        }}
       >
         {fileList.length >= 8 ? null : uploadButton}
       </Upload>

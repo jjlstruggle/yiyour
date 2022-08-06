@@ -14,7 +14,8 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "cross-env GENERATE_SOURCEMAP=false node scripts/build.js"
+    "build": "cross-env GENERATE_SOURCEMAP=false node scripts/build.js",
+    "analyze": "cross-env ANALYZER=true pnpm run start"
   },
   "browserslist": {
     "production": [
@@ -64,7 +65,6 @@
     "cssnano": "^5.1.12",
     "dotenv": "^16.0.1",
     "dotenv-expand": "^8.0.3",
-    "esbuild-loader": "^2.19.0",
     "file-loader": "^6.2.0",
     "fs-extra": "^10.1.0",
     "html-webpack-plugin": "^5.5.0",
@@ -91,6 +91,7 @@
     "ts-loader": "^9.3.1",
     "typescript": "^4.7.4",
     "webpack": "^5.73.0",
+    "webpack-bundle-analyzer": "^4.5.0",
     "webpack-dev-server": "^4.9.3",
     "webpack-manifest-plugin": "^5.0.0",
     "webpackbar": "^5.0.2",
