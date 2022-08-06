@@ -10,25 +10,28 @@ import Text from "@/components/publish/text";
 import TimeSelect from "@/components/publish/timeSelect";
 import NameInput from "@/components/publish/nameInput";
 
+const task = ["任务", "作品"];
+const type = ["文本文案", "图片", "音频"];
+
 export default function Publish() {
   const timeRef = useRef(null);
   const nameRef = useRef(null);
   const taskRef = useRef(null);
   const typeRef = useRef(null);
   const textRef = useRef(null);
-
+  const handleSubmit = () => {};
   return (
     <div className="bg-slate-50">
       <div className="w-4/5 shadow-xl mx-auto pt-4 px-6 text-2xl font-bold mt-8 mb-10 pb-6 bg-white">
         <div className="flex items-center mb-6">
           <div className="bg-ger w-3 h-7 mr-2"></div>
           <div className="mr-16">您选择发布一个</div>
-          <Select item={["任务", "作品"]} ref={taskRef} />
+          <Select item={task} ref={taskRef} />
         </div>
         <div className="flex items-center">
           <div className="bg-ger w-3 h-7 mr-2"></div>
           <div className="mr-16">您需要哪类作品</div>
-          <Select item={["文本文案", "图片", "音频"]} ref={typeRef} />
+          <Select item={type} ref={typeRef} />
         </div>
       </div>
       <div className="w-4/5 shadow-xl mx-auto pt-4 px-6 text-2xl font-bold mt-8 mb-10 pb-6 bg-white">
@@ -118,7 +121,7 @@ export default function Publish() {
         >
           保存
         </Button>
-        <Button type="primary" className="bg-ger">
+        <Button type="primary" className="bg-ger" onClick={handleSubmit}>
           发布
         </Button>
       </div>

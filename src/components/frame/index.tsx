@@ -8,8 +8,7 @@ import {
 import type { MenuProps } from "antd";
 import { Breadcrumb, Layout, Menu } from "antd";
 import React, { useEffect, useState } from "react";
-
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>["items"][number];
 

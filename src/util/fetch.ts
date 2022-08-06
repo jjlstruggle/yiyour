@@ -1,6 +1,6 @@
 interface RequestConfig {
   url?: string;
-  method?: "POST" | "GET";
+  method?: "POST" | "GET" | "PUT";
 }
 
 interface RequestGetConfig {
@@ -9,6 +9,11 @@ interface RequestGetConfig {
 }
 
 interface RequestPostConfig {
+  headers?: HeadersInit;
+  timeout?: number;
+}
+
+interface RequestPutConfig {
   headers?: HeadersInit;
   timeout?: number;
 }
@@ -23,6 +28,16 @@ const postBaseConfig: RequestInit = {
   method: "POST",
 };
 
+const putBaseConfig: RequestInit = {
+  credentials: "include",
+  method: "PUT",
+};
+
+const deleteBaseConfig: RequestInit = {
+  credentials: "include",
+  method: "DELETE",
+};
+
 const sleep = (time: number) =>
   new Promise<number>((res) => {
     setTimeout(() => {
@@ -30,12 +45,38 @@ const sleep = (time: number) =>
     }, time);
   });
 
+const resolveConfig = (config?: RequestGetConfig | RequestPostConfig) => {
+  let token = localStorage.getItem("token");
+  let header = localStorage.getItem("header");
+  // 如果没有请求头则添加默认请求头
+  if ((config && !config.headers) || !config) {
+    config = {};
+    config.headers =
+      token && header
+        ? {
+            [header]: token,
+            "Content-Type": "application/json",
+          }
+        : {
+            "Content-Type": "application/json",
+          };
+  } else if (config.headers) {
+    if (token && header) {
+      config.headers[header] = token;
+    }
+    if (!config.headers["Content-Type"]) {
+      config.headers["Content-Type"] = "application/json";
+    }
+  }
+  return config;
+};
+
 function initalRequest() {
   const baseUrl = "http://47.96.86.132:88";
   function request(config: RequestConfig) {}
   request.get = async (url: string, config?: RequestGetConfig) => {
     const res = await Promise.race([
-      fetch(baseUrl + url, Object.assign(getBaseConfig, config)),
+      fetch(baseUrl + url, Object.assign(resolveConfig(config), getBaseConfig)),
       sleep(config?.timeout || 5000),
     ]);
     if (typeof res === "number") {
@@ -49,12 +90,56 @@ function initalRequest() {
     data?: BodyInit,
     config?: RequestPostConfig
   ) => {
+    if ((config && !config.headers) || !config) {
+      config = {};
+      config.headers = {
+        "Content-Type": "application/json",
+      };
+    }
     const res = await Promise.race([
       fetch(
         baseUrl + url,
-        Object.assign(postBaseConfig, config, { body: data })
+        Object.assign(resolveConfig(config), { body: data }, postBaseConfig)
       ),
       sleep(config?.timeout || 8000),
+    ]);
+    if (typeof res === "number") {
+      throw "timeout";
+    } else {
+      return res.json();
+    }
+  };
+  request.put = async (
+    url: string,
+    data?: BodyInit,
+    config?: RequestPutConfig
+  ) => {
+    if ((config && !config.headers) || !config) {
+      config = {};
+      config.headers = {
+        "Content-Type": "application/json",
+      };
+    }
+    const res = await Promise.race([
+      fetch(
+        baseUrl + url,
+        Object.assign(resolveConfig(config), { body: data }, putBaseConfig)
+      ),
+      sleep(config?.timeout || 8000),
+    ]);
+    if (typeof res === "number") {
+      throw "timeout";
+    } else {
+      return res.json();
+    }
+  };
+  request.delete = async (url: string, config?: RequestGetConfig) => {
+    const res = await Promise.race([
+      fetch(
+        baseUrl + url,
+        Object.assign(resolveConfig(config), deleteBaseConfig)
+      ),
+      sleep(config?.timeout || 5000),
     ]);
     if (typeof res === "number") {
       throw "timeout";

@@ -15,7 +15,8 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "cross-env GENERATE_SOURCEMAP=false node scripts/build.js"
+    "build": "cross-env GENERATE_SOURCEMAP=false node scripts/build.js",
+    "analyze": "cross-env ANALYZER=true pnpm run start"
   },
   "browserslist": {
     "production": [
@@ -30,9 +31,6 @@
     ]
   },
   "babel": {
-    "presets": [
-      "react-app"
-    ],
     "plugins": [
       [
         "import",
@@ -87,11 +85,14 @@
     "resolve-url-loader": "^5.0.0",
     "semver": "^7.3.7",
     "source-map-loader": "^4.0.0",
+    "speed-measure-webpack-plugin": "^1.5.0",
     "style-loader": "^3.3.1",
     "tailwindcss": "^3.1.5",
     "terser-webpack-plugin": "^5.3.3",
+    "ts-loader": "^9.3.1",
     "typescript": "^4.7.4",
     "webpack": "^5.73.0",
+    "webpack-bundle-analyzer": "^4.5.0",
     "webpack-dev-server": "^4.9.3",
     "webpack-manifest-plugin": "^5.0.0",
     "webpackbar": "^5.0.2",

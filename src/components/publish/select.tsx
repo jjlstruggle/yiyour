@@ -30,7 +30,7 @@ function Select({ defaultSelect, item, s }: ExtraSelectProps) {
             className={
               select === index
                 ? "w-3 h-3 border rounded-full  mr-1 bg-yel cursor-pointer"
-                : "w-3 h-3 border rounded-full border-black mr-1 cursor-pointer"
+                : "w-3 h-3 border rounded-full border-black mr-1 cursor-pointer border-solid"
             }
           ></div>
           <div>{s}</div>
