@@ -8,6 +8,7 @@ export default function Navigate() {
       <NavLink to="about">关于</NavLink>
       <NavLink to="home/detail">详情</NavLink>
       <NavLink to="user">用户</NavLink>
+      <NavLink to="admin">后台</NavLink>
     </div>
   );
 }

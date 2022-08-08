@@ -24,11 +24,14 @@ export default function PageLayout() {
   useAsyncEffect(async () => {
     if (localStorage.getItem("token")) {
       const res = await getUserInfo();
+      console.log(res);
+
       if (res.code === "0") {
         dispatchUserInfo({
           hasLogin: true,
           userInfo: {
             name: "秦海峰",
+            img: "https://mat1.gtimg.com/pingjs/ext2020/weather/pc/icon/weather/day/02.png",
           },
         });
       }

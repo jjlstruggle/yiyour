@@ -2015,15 +2015,13 @@ packages:
       webpack-dev-server: 4.9.3_webpack@5.73.0
     dev: true
 
-<<<<<<< HEAD
-  /@qixian.cs/path-to-regexp/6.1.0:
-    resolution: {integrity: sha512-2jIiLiVZB1jnY7IIRQKtoV8Gnr7XIhk4mC88ONGunZE3hYt5IHUG4BE/6+JiTBjjEWQLBeWnZB8hGpppkufiVw==}
-    dev: false
-=======
   /@polka/url/1.0.0-next.21:
     resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
     dev: true
->>>>>>> 55437970b5ee8926c9adb2e39452ca8d51d3ef7f
+
+  /@qixian.cs/path-to-regexp/6.1.0:
+    resolution: {integrity: sha512-2jIiLiVZB1jnY7IIRQKtoV8Gnr7XIhk4mC88ONGunZE3hYt5IHUG4BE/6+JiTBjjEWQLBeWnZB8hGpppkufiVw==}
+    dev: false
 
   /@rollup/plugin-babel/5.3.1_ayiqorrx7dutx4scyxuyyyvhga:
     resolution: {integrity: sha512-WFfdLWU/xVWKeRQnKmIAQULUI7Il0gZnBIH/ZFO069wYIfPu+8zrfp/KMW0atmELoRDq8FbiP3VCss9MhCut7Q==}
