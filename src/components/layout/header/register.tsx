@@ -57,6 +57,8 @@ const Register = ({
         message.success("注册成功");
         setVisble(false);
         // 暂且不处理
+      } else if (res.code == "1002") {
+        message.warn("手机号已被占用");
       } else {
         message.warn("new error wait to handle");
       }
