@@ -31,6 +31,9 @@
     ]
   },
   "babel": {
+    "presets": [
+      "react-app"
+    ],
     "plugins": [
       [
         "import",

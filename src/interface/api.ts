@@ -72,3 +72,19 @@ export interface SearchWorksByPageParams {
   timeSort: number;
   typeId: string;
 }
+
+export interface TaskListInfo {
+  id: number;
+  taskDeadline: string;
+  taskName: string;
+  taskPicture: string;
+  taskPrice: number;
+  type: string;
+}
+
+export interface TaskList {
+  currPage: number;
+  list: TaskListInfo[];
+  pageSize: number;
+  totalPage: number;
+}

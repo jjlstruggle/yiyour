@@ -1,11 +1,12 @@
 import { HeartFilled } from "@ant-design/icons";
 
 import useRequest from "@/hooks/useRequest";
-import { getList } from "@/api";
-import { GetList } from "@/interface/api";
+import { searchList } from "@/api/task";
+import { TaskList } from "@/interface/api";
 
 export default function Bazaar() {
-  const { data, loading, error } = useRequest<GetList>(() => getList(1));
+  const { data, loading, error } = useRequest<TaskList>(() => searchList(1));
+  console.log(data);
 
   if (data && data.code == "0") {
     return (
@@ -15,17 +16,13 @@ export default function Bazaar() {
       >
         {data.data.list.map((item, index) => (
           <div key={index} className="mb-5 relative inline-block mt-1">
-            <img src={item.publisherNickname!} style={{ objectFit: "cover" }} />
-            <div className="font-bold text-base">{item.worksName}</div>
+            <img src={item.taskPicture} style={{ objectFit: "cover" }} />
+            <div className="font-bold text-base">{item.taskName}</div>
+            <div className="text-xs text-gray-400">{item.taskDeadline}截止</div>
             <div className="text-xs text-gray-400">
-              {item.worksDeadline}截止
+              {item.type}/{item.type}
             </div>
-            <div className="text-xs text-gray-400">
-              {item.type}/{item.subtype}
-            </div>
-            <div className="text-main text-base">
-              悬赏： {item.worksPrice}元
-            </div>
+            <div className="text-main text-base">悬赏： {item.taskPrice}元</div>
             <div className="absolute right-0 bottom-0 bg-main w-10 h-10 rounded-full flex items-center justify-center text-white">
               <HeartFilled />
             </div>
