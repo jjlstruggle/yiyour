@@ -22,11 +22,3 @@ export const sendCode = (phone: string) => {
     },
   });
 };
-
-export const getUserInfo = () => {
-  return request.get("/api-user/info", {
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-  });
-};

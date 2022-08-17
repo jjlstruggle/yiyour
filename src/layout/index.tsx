@@ -1,4 +1,3 @@
-import { getUserInfo } from "@/api/auth";
 import Container from "@/components/layout/content";
 import Foot from "@/components/layout/footer";
 import Head from "@/components/layout/header";
@@ -23,18 +22,10 @@ export default function PageLayout() {
   }, []);
   useAsyncEffect(async () => {
     if (localStorage.getItem("token")) {
-      const res = await getUserInfo();
-      console.log(res);
-
-      if (res.code === "0") {
-        dispatchUserInfo({
-          hasLogin: true,
-          userInfo: {
-            name: "秦海峰",
-            img: "https://mat1.gtimg.com/pingjs/ext2020/weather/pc/icon/weather/day/02.png",
-          },
-        });
-      }
+      dispatchUserInfo({
+        hasLogin: true,
+        userInfo: JSON.parse(localStorage.getItem("user")!),
+      });
     }
   });
   return (

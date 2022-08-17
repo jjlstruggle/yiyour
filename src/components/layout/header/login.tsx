@@ -46,7 +46,7 @@ export default function Login({
           message.success("登录成功");
           localStorage.setItem("token", res.data.token.token);
           localStorage.setItem("header", res.data.token.tokenHead);
-          localStorage.setItem("user", res.data);
+          localStorage.setItem("user", JSON.stringify(res.data));
           dispatchUserInfo({
             hasLogin: true,
             userInfo: res.data,
