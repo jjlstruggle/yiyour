@@ -1,5 +1,6 @@
 import useLazy from "@/hooks/useLazy";
 const Header = useLazy(import("../../../components/user/header"));
+import { useState } from "react";
 import {
   UserOutlined,
   UploadOutlined,
@@ -27,6 +28,7 @@ const props: UploadProps = {
 };
 //个人信息
 export default function Person() {
+  const [isEdit, setIsEdit] = useState(false);
   const Content = () => {
     return (
       <div
@@ -45,13 +47,15 @@ export default function Person() {
             className="flex justify-center items-center"
             icon={<UserOutlined />}
           />
-          <Upload
-            {...props}
-            className="rounded-md my-3 w-28 h-10 bg-main text-white text-sm ml-4 flex justify-center items-center"
-          >
-            {" "}
-            更换头像
-          </Upload>
+          {isEdit ? (
+            <Upload
+              {...props}
+              className="rounded-md my-3 w-28 h-10 bg-main text-white text-sm ml-4 flex justify-center items-center"
+            >
+              {" "}
+              更换头像
+            </Upload>
+          ) : null}
         </div>
         <Input
           className="my-4 w-80"
@@ -68,9 +72,18 @@ export default function Person() {
           placeholder="设置密码"
           prefix={<BorderOutlined />}
         />
-        <Button className="my-3 w-28 h-10 bg-main text-white text-sm">
-          确认
-        </Button>
+        {isEdit ? (
+          <Button className="my-3 w-28 h-10 bg-main text-white text-sm">
+            确认
+          </Button>
+        ) : (
+          <Button
+            onClick={() => setIsEdit(true)}
+            className="my-3 w-28 h-10 bg-main text-white text-sm"
+          >
+            编辑
+          </Button>
+        )}
       </div>
     );
   };
