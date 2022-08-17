@@ -44,8 +44,8 @@ export default function Login({
         close();
         if (res.code == "0") {
           message.success("登录成功");
-          localStorage.setItem("token", res.data.token);
-          localStorage.setItem("header", res.data.tokenHead);
+          localStorage.setItem("token", res.data.token.token);
+          localStorage.setItem("header", res.data.token.tokenHead);
           dispatchUserInfo({
             hasLogin: true,
             userInfo: {

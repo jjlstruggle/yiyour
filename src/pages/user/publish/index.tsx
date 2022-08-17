@@ -1,16 +1,44 @@
 import useLazy from "@/hooks/useLazy";
 const Header = useLazy(import("../../../components/user/header"));
 import { Button, Pagination } from "antd";
-const ContentLeft = () => {
+import { getUserPublish } from "../../../api/task";
+import { searchWorksByUser } from "../../../api/work";
+import { use } from "i18next";
+import { useState } from "react";
+const ContentLeft = ({ choose, setChoose }: any) => {
+  const onClickButton = async (e: any) => {
+    if (e.target.innerText === "任 务" && choose == false) {
+      setChoose(true);
+      let res = await getUserPublish(1, "id");
+      if (res.code == 200) {
+      }
+    }
+  };
   return (
     <div
       className="flex flex-col w-32  h-full"
       style={{ borderRight: "2px solid #E2E2E2" }}
     >
-      <Button className="shadow-xl bg-main w-24 h-10  mt-6 text-white text-base font-semibold">
+      <Button
+        onClick={onClickButton.bind(this)}
+        style={
+          choose
+            ? { backgroundColor: "#F6B76C" }
+            : { backgroundColor: "#895DC3" }
+        }
+        className="shadow-xl  w-24 h-10  mt-6 text-white text-base font-semibold"
+      >
         任务
       </Button>
-      <Button className="shadow-xl bg-main w-24 mt-12 h-10 text-white font-semibold">
+      <Button
+        onClick={onClickButton.bind(this)}
+        style={
+          !choose
+            ? { backgroundColor: "#F6B76C" }
+            : { backgroundColor: "#895DC3" }
+        }
+        className="shadow-xl bg-main w-24 mt-12 h-10 text-white font-semibold"
+      >
         作品
       </Button>
     </div>
@@ -151,6 +179,7 @@ const ContentRight = () => {
   );
 };
 export default function Publish() {
+  const [choose, setChoose] = useState(true);
   return (
     <div
       style={{
@@ -170,7 +199,7 @@ export default function Publish() {
           border: "1px solid  #DEDEDE",
         }}
       >
-        <ContentLeft />
+        <ContentLeft choose setChoose />
         <ContentRight />
       </div>
     </div>
