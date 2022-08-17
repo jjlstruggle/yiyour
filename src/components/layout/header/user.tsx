@@ -8,10 +8,19 @@ const Login = useLazy(import("./login"));
 
 export default function User() {
   const [visible, setVisble] = useState(false);
-  const { user } = useContext(UserContext);
+  const { user, dispatchUserInfo } = useContext(UserContext);
   const { hasLogin, userInfo } = user;
   const navigate = useNavigate();
-  const handleLogout = () => {};
+
+  const handleLogout = () => {
+    if (hasLogin) {
+      localStorage.clear();
+      dispatchUserInfo({
+        hasLogin: false,
+        userInfo: {},
+      });
+    }
+  };
   return (
     <>
       <Modal

@@ -46,11 +46,10 @@ export default function Login({
           message.success("登录成功");
           localStorage.setItem("token", res.data.token.token);
           localStorage.setItem("header", res.data.token.tokenHead);
+          localStorage.setItem("user", res.data);
           dispatchUserInfo({
             hasLogin: true,
-            userInfo: {
-              name: phone,
-            },
+            userInfo: res.data,
           });
           setVisble(false);
         } else if (res.code == "1000") {

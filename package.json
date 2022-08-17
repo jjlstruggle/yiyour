@@ -15,8 +15,7 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "cross-env GENERATE_SOURCEMAP=false node scripts/build.js",
-    "analyze": "cross-env ANALYZER=true pnpm run start"
+    "build": "cross-env GENERATE_SOURCEMAP=false node scripts/build.js"
   },
   "browserslist": {
     "production": [
