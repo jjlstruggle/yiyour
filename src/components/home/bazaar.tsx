@@ -3,10 +3,10 @@ import { HeartFilled } from "@ant-design/icons";
 import useRequest from "@/hooks/useRequest";
 import { searchList } from "@/api/task";
 import { TaskList } from "@/interface/api";
+import { memo } from "react";
 
-export default function Bazaar() {
+function Bazaar() {
   const { data, loading, error } = useRequest<TaskList>(() => searchList(1));
-  console.log(data);
 
   if (data && data.code == "0") {
     return (
@@ -38,3 +38,5 @@ export default function Bazaar() {
     ></div>
   );
 }
+
+export default memo(Bazaar);

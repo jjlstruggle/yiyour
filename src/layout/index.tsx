@@ -5,6 +5,7 @@ import UserContext from "@/context/user";
 import useAsyncEffect from "@/hooks/useAsyncEffect";
 import "@/styles/layout.less";
 import { Ref, useContext, useEffect, useRef, useState } from "react";
+
 export default function PageLayout() {
   const header: Ref<HTMLDivElement> = useRef(null);
   const footer: Ref<HTMLDivElement> = useRef(null);

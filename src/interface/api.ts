@@ -88,3 +88,12 @@ export interface TaskList {
   pageSize: number;
   totalPage: number;
 }
+
+export interface AdList {
+  coverUrl: string;
+  id: string;
+  linkUrl: string;
+  position: number;
+  sort: number;
+  title: string;
+}

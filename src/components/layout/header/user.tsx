@@ -21,6 +21,9 @@ export default function User() {
       });
     }
   };
+
+  console.log(userInfo);
+
   return (
     <>
       <Modal
@@ -49,8 +52,10 @@ export default function User() {
         >
           <img
             className="w-7 h-7 rounded-full mr-3"
-            // @ts-ignore
-            src={hasLogin ? userInfo.img : userImg}
+            src={
+              // @ts-ignore
+              hasLogin ? (userInfo.avatar ? userInfo.avatar : userImg) : userImg
+            }
           />
           <div className=" text-white flex items-center">
             {hasLogin ? "" : "未登录"}

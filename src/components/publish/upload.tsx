@@ -1,8 +1,8 @@
 import { PlusCircleFilled } from "@ant-design/icons";
 import { Modal, Upload } from "antd";
-import type { RcFile, UploadProps } from "antd/es/upload";
+import type { RcFile } from "antd/es/upload";
 import type { UploadFile } from "antd/es/upload/interface";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 const uploadButton = (
   <div>
@@ -19,12 +19,16 @@ const getBase64 = (file: RcFile): Promise<string> =>
     reader.onerror = (error) => reject(error);
   });
 
-export default function GoodUpload() {
+export default function GoodUpload({
+  setFileList,
+  fileList,
+}: {
+  setFileList: Dispatch<SetStateAction<UploadFile[]>>;
+  fileList: UploadFile[];
+}) {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
-  const [uploading, setUploading] = useState(false);
 
   const handleCancel = () => setPreviewVisible(false);
   const handlePreview = async (file: UploadFile) => {
@@ -38,13 +42,10 @@ export default function GoodUpload() {
     );
   };
 
-  const handleUpload = () => {
-    // 上传到图床
-  };
-
   return (
     <div>
       <Upload
+        accept="image/*"
         listType="picture-card"
         fileList={fileList}
         onPreview={handlePreview}
@@ -57,6 +58,7 @@ export default function GoodUpload() {
           newFileList.splice(index, 1);
           setFileList(newFileList);
         }}
+        customRequest={() => {}}
       >
         {fileList.length >= 8 ? null : uploadButton}
       </Upload>
