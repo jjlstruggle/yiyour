@@ -1,6 +1,7 @@
 import useLazy from "@/hooks/useLazy";
 const Header = useLazy(import("../../../components/user/header"));
 import { Input, Button, Avatar, message, Upload, Pagination } from "antd";
+import { useEffect } from "react";
 const ContentLeft = () => {
   return (
     <div
@@ -122,6 +123,17 @@ const ContentRight = () => {
   );
 };
 export default function Message() {
+  useEffect(() => {
+    let token: any = localStorage.getItem("token");
+    var ws = new WebSocket(" ws://47.96.86.132:88/api-websocket/chat");
+    console.log(ws.readyState);
+
+    ws.onopen = function () {
+      console.log("ws连接状态：" + ws.readyState);
+      //连接成功则发送一个数据
+      ws.send("test1");
+    };
+  }, []);
   return (
     <div
       style={{

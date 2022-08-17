@@ -8,26 +8,31 @@ function UserHeader(props: any) {
   const data = [
     {
       icon: props.camera ? "camera1" : "camera2",
+      style: props.camera ? "#F6B76C" : "#9FA6AC",
       content: "我的发布",
       key: "/user/publish",
     },
     {
       icon: props.web ? "web1" : "web2",
+      style: props.web ? "#F6B76C" : "#9FA6AC",
       content: "我参与的",
       key: "/user/join",
     },
     {
       icon: props.love ? "love1" : "love2",
+      style: props.love ? "#F6B76C" : "#9FA6AC",
       content: "我的收藏",
       key: "/user/collect",
     },
     {
       icon: props.message ? "message1" : "message2",
+      style: props.message ? "#F6B76C" : "#9FA6AC",
       content: "我的消息",
       key: "/user/message",
     },
     {
       icon: props.star ? "star1" : "star2",
+      style: props.star ? "#F6B76C" : "#9FA6AC",
       content: "个人信息",
       key: "/user/person",
     },
@@ -44,7 +49,7 @@ function UserHeader(props: any) {
       }}
     >
       {data.map((item, index) => {
-        const { icon, content, key } = item;
+        const { icon, content, key, style } = item;
         return (
           <div
             key={index}
@@ -65,7 +70,7 @@ function UserHeader(props: any) {
                 width: "50%",
                 fontSize: "1.4vw",
                 marginLeft: "0.5vw",
-                color: "#9FA6AC",
+                color: style,
               }}
             >
               {content}
