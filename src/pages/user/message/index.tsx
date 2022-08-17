@@ -130,7 +130,6 @@ export default function Message() {
 
     ws.onopen = function () {
       console.log("ws连接状态：" + ws.readyState);
-      //连接成功则发送一个数据
       ws.send("test1");
     };
   }, []);
