@@ -1,7 +1,6 @@
 import { PlusCircleFilled } from "@ant-design/icons";
-import { Modal, Upload } from "antd";
+import { Image, Upload } from "antd";
 import type { RcFile } from "antd/es/upload";
-import type { UploadFile } from "antd/es/upload/interface";
 import { Dispatch, SetStateAction, useState } from "react";
 
 const uploadButton = (
@@ -23,53 +22,33 @@ export default function GoodUpload({
   setFileList,
   fileList,
 }: {
-  setFileList: Dispatch<SetStateAction<UploadFile[]>>;
-  fileList: UploadFile[];
+  setFileList: Dispatch<SetStateAction<RcFile[]>>;
+  fileList: RcFile[];
 }) {
-  const [previewVisible, setPreviewVisible] = useState(false);
-  const [previewImage, setPreviewImage] = useState("");
-  const [previewTitle, setPreviewTitle] = useState("");
-
-  const handleCancel = () => setPreviewVisible(false);
-  const handlePreview = async (file: UploadFile) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj as RcFile);
-    }
-    setPreviewImage(file.url || (file.preview as string));
-    setPreviewVisible(true);
-    setPreviewTitle(
-      file.name || file.url!.substring(file.url!.lastIndexOf("/") + 1)
-    );
-  };
+  const [preview, setPreview] = useState<string[]>([]);
 
   return (
-    <div>
+    <div className="flex">
+      {preview.map((item, index) => (
+        <Image src={item} key={index} style={{ width: 104, height: 104 }} />
+      ))}
       <Upload
+        className="ml-4"
         accept="image/*"
         listType="picture-card"
         fileList={fileList}
-        onPreview={handlePreview}
-        beforeUpload={(file) => {
+        showUploadList={false}
+        beforeUpload={async (file) => {
+          const base64 = await Promise.all(
+            [...fileList, file].map(async (item) => await getBase64(item))
+          );
+          setPreview(base64);
           setFileList([...fileList, file]);
+          return false;
         }}
-        onRemove={(file) => {
-          const index = fileList.indexOf(file);
-          const newFileList = fileList.slice();
-          newFileList.splice(index, 1);
-          setFileList(newFileList);
-        }}
-        customRequest={() => {}}
       >
         {fileList.length >= 8 ? null : uploadButton}
       </Upload>
-      <Modal
-        visible={previewVisible}
-        title={previewTitle}
-        footer={null}
-        onCancel={handleCancel}
-      >
-        <img alt="example" style={{ width: "100%" }} src={previewImage} />
-      </Modal>
     </div>
   );
 }

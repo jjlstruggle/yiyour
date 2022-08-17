@@ -4,37 +4,48 @@
 
 import Select from "@/components/publish/select";
 import GoodUpload from "@/components/publish/upload";
-import { InputNumber, Checkbox, Button, Input } from "antd";
+import { InputNumber, Checkbox, Button, InputRef } from "antd";
 import { useRef, useState } from "react";
 import Text from "@/components/publish/text";
 import TimeSelect from "@/components/publish/timeSelect";
 import NameInput from "@/components/publish/nameInput";
 import AddNumber from "@/components/publish/addNumber";
-import type { UploadFile } from "antd/es/upload/interface";
+import type { RcFile } from "antd/es/upload";
+import { TextAreaRef } from "antd/lib/input/TextArea";
 
 const task = ["任务", "作品"];
 const type = ["文本文案", "图片", "音频"];
 
+interface DDate {
+  year: string;
+  month: string;
+  date: string;
+  time: string;
+}
+
 export default function Publish() {
-  const timeRef = useRef(null);
-  const nameRef = useRef(null);
+  const timeRef = useRef<{ date: DDate }>(null);
+  const nameRef = useRef<InputRef>(null);
   const taskRef = useRef(null);
   const typeRef = useRef(null);
-  const textRef = useRef(null);
+  const textRef = useRef<TextAreaRef>(null);
   const [price, setPrice] = useState(0);
   const [topAd, setTopAd] = useState(0);
   const [bottomAd, setBottomAd] = useState(0);
-  const [file, setFile] = useState<UploadFile[]>([]);
+  const [file, setFile] = useState<RcFile[]>([]);
 
   let allPrice = 1000 * topAd + 800 * bottomAd + price;
 
   const handleSubmit = () => {
-    console.log(taskRef.current);
-    console.log(typeRef.current);
-    console.log(nameRef.current);
+    console.log(task[taskRef.current!]);
+    console.log(type[typeRef.current!]);
+    console.log(nameRef.current!.input!.value);
     console.log(file);
-    console.log(timeRef.current);
-    console.log(textRef.current);
+    let date = timeRef.current?.date;
+    console.log(
+      date?.year + "-" + date?.month + "-" + date?.date + "-" + date?.time
+    );
+    console.log(textRef.current!.resizableTextArea!.props.value);
     console.log(allPrice);
   };
 
@@ -55,7 +66,7 @@ export default function Publish() {
       <div className="w-4/5 shadow-xl mx-auto pt-4 px-6 text-2xl font-bold mt-8 mb-10 pb-6 bg-white">
         <NameInput ref={nameRef} />
         <div className="mb-12">
-          <div className="flex">
+          <div className="flex mb-6">
             <div className="bg-ger w-3 h-7 mr-2"></div>
             <div className="mr-16">请上传封面作品</div>
           </div>
