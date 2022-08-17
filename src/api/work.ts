@@ -44,3 +44,7 @@ export const getWorkDetail = (workId: string) => {
     },
   });
 };
+
+export const getAd = () => {
+  return request.get(`/api-works/ad/1/8?position=0`);
+};

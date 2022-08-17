@@ -2,7 +2,16 @@ import { useState, createContext, Dispatch, SetStateAction } from "react";
 
 interface User {
   hasLogin: boolean;
-  userInfo: {};
+  userInfo:
+    | {
+        avatar: null | string;
+        email: string;
+        id: number;
+        organization: null;
+        phone: string;
+        username: null;
+      }
+    | {};
 }
 
 interface UserContext {
