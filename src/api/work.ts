@@ -28,7 +28,13 @@ export const deleteWork = (id: string) => {
 export const searchWorksByPage = (data: SearchWorksByPageParams) => {
   return request.post("/api-works/list", JSON.stringify(data));
 };
-
+export const searchWorksOrder = (page: number) => {
+  return request.get(`/api-works/worksOrder/${page}/8`, {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  });
+};
 export const searchWorksByUser = (page: number, id: string) => {
   return request.get(`/api-works/publisher/${page}/8?publisherId=${id}`, {
     headers: {

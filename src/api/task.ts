@@ -28,6 +28,20 @@ export const getUserPublish = (page: number, id: string) => {
     },
   });
 };
+export const getUserCommitted = (page: number) => {
+  return request.get(`/api-task/committed/${page}/8`, {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  });
+};
+export const getUserCollected = (page: number) => {
+  return request.get(`/api-task/collected/${page}/8`, {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  });
+};
 
 export const getRecommend = () => {
   return request.get("/api-task/recommend", {

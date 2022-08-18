@@ -1,8 +1,8 @@
 import useLazy from "@/hooks/useLazy";
 const Header = useLazy(import("../../../components/user/header"));
 import { Button, Pagination } from "antd";
-import { getUserPublish } from "../../../api/task";
-import { searchWorksByUser } from "../../../api/work";
+import { getUserCommitted } from "../../../api/task";
+import { searchWorksOrder } from "../../../api/work";
 import { Space, Spin } from "antd";
 import { useState, useContext, useEffect } from "react";
 import UserContext from "@/context/user";
@@ -29,13 +29,13 @@ const ContentLeft = ({
   const onClickButton = async (e: any) => {
     if (e.target.innerText === "任 务" && choose == false) {
       setChoose(true);
-      let res = await getUserPublish(1, user.userInfo.id);
+      let res = await getUserCommitted(1);
       if (res.code == "0") {
         setUseTask(res.data.list);
       }
     } else if (e.target.innerText === "作 品" && choose == true) {
       setChoose(false);
-      let res = await searchWorksByUser(1, user.userInfo.id);
+      let res = await searchWorksOrder(1);
       if (res.code == "0") {
         setUseWork(res.data.list);
       }
@@ -86,13 +86,13 @@ const ContentRight = ({
     if (choose) {
       console.log("right");
 
-      let res = await getUserPublish(page, user.userInfo.id);
+      let res = await getUserCommitted(page);
       if (res.code == "0") {
         setUseTask(res.data.list);
       }
     } else {
       console.log("false");
-      let res = await searchWorksByUser(page, user.userInfo.id);
+      let res = await searchWorksOrder(page);
       if (res.code == "0") {
         setUseWork(res.data.list);
       }
@@ -164,7 +164,7 @@ export default function Join() {
   useEffect(() => {
     const fn = async () => {
       //@ts-ignore
-      let res = await getUserPublish(1, user.userInfo.id);
+      let res = await getUserCommitted(1, user.userInfo.id);
       if (res.code == "0") {
         setPage({
           current: 1,

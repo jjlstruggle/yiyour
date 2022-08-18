@@ -1,20 +1,53 @@
 import useLazy from "@/hooks/useLazy";
 const Header = useLazy(import("../../../components/user/header"));
 import { Input, Button, Avatar, message, Upload, Pagination } from "antd";
-import { useEffect } from "react";
-const ContentLeft = () => {
+import { useState, useEffect } from "react";
+const ContentLeft = ({ choose, setChoose }: any) => {
+  const onclickBut = (e: any) => {
+    if (e.target.innerText === "全部消息" && choose.all !== true) {
+      console.log(123);
+    } else if (e.target.innerText === "系统消息" && choose.system !== true) {
+      console.log(123);
+    } else if (e.target.innerText === "用户消息" && choose.user !== true) {
+      console.log(123);
+    }
+  };
   return (
     <div
       className="flex flex-col w-32  h-full"
       style={{ borderRight: "2px solid #E2E2E2" }}
     >
-      <Button className="shadow-xl bg-main w-24 h-10  mt-6 text-white text-base font-semibold">
+      <Button
+        onClick={onclickBut.bind(this)}
+        className="shadow-xl  w-24 h-10  mt-6 text-white text-base font-semibold"
+        style={
+          choose.all
+            ? { backgroundColor: "#F6B76C" }
+            : { backgroundColor: "#895DC3" }
+        }
+      >
         全部消息
       </Button>
-      <Button className="shadow-xl bg-main w-24 mt-12 h-10 text-white font-semibold">
+      <Button
+        onClick={onclickBut.bind(this)}
+        className="shadow-xl bg-main w-24 mt-12 h-10 text-white font-semibold"
+        style={
+          choose.system
+            ? { backgroundColor: "#F6B76C" }
+            : { backgroundColor: "#895DC3" }
+        }
+      >
         系统消息
       </Button>
-      <Button className="shadow-xl bg-main w-24 mt-12 h-10 text-white font-semibold">
+      <Button
+        onClick={onclickBut.bind(this)}
+        className="shadow-xl bg-main w-24 mt-12 h-10 text-white font-semibold"
+        style={
+          choose.user
+            ? { backgroundColor: "#F6B76C" }
+            : { backgroundColor: "#895DC3" }
+        }
+      >
         用户消息
       </Button>
     </div>
@@ -123,9 +156,14 @@ const ContentRight = () => {
   );
 };
 export default function Message() {
+  const [choose, setChoose] = useState({
+    all: true,
+    system: false,
+    user: false,
+  });
   useEffect(() => {
     let token: any = localStorage.getItem("token");
-    var ws = new WebSocket(" ws://47.96.86.132:88/api-websocket/chat", [token]);
+    var ws = new WebSocket("ws:47.96.86.132:88/api-websocket/chat", [token]);
     console.log(ws.readyState);
 
     ws.onopen = function () {
@@ -154,7 +192,7 @@ export default function Message() {
           border: "1px solid  #DEDEDE",
         }}
       >
-        <ContentLeft />
+        <ContentLeft choose={choose} setChoose={setChoose} />
         <ContentRight />
       </div>
     </div>

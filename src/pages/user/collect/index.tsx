@@ -1,7 +1,7 @@
 import useLazy from "@/hooks/useLazy";
 const Header = useLazy(import("../../../components/user/header"));
 import { Button, Pagination } from "antd";
-import { getUserPublish } from "../../../api/task";
+import { getUserCollected } from "../../../api/task";
 import { searchWorksByUser } from "../../../api/work";
 import { Space, Spin } from "antd";
 import { useState, useContext, useEffect } from "react";
@@ -29,7 +29,7 @@ const ContentLeft = ({
   const onClickButton = async (e: any) => {
     if (e.target.innerText === "任 务" && choose == false) {
       setChoose(true);
-      let res = await getUserPublish(1, user.userInfo.id);
+      let res = await getUserCollected(1);
       if (res.code == "0") {
         setUseTask(res.data.list);
       }
@@ -86,7 +86,7 @@ const ContentRight = ({
     if (choose) {
       console.log("right");
 
-      let res = await getUserPublish(page, user.userInfo.id);
+      let res = await getUserCollected(page);
       if (res.code == "0") {
         setUseTask(res.data.list);
       }
@@ -164,7 +164,7 @@ export default function Collect() {
   useEffect(() => {
     const fn = async () => {
       //@ts-ignore
-      let res = await getUserPublish(1, user.userInfo.id);
+      let res = await getUserCollected(1);
       if (res.code == "0") {
         setPage({
           current: 1,
