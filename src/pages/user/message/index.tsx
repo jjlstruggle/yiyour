@@ -5,6 +5,7 @@ import { useState, useEffect, useContext } from "react";
 import { getMes } from "../../../api/user";
 import UserContext from "@/context/user";
 import { Space, Spin } from "antd";
+import { useNavigate } from "react-router-dom";
 const ContentLeft = ({ choose, setChoose }: any) => {
   const onclickBut = (e: any) => {
     if (e.target.innerText === "全部消息" && choose.all !== true) {
@@ -182,6 +183,7 @@ const ContentRight = ({
   );
 };
 export default function Message() {
+  const navigate = useNavigate();
   const [choose, setChoose] = useState({
     all: true,
     system: false,
@@ -233,6 +235,14 @@ export default function Message() {
         padding: "4vh 5vw",
       }}
     >
+      <Button
+        className="shadow-xl w-24 mb-2 h-10 bg-white text-main font-semibold"
+        onClick={() => {
+          navigate("/home");
+        }}
+      >
+        返回
+      </Button>
       <Header message={true} />
       <div
         className="flex  mt-6 h-4/5"

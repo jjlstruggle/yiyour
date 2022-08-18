@@ -6,6 +6,7 @@ import { searchWorksOrder } from "../../../api/work";
 import { Space, Spin } from "antd";
 import { useState, useContext, useEffect } from "react";
 import UserContext from "@/context/user";
+import { useNavigate } from "react-router-dom";
 type page = {
   current: number;
   total: number;
@@ -154,6 +155,7 @@ const ContentRight = ({
   );
 };
 export default function Join() {
+  const navigate = useNavigate();
   const [choose, setChoose] = useState(true);
   const [userWork, setUseWork] = useState("");
   const [userTask, setUseTask] = useState("");
@@ -184,6 +186,14 @@ export default function Join() {
         padding: "4vh 5vw",
       }}
     >
+      <Button
+        className="shadow-xl w-24 mb-2 h-10 bg-white text-main font-semibold"
+        onClick={() => {
+          navigate("/home");
+        }}
+      >
+        返回
+      </Button>
       <Header web={true} />
       <div
         className="flex  mt-6 h-4/5"

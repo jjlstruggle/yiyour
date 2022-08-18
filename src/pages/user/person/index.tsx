@@ -2,6 +2,7 @@ import useLazy from "@/hooks/useLazy";
 const Header = useLazy(import("../../../components/user/header"));
 import { useState, useContext } from "react";
 import UserContext from "@/context/user";
+import { useNavigate } from "react-router-dom";
 import {
   UserOutlined,
   UploadOutlined,
@@ -29,6 +30,7 @@ const props: UploadProps = {
 };
 //个人信息
 export default function Person() {
+  const navigate = useNavigate();
   const [isEdit, setIsEdit] = useState(false);
   const { user } = useContext(UserContext);
   const Content = () => {
@@ -138,6 +140,14 @@ export default function Person() {
         padding: "4vh 5vw",
       }}
     >
+      <Button
+        className="shadow-xl w-24 mb-2 h-10 bg-white text-main font-semibold"
+        onClick={() => {
+          navigate("/home");
+        }}
+      >
+        返回
+      </Button>
       <Header star={true} />
       <Content />
     </div>
