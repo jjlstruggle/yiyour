@@ -1,15 +1,30 @@
 import useLazy from "@/hooks/useLazy";
 const Header = useLazy(import("../../../components/user/header"));
 import { Input, Button, Avatar, message, Upload, Pagination } from "antd";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { getMes } from "../../../api/user";
+import UserContext from "@/context/user";
+import { Space, Spin } from "antd";
 const ContentLeft = ({ choose, setChoose }: any) => {
   const onclickBut = (e: any) => {
     if (e.target.innerText === "全部消息" && choose.all !== true) {
-      console.log(123);
+      setChoose({
+        all: true,
+        system: false,
+        user: false,
+      });
     } else if (e.target.innerText === "系统消息" && choose.system !== true) {
-      console.log(123);
+      setChoose({
+        all: false,
+        system: true,
+        user: false,
+      });
     } else if (e.target.innerText === "用户消息" && choose.user !== true) {
-      console.log(123);
+      setChoose({
+        all: false,
+        system: false,
+        user: true,
+      });
     }
   };
   return (
@@ -30,7 +45,7 @@ const ContentLeft = ({ choose, setChoose }: any) => {
       </Button>
       <Button
         onClick={onclickBut.bind(this)}
-        className="shadow-xl bg-main w-24 mt-12 h-10 text-white font-semibold"
+        className="shadow-xl  w-24 mt-12 h-10 text-white font-semibold"
         style={
           choose.system
             ? { backgroundColor: "#F6B76C" }
@@ -41,7 +56,7 @@ const ContentLeft = ({ choose, setChoose }: any) => {
       </Button>
       <Button
         onClick={onclickBut.bind(this)}
-        className="shadow-xl bg-main w-24 mt-12 h-10 text-white font-semibold"
+        className="shadow-xl w-24 mt-12 h-10 text-white font-semibold"
         style={
           choose.user
             ? { backgroundColor: "#F6B76C" }
@@ -53,7 +68,90 @@ const ContentLeft = ({ choose, setChoose }: any) => {
     </div>
   );
 };
-const ContentRight = () => {
+const ContentRight = ({
+  mesAllData,
+  mesSystemData,
+  mesUserData,
+  pageData,
+  setPageData,
+  setMesAllData,
+  setMesSystemData,
+  setMesUserData,
+  choose,
+  user,
+}: any) => {
+  const onPageChange = async (page: number, pageSize: number) => {
+    console.log(page);
+    if (choose.all) {
+      let res = await getMes(page, user.userInfo.id);
+      if (res.code == "0") {
+        setMesAllData(res.data.list);
+      }
+    } else if (choose.system) {
+      let res = await getMes(page, user.userInfo.id);
+      if (res.code == "0") {
+        setMesSystemData(res.data.list);
+      }
+    } else if (choose.user) {
+      let res = await getMes(page, user.userInfo.id);
+      if (res.code == "0") {
+        setMesUserData(res.data.list);
+      }
+    }
+  };
+  const mesRender = (): any => {
+    let fn = async () => {
+      let data: any = [];
+      if (choose.all) {
+        data = mesAllData;
+      } else if (choose.system) {
+        data = mesSystemData;
+      } else if (choose.user) {
+        data = mesUserData;
+      }
+
+      {
+        data ? (
+          <>
+            {data.map((item: any) => {
+              return (
+                <div
+                  className="flex "
+                  style={{
+                    borderBottom: "1px solid #CCCCCC",
+                    padding: "1.5vh 2vw",
+                  }}
+                >
+                  <Avatar size={64} />
+                  <div className="text-blank text-xl ml-8 flex flex-col justify-around">
+                    <div className="flex justify-between">
+                      <div className=" font-semibold">一云立画</div>
+                      <div className="text-stone-400">2022/05/01</div>
+                    </div>
+                    <div className=" font-semibold text-base">
+                      你发布的作品xxxxxx已过审！
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </>
+        ) : (
+          () => {
+            return (
+              <Space
+                size="middle"
+                className=" absolute top-1/2 left-1/2  -translate-x-1/2 -translate-y-1/2"
+              >
+                <Spin size="large" />
+              </Space>
+            );
+          }
+        );
+      }
+    };
+    fn();
+  };
   return (
     <div className="flex flex-col relative w-full">
       <div
@@ -64,81 +162,7 @@ const ContentRight = () => {
           letterSpacing: "1px",
         }}
       >
-        <div
-          className="flex "
-          style={{ borderBottom: "1px solid #CCCCCC", padding: "1.5vh 2vw" }}
-        >
-          <Avatar size={64} />
-          <div className="text-blank text-xl ml-8 flex flex-col justify-around">
-            <div className="flex justify-between">
-              <div className=" font-semibold">一云立画</div>
-              <div className="text-stone-400">2022/05/01</div>
-            </div>
-            <div className=" font-semibold text-base">
-              你发布的作品xxxxxx已过审！
-            </div>
-          </div>
-        </div>
-        <div
-          className="flex "
-          style={{ borderBottom: "1px solid #CCCCCC", padding: "1.5vh 2vw" }}
-        >
-          <Avatar size={64} />
-          <div className="text-blank text-xl ml-8 flex flex-col justify-around">
-            <div className="flex justify-between">
-              <div className=" font-semibold">一云立画</div>
-              <div className="text-stone-400">2022/05/01</div>
-            </div>
-            <div className=" font-semibold text-base">
-              你发布的作品xxxxxx已过审！
-            </div>
-          </div>
-        </div>
-        <div
-          className="flex "
-          style={{ borderBottom: "1px solid #CCCCCC", padding: "1.5vh 2vw" }}
-        >
-          <Avatar size={64} />
-          <div className="text-blank text-xl ml-8 flex flex-col justify-around">
-            <div className="flex justify-between">
-              <div className=" font-semibold">一云立画</div>
-              <div className="text-stone-400">2022/05/01</div>
-            </div>
-            <div className=" font-semibold text-base">
-              你发布的作品xxxxxx已过审！
-            </div>
-          </div>
-        </div>
-        <div
-          className="flex "
-          style={{ borderBottom: "1px solid #CCCCCC", padding: "1.5vh 2vw" }}
-        >
-          <Avatar size={64} />
-          <div className="text-blank text-xl ml-8 flex flex-col justify-around">
-            <div className="flex justify-between">
-              <div className=" font-semibold">一隅立画</div>
-              <div className="text-stone-400">2022/05/01</div>
-            </div>
-            <div className=" font-semibold text-base">
-              你发布的作品xxxxxx已过审！
-            </div>
-          </div>
-        </div>
-        <div
-          className="flex "
-          style={{ borderBottom: "1px solid #CCCCCC", padding: "1.5vh 2vw" }}
-        >
-          <Avatar size={64} />
-          <div className="text-blank text-xl ml-8 flex flex-col justify-around">
-            <div className="flex justify-between">
-              <div className=" font-semibold">一云立画</div>
-              <div className="text-stone-400">2022/05/01</div>
-            </div>
-            <div className=" font-semibold text-base">
-              你发布的作品xxxxxx已过审！
-            </div>
-          </div>
-        </div>
+        {mesRender()}
       </div>
 
       <Pagination
@@ -149,8 +173,10 @@ const ContentRight = () => {
           display: "flex",
           transform: "translateX(-50%)",
         }}
-        defaultCurrent={6}
-        total={500}
+        onChange={onPageChange}
+        current={pageData.current}
+        defaultPageSize={5}
+        total={pageData.total}
       />
     </div>
   );
@@ -161,9 +187,17 @@ export default function Message() {
     system: false,
     user: false,
   });
+  const [mesAllData, setMesAllData] = useState();
+  const [mesSystemData, setMesSystemData] = useState();
+  const [mesUserData, setMesUserData] = useState();
+  const [pageData, setPageData] = useState({
+    current: 1,
+    total: 5,
+  });
+  const { user } = useContext(UserContext);
   useEffect(() => {
     let token: any = localStorage.getItem("token");
-    var ws = new WebSocket("ws:47.96.86.132:88/api-websocket/chat", [token]);
+    var ws = new WebSocket("ws://121.40.19.111:88/api-websocket/chat", token);
     console.log(ws.readyState);
 
     ws.onopen = function () {
@@ -172,6 +206,24 @@ export default function Message() {
 
       ws.send("test1");
     };
+  }, []);
+  useEffect(() => {
+    let fn = async () => {
+      if (choose.all) {
+        //@ts-ignore
+        let res = await getMes(1, user.userInfo.id);
+        if (res.code == "0") {
+          setPageData({
+            current: 1,
+            total: res.data.totalCount,
+          });
+          console.log(res.data.totalCount);
+        }
+      } else if (choose.system) {
+      } else if (choose.user) {
+      }
+    };
+    fn();
   }, []);
   return (
     <div
@@ -193,7 +245,18 @@ export default function Message() {
         }}
       >
         <ContentLeft choose={choose} setChoose={setChoose} />
-        <ContentRight />
+        <ContentRight
+          mesAllData={mesAllData}
+          mesSystemData={mesSystemData}
+          mesUserData={mesUserData}
+          pageData={pageData}
+          setPageData={setPageData}
+          setMesAllData={setMesAllData}
+          setMesSystemData={setMesSystemData}
+          setMesUserData={setMesUserData}
+          choose={choose}
+          user={user}
+        />
       </div>
     </div>
   );

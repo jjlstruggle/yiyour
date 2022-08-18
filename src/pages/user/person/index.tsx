@@ -1,6 +1,7 @@
 import useLazy from "@/hooks/useLazy";
 const Header = useLazy(import("../../../components/user/header"));
-import { useState } from "react";
+import { useState, useContext } from "react";
+import UserContext from "@/context/user";
 import {
   UserOutlined,
   UploadOutlined,
@@ -29,6 +30,7 @@ const props: UploadProps = {
 //个人信息
 export default function Person() {
   const [isEdit, setIsEdit] = useState(false);
+  const { user } = useContext(UserContext);
   const Content = () => {
     return (
       <div
@@ -46,32 +48,73 @@ export default function Person() {
             size={64}
             className="flex justify-center items-center"
             icon={<UserOutlined />}
+            src={
+              //@ts-ignore
+              user.userInfo.avatar
+            }
           />
+
           {isEdit ? (
             <Upload
               {...props}
-              className="rounded-md my-3 w-28 h-10 bg-main text-white text-sm ml-4 flex justify-center items-center"
+              className="border-solid  rounded-md my-3 w-28 h-10 bg-main text-white text-sm ml-4 flex justify-center items-center"
             >
               {" "}
               更换头像
             </Upload>
           ) : null}
         </div>
-        <Input
-          className="my-4 w-80"
-          placeholder="用户昵称"
-          prefix={<UserOutlined />}
-        />
-        <Input
-          className="my-4  w-80"
-          placeholder="企业/学校"
-          prefix={<UserOutlined />}
-        />
-        <Input
-          className="my-4  w-80"
-          placeholder="设置密码"
-          prefix={<BorderOutlined />}
-        />
+        {isEdit ? (
+          <Input
+            className="my-4 w-80"
+            placeholder="用户昵称"
+            prefix={<UserOutlined />}
+          />
+        ) : (
+          <div className="text-lg text-purple-500 border-solid px-4 flex items-center rounded-md w-80 h-10 my-5 border-2 border-gray-500 hover:border-purple-500">
+            用户昵称：
+            {
+              //@ts-ignore
+              user.userInfo.username
+                ? //@ts-ignore
+                  user.userInfo.username
+                : "还未设置姓名哦！"
+            }
+          </div>
+        )}
+        {isEdit ? (
+          <Input
+            className="my-4  w-80"
+            placeholder="企业/学校"
+            prefix={<UserOutlined />}
+          />
+        ) : (
+          <div className="text-lg text-purple-500 border-solid px-4 flex items-center rounded-md w-80 h-10  my-5 border-2 border-gray-500 hover:border-purple-500 ">
+            企业/学校：
+            {
+              //@ts-ignore
+              user.userInfo.organization
+                ? //@ts-ignore
+                  user.userInfo.organization
+                : "还未设置组织哦！"
+            }
+          </div>
+        )}
+        {isEdit ? (
+          <Input
+            className="my-4  w-80"
+            placeholder="设置密码"
+            prefix={<BorderOutlined />}
+          />
+        ) : (
+          <div className=" text-lg text-purple-500 border-solid rounded-lg px-4 flex items-center w-80 h-10  my-5  border-2 border-gray-500 hover:border-purple-500 ">
+            邮箱：
+            {
+              //@ts-ignore
+              user.userInfo.email
+            }
+          </div>
+        )}
         {isEdit ? (
           <Button className="my-3 w-28 h-10 bg-main text-white text-sm">
             确认
