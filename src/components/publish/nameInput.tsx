@@ -1,8 +1,11 @@
 import { Input, InputRef } from "antd";
 import { ForwardedRef, forwardRef, useState } from "react";
 
-function NameInput(props: { ipt: ForwardedRef<InputRef> }) {
-  const [name, setName] = useState("");
+function NameInput(props: {
+  ipt: ForwardedRef<InputRef>;
+  initalName?: string;
+}) {
+  const [name, setName] = useState(props.initalName || "");
   return (
     <div className="flex items-center mb-12 ">
       <div className="bg-ger w-3 h-7 mr-2"></div>
@@ -17,6 +20,8 @@ function NameInput(props: { ipt: ForwardedRef<InputRef> }) {
     </div>
   );
 }
-export default forwardRef((props, ref: ForwardedRef<InputRef>) => (
-  <NameInput {...props} ipt={ref} />
-));
+export default forwardRef(
+  (props: { initalName?: string }, ref: ForwardedRef<InputRef>) => (
+    <NameInput {...props} ipt={ref} />
+  )
+);

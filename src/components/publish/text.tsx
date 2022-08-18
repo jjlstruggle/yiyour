@@ -2,8 +2,8 @@ import { Input } from "antd";
 import { TextAreaRef } from "antd/lib/input/TextArea";
 import { ForwardedRef, forwardRef, useState } from "react";
 
-function Text(props: { text: ForwardedRef<TextAreaRef> }) {
-  const [value, setValue] = useState("");
+function Text(props: { text: ForwardedRef<TextAreaRef>; initalText?: string }) {
+  const [value, setValue] = useState(props.initalText || "");
   return (
     <div className="flex mb-4 text-base font-normal">
       <div className="w-3/4 relative">
@@ -28,6 +28,8 @@ function Text(props: { text: ForwardedRef<TextAreaRef> }) {
   );
 }
 
-export default forwardRef((props, ref: ForwardedRef<TextAreaRef>) => (
-  <Text {...props} text={ref} />
-));
+export default forwardRef(
+  (props: { initalText?: string }, ref: ForwardedRef<TextAreaRef>) => (
+    <Text {...props} text={ref} />
+  )
+);
