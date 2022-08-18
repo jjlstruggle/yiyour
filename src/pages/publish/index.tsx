@@ -14,7 +14,8 @@ import type { RcFile } from "antd/es/upload";
 import { TextAreaRef } from "antd/lib/input/TextArea";
 import dayjs, { Dayjs } from "dayjs";
 import { DDate } from "@/interface/type";
-
+import { publish } from "@/api/task";
+import { upload } from "@/api/oss";
 const task = ["任务", "作品"];
 const type = ["文本文案", "图片", "音频"];
 
@@ -117,19 +118,24 @@ export default function Publish() {
     );
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let date = timeRef.current?.date;
+    const res = await upload(file[0]);
+    console.log(res);
 
-    /* console.log(task[taskRef.current!]);
-    console.log(type[typeRef.current!]);
-    console.log(nameRef.current!.input!.value);
-    console.log(file);
-    
-    console.log(
-      date?.year + "-" + date?.month + "-" + date?.date + "-" + date?.time
-    );
-    console.log(textRef.current!.resizableTextArea!.props.value);
-    console.log(allPrice); */
+    if (taskRef.current == 0) {
+      /* const res = await publish({
+        bottomAds: bottomAd,
+        taskName: nameRef.current!.input!.value,
+        type: type[typeRef.current!],
+        frontPageAds: topAd,
+        taskDeadline:
+          date?.year + "-" + date?.month + "-" + date?.date + "-" + date?.time,
+        taskPrice: price,
+        taskDemands: textRef.current!.resizableTextArea!.props
+          .value as unknown as string,
+      }); */
+    }
   };
 
   return (
