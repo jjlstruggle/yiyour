@@ -1,22 +1,36 @@
-import { Button, Carousel } from "antd";
+import { Button, Carousel, message } from "antd";
 import HeaderInput from "./header/input";
 import { MailOutlined } from "@ant-design/icons";
 import { ForwardedRef, forwardRef, memo } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import User from "./header/user";
 import { getAd } from "@/api/work";
 import useRequest from "@/hooks/useRequest";
 import { AdList } from "@/interface/api";
+import { User as UserType } from "@/interface/type";
 
 function Head({
   headerContainer,
+  user,
 }: {
   headerContainer: ForwardedRef<HTMLDivElement>;
+  user: UserType;
 }) {
   const { data, loading } = useRequest<{
     list: AdList[];
   }>(getAd);
   const { pathname } = useLocation();
+  const navegate = useNavigate();
+  const handleToPublish = () => {
+    if (user.hasLogin) {
+      // @ts-ignore
+      navegate(`/publish?uid=${user.userInfo.id}`);
+    } else {
+      import("antd/es/message/index").then((m) => {
+        m.default.error("请先登录");
+      });
+    }
+  };
 
   return (
     <div className="header">
@@ -25,9 +39,9 @@ function Head({
         ref={headerContainer}
       >
         <div className=" flex justify-between">
-          <Link to="/publish">
-            <Button className="text-main">我要发布</Button>
-          </Link>
+          <Button className="text-main" onClick={handleToPublish}>
+            我要发布
+          </Button>
           <Button className="text-main left-7 relative   ">版权帮助</Button>
         </div>
         <div className="w-96 ">
@@ -60,7 +74,7 @@ function Head({
 }
 
 export default memo(
-  forwardRef((props, ref: ForwardedRef<HTMLDivElement>) => (
+  forwardRef((props: { user: UserType }, ref: ForwardedRef<HTMLDivElement>) => (
     <Head {...props} headerContainer={ref} />
   ))
 );

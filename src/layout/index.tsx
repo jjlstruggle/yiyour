@@ -14,7 +14,7 @@ export default function PageLayout() {
     headerHeight: 0,
     footerHeight: 0,
   });
-  const { dispatchUserInfo } = useContext(UserContext);
+  const { dispatchUserInfo, user } = useContext(UserContext);
   useEffect(() => {
     const wh = document.body.clientHeight; // 总高
     const headerHeight = header.current?.clientHeight!; // 头部高度
@@ -31,7 +31,7 @@ export default function PageLayout() {
   });
   return (
     <div className="flex-1 overflow-x-hidden overflow-y-auto block">
-      <Head ref={header} />
+      <Head ref={header} user={user} />
       <Container heightInfo={heightInfo} />
       <Foot ref={footer} />
     </div>

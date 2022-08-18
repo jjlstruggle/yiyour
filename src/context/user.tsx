@@ -1,19 +1,5 @@
 import { useState, createContext, Dispatch, SetStateAction } from "react";
-
-interface User {
-  hasLogin: boolean;
-  userInfo:
-    | {
-        avatar: null | string;
-        email: string;
-        id: number;
-        organization: null;
-        phone: string;
-        username: null;
-      }
-    | {};
-}
-
+import { User } from "@/interface/type";
 interface UserContext {
   user: User;
   dispatchUserInfo: Dispatch<SetStateAction<User>>;
