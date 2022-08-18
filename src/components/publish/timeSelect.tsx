@@ -13,6 +13,8 @@ function TimeSelect(props: {
   initalDate?: { date: DDate };
 }) {
   const shouldInit = props.initalDate !== null;
+  console.log(shouldInit);
+
   const date = useRef(props.initalDate ? props.initalDate.date || {} : {});
   const onChange = (type: "time" | "date" | "month" | "year") => {
     return (time: any) => {
@@ -52,7 +54,7 @@ function TimeSelect(props: {
         <TimePicker
           // @ts-ignore
           defaultValue={
-            shouldInit && dayjs(props.initalDate?.date.time, "HH:mm")
+            shouldInit ? dayjs(props.initalDate?.date.time, "HH:mm") : dayjs()
           }
           format="HH:mm"
           onChange={onChange("time")}
@@ -61,9 +63,7 @@ function TimeSelect(props: {
         <DatePicker
           // @ts-ignore
           defaultValue={
-            shouldInit
-              ? dayjs(props.initalDate?.date.date, "DD")
-              : dayjs(undefined, "DD")
+            shouldInit ? dayjs(props.initalDate?.date.date, "DD") : dayjs()
           }
           mode="date"
           format="DD"
@@ -74,9 +74,7 @@ function TimeSelect(props: {
         <DatePicker
           // @ts-ignore
           defaultValue={
-            shouldInit
-              ? dayjs(props.initalDate?.date.month, "MM")
-              : dayjs(undefined, "MM")
+            shouldInit ? dayjs(props.initalDate?.date.month, "MM") : dayjs()
           }
           format="MM"
           className="mr-6"
@@ -87,9 +85,7 @@ function TimeSelect(props: {
         <DatePicker
           // @ts-ignore
           defaultValue={
-            shouldInit
-              ? dayjs(props.initalDate?.date.year, "YYYY")
-              : dayjs(undefined, "YYYY")
+            shouldInit ? dayjs(props.initalDate?.date.year, "YYYY") : dayjs()
           }
           format="YYYY"
           className="mr-6"
