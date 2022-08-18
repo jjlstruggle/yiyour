@@ -6,6 +6,19 @@ import { searchWorksByUser } from "../../../api/work";
 import { Space, Spin } from "antd";
 import { useState, useContext, useEffect } from "react";
 import UserContext from "@/context/user";
+type page = {
+  current: number;
+  total: number;
+};
+interface ContentRightParams {
+  userWork: any;
+  userTask: any;
+  choose: Boolean;
+  page: page;
+  user: any;
+  setUseTask: any;
+  setUseWork: any;
+}
 const ContentLeft = ({
   choose,
   setChoose,
@@ -58,11 +71,33 @@ const ContentLeft = ({
     </div>
   );
 };
-const ContentRight = ({ userWork, userTask, choose }: any) => {
+const ContentRight = ({
+  userWork,
+  userTask,
+  choose,
+  page,
+  user,
+  setUseTask,
+  setUseWork,
+}: ContentRightParams) => {
   const data = !choose ? userWork : userTask;
-  console.log("useTask", userTask);
-  console.log(data);
+  const onPageChange = async (page: number, pageSize: number) => {
+    console.log(page);
+    if (choose) {
+      console.log("right");
 
+      let res = await getUserPublish(page, user.userInfo.id);
+      if (res.code == "0") {
+        setUseTask(res.data.list);
+      }
+    } else {
+      console.log("false");
+      let res = await searchWorksByUser(page, user.userInfo.id);
+      if (res.code == "0") {
+        setUseWork(res.data.list);
+      }
+    }
+  };
   return (
     <div className="flex flex-col relative w-full">
       <div
@@ -109,8 +144,10 @@ const ContentRight = ({ userWork, userTask, choose }: any) => {
           display: "flex",
           transform: "translateX(-50%)",
         }}
-        defaultCurrent={1}
-        total={500}
+        onChange={onPageChange}
+        // current={page.current}
+        defaultPageSize={8}
+        total={page.total}
       />
     </div>
   );
@@ -129,8 +166,10 @@ export default function Publish() {
       //@ts-ignore
       let res = await getUserPublish(1, user.userInfo.id);
       if (res.code == "0") {
-        console.log(res.data);
-
+        setPage({
+          current: 1,
+          total: res.data.totalCount,
+        });
         setUseTask(res.data.list);
       }
     };
@@ -162,7 +201,15 @@ export default function Publish() {
           setChoose={setChoose}
           user={user}
         />
-        <ContentRight choose={choose} userWork={userWork} userTask={userTask} />
+        <ContentRight
+          page={page}
+          choose={choose}
+          userWork={userWork}
+          userTask={userTask}
+          user={user}
+          setUseTask={setUseTask}
+          setUseWork={setUseWork}
+        />
       </div>
     </div>
   );

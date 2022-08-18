@@ -125,9 +125,7 @@ const ContentRight = () => {
 export default function Message() {
   useEffect(() => {
     let token: any = localStorage.getItem("token");
-    var ws = new WebSocket(" ws://121.40.19.111:88/api-websocket/chat", [
-      token,
-    ]);
+    var ws = new WebSocket(" ws://47.96.86.132:88/api-websocket/chat", [token]);
     console.log(ws.readyState);
 
     ws.onopen = function () {
