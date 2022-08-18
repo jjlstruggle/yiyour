@@ -5,11 +5,23 @@ import { useState, useEffect } from "react";
 const ContentLeft = ({ choose, setChoose }: any) => {
   const onclickBut = (e: any) => {
     if (e.target.innerText === "全部消息" && choose.all !== true) {
-      console.log(123);
+      setChoose({
+        all: true,
+        system: false,
+        user: false,
+      });
     } else if (e.target.innerText === "系统消息" && choose.system !== true) {
-      console.log(123);
+      setChoose({
+        all: false,
+        system: true,
+        user: false,
+      });
     } else if (e.target.innerText === "用户消息" && choose.user !== true) {
-      console.log(123);
+      setChoose({
+        all: false,
+        system: false,
+        user: true,
+      });
     }
   };
   return (
@@ -30,7 +42,7 @@ const ContentLeft = ({ choose, setChoose }: any) => {
       </Button>
       <Button
         onClick={onclickBut.bind(this)}
-        className="shadow-xl bg-main w-24 mt-12 h-10 text-white font-semibold"
+        className="shadow-xl  w-24 mt-12 h-10 text-white font-semibold"
         style={
           choose.system
             ? { backgroundColor: "#F6B76C" }
@@ -41,7 +53,7 @@ const ContentLeft = ({ choose, setChoose }: any) => {
       </Button>
       <Button
         onClick={onclickBut.bind(this)}
-        className="shadow-xl bg-main w-24 mt-12 h-10 text-white font-semibold"
+        className="shadow-xl w-24 mt-12 h-10 text-white font-semibold"
         style={
           choose.user
             ? { backgroundColor: "#F6B76C" }
