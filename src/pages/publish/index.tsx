@@ -12,41 +12,124 @@ import NameInput from "@/components/publish/nameInput";
 import AddNumber from "@/components/publish/addNumber";
 import type { RcFile } from "antd/es/upload";
 import { TextAreaRef } from "antd/lib/input/TextArea";
+import dayjs, { Dayjs } from "dayjs";
+import { DDate } from "@/interface/type";
 
 const task = ["任务", "作品"];
 const type = ["文本文案", "图片", "音频"];
 
-interface DDate {
-  year: string;
-  month: string;
+type PublishStorage = null | {
   date: string;
-  time: string;
+  bottomAd: number;
+  name: string;
+  price: number;
+  task: number;
+  text: string;
+  topAd: number;
+  type: number;
+};
+
+function formate(date: Dayjs): { date: DDate } {
+  return {
+    date: {
+      year: String(date.year()),
+      month: String(date.month() + 1),
+      date: String(date.date()),
+      time: String(date.hour() + ":" + date.minute()),
+    },
+  };
 }
 
 export default function Publish() {
+  let storage: PublishStorage = JSON.parse(
+    localStorage.getItem("publishTemp")!
+  );
+  const shouldLoadFromStorage = storage === null ? false : true;
+
+  let formateDate = shouldLoadFromStorage
+    ? storage!.date
+      ? formate(dayjs(storage!.date))
+      : null
+    : null;
+  let formateName = shouldLoadFromStorage
+    ? storage?.name
+      ? storage.name
+      : ""
+    : "";
+  let formateTask = shouldLoadFromStorage
+    ? storage?.task
+      ? storage.task
+      : null
+    : null;
+  let formateType = shouldLoadFromStorage
+    ? storage?.type
+      ? storage.type
+      : null
+    : null;
+  let formateText = shouldLoadFromStorage
+    ? storage?.text
+      ? storage.text
+      : ""
+    : "";
+  let formatPrice = shouldLoadFromStorage
+    ? storage?.price
+      ? storage.price
+      : 0
+    : 0;
+  let formatTopAd = shouldLoadFromStorage
+    ? storage?.topAd
+      ? storage.topAd
+      : 0
+    : 0;
+  let formatBottomAd = shouldLoadFromStorage
+    ? storage?.bottomAd
+      ? storage.bottomAd
+      : 0
+    : 0;
+
   const timeRef = useRef<{ date: DDate }>(null);
   const nameRef = useRef<InputRef>(null);
-  const taskRef = useRef(null);
-  const typeRef = useRef(null);
+  const taskRef = useRef(formateTask);
+  const typeRef = useRef(formateType);
   const textRef = useRef<TextAreaRef>(null);
-  const [price, setPrice] = useState(0);
-  const [topAd, setTopAd] = useState(0);
-  const [bottomAd, setBottomAd] = useState(0);
+  const [price, setPrice] = useState(formatPrice);
+  const [topAd, setTopAd] = useState(formatTopAd);
+  const [bottomAd, setBottomAd] = useState(formatBottomAd);
   const [file, setFile] = useState<RcFile[]>([]);
 
   let allPrice = 1000 * topAd + 800 * bottomAd + price;
 
+  const handleSave = () => {
+    let date = timeRef.current?.date;
+    localStorage.setItem(
+      "publishTemp",
+      JSON.stringify({
+        task: taskRef.current,
+        type: typeRef.current,
+        name: nameRef.current!.input!.value,
+        date:
+          date?.year + "-" + date?.month + "-" + date?.date + " " + date?.time,
+        text: textRef.current!.resizableTextArea!.props.value,
+        topAd,
+        bottomAd,
+        price,
+      })
+    );
+  };
+
   const handleSubmit = () => {
-    console.log(task[taskRef.current!]);
+    let date = timeRef.current?.date;
+
+    /* console.log(task[taskRef.current!]);
     console.log(type[typeRef.current!]);
     console.log(nameRef.current!.input!.value);
     console.log(file);
-    let date = timeRef.current?.date;
+    
     console.log(
       date?.year + "-" + date?.month + "-" + date?.date + "-" + date?.time
     );
     console.log(textRef.current!.resizableTextArea!.props.value);
-    console.log(allPrice);
+    console.log(allPrice); */
   };
 
   return (
@@ -64,7 +147,7 @@ export default function Publish() {
         </div>
       </div>
       <div className="w-4/5 shadow-xl mx-auto pt-4 px-6 text-2xl font-bold mt-8 mb-10 pb-6 bg-white">
-        <NameInput ref={nameRef} />
+        <NameInput ref={nameRef} initalName={formateName!} />
         <div className="mb-12">
           <div className="flex mb-6">
             <div className="bg-ger w-3 h-7 mr-2"></div>
@@ -74,13 +157,13 @@ export default function Publish() {
             <GoodUpload fileList={file} setFileList={setFile} />
           </div>
         </div>
-        <TimeSelect ref={timeRef} />
+        <TimeSelect ref={timeRef} initalDate={formateDate!} />
         <div className="mb-12">
           <div className="flex items-center mb-4">
             <div className="bg-ger w-3 h-7 mr-2"></div>
             <div className="mr-16">请尽可能详细的描述您的需求</div>
           </div>
-          <Text ref={textRef} />
+          <Text ref={textRef} initalText={formateText} />
         </div>
       </div>
       <div className="w-4/5 shadow-xl mx-auto pt-4 px-6 text-2xl font-bold mt-8 mb-10 pb-6 bg-white">
@@ -154,7 +237,7 @@ export default function Publish() {
         </div>
       </div>
       <div className="flex items-center justify-around mb-12 w-80 mx-auto">
-        <Button type="primary" className="bg-ger" onClick={() => {}}>
+        <Button type="primary" className="bg-ger" onClick={handleSave}>
           保存
         </Button>
         <Button type="primary" className="bg-ger" onClick={handleSubmit}>

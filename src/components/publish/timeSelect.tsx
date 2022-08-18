@@ -5,9 +5,15 @@ import { DownOutlined } from "@ant-design/icons";
 import { TimePicker, DatePicker } from "antd";
 import { useRef, useImperativeHandle, forwardRef, ForwardedRef } from "react";
 import format from "@/util/format";
+import { DDate } from "@/interface/type";
+import dayjs from "dayjs";
 
-function TimeSelect(props: { $date: ForwardedRef<any> }) {
-  const date = useRef({});
+function TimeSelect(props: {
+  $date: ForwardedRef<any>;
+  initalDate?: { date: DDate };
+}) {
+  const shouldInit = props.initalDate !== null;
+  const date = useRef(props.initalDate ? props.initalDate.date || {} : {});
   const onChange = (type: "time" | "date" | "month" | "year") => {
     return (time: any) => {
       switch (type) {
@@ -44,11 +50,21 @@ function TimeSelect(props: { $date: ForwardedRef<any> }) {
       </div>
       <div className="flex mb-4">
         <TimePicker
+          // @ts-ignore
+          defaultValue={
+            shouldInit && dayjs(props.initalDate?.date.time, "HH:mm")
+          }
           format="HH:mm"
           onChange={onChange("time")}
           className="mr-6"
         />
         <DatePicker
+          // @ts-ignore
+          defaultValue={
+            shouldInit
+              ? dayjs(props.initalDate?.date.date, "DD")
+              : dayjs(undefined, "DD")
+          }
           mode="date"
           format="DD"
           suffixIcon={<DownOutlined />}
@@ -56,6 +72,12 @@ function TimeSelect(props: { $date: ForwardedRef<any> }) {
           onChange={onChange("date")}
         />
         <DatePicker
+          // @ts-ignore
+          defaultValue={
+            shouldInit
+              ? dayjs(props.initalDate?.date.month, "MM")
+              : dayjs(undefined, "MM")
+          }
           format="MM"
           className="mr-6"
           onChange={onChange("month")}
@@ -63,6 +85,12 @@ function TimeSelect(props: { $date: ForwardedRef<any> }) {
           suffixIcon={<DownOutlined />}
         />
         <DatePicker
+          // @ts-ignore
+          defaultValue={
+            shouldInit
+              ? dayjs(props.initalDate?.date.year, "YYYY")
+              : dayjs(undefined, "YYYY")
+          }
           format="YYYY"
           className="mr-6"
           onChange={onChange("year")}
@@ -74,6 +102,6 @@ function TimeSelect(props: { $date: ForwardedRef<any> }) {
   );
 }
 
-export default forwardRef((props, ref) => (
+export default forwardRef((props: { initalDate?: { date: DDate } }, ref) => (
   <TimeSelect {...props} $date={ref} />
 ));
