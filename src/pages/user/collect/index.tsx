@@ -148,6 +148,7 @@ const ContentRight = ({
         // current={page.current}
         defaultPageSize={8}
         total={page.total}
+        current={page.current}
       />
     </div>
   );
