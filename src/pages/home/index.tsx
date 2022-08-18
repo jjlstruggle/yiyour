@@ -9,6 +9,7 @@ import { DownOutlined } from "@ant-design/icons";
 
 const { TabPane } = Tabs;
 const Bazaar = useLazy(import("@/components/home/bazaar"));
+const Shop = useLazy(import("@/components/home/shop"));
 
 const sorts = ["时间降序", "时间增序"];
 
@@ -60,7 +61,9 @@ export default function Index() {
           <TabPane tab="任务集市" key="1">
             <Bazaar />
           </TabPane>
-          <TabPane tab="作品商店" key="2"></TabPane>
+          <TabPane tab="作品商店" key="2">
+            <Shop />
+          </TabPane>
         </Tabs>
       </div>
     </div>

@@ -67,10 +67,10 @@ export interface UpdateWorksParams {
 export interface SearchWorksByPageParams {
   currentPage: number;
   pageSize: number;
-  priceSort: number;
-  subtypeId: string;
-  timeSort: number;
-  typeId: string;
+  priceSort?: number;
+  subtypeId?: string;
+  timeSort?: number;
+  typeId?: string;
 }
 
 export interface TaskListInfo {
