@@ -16,6 +16,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { DDate } from "@/interface/type";
 import { publish } from "@/api/task";
 import { upload } from "@/api/oss";
+import Hide from "@/common/hideComponent";
 const task = ["任务", "作品"];
 const type = ["文本文案", "图片", "音频"];
 
@@ -97,6 +98,7 @@ export default function Publish() {
   const [topAd, setTopAd] = useState(formatTopAd);
   const [bottomAd, setBottomAd] = useState(formatBottomAd);
   const [file, setFile] = useState<RcFile[]>([]);
+  const [value, update] = useState<any>(formateTask);
 
   let allPrice = 1000 * topAd + 800 * bottomAd + price;
 
@@ -144,7 +146,7 @@ export default function Publish() {
         <div className="flex items-center mb-6">
           <div className="bg-ger w-3 h-7 mr-2"></div>
           <div className="mr-16">您选择发布一个</div>
-          <Select item={task} ref={taskRef} />
+          <Select item={task} ref={taskRef} change={update} />
         </div>
         <div className="flex items-center">
           <div className="bg-ger w-3 h-7 mr-2"></div>
@@ -160,9 +162,24 @@ export default function Publish() {
             <div className="mr-16">请上传封面作品</div>
           </div>
           <div>
-            <GoodUpload fileList={file} setFileList={setFile} />
+            <GoodUpload type="card" fileList={file} setFileList={setFile} />
           </div>
         </div>
+        <Hide itShould={value == 1}>
+          <div className="mb-12">
+            <div className="flex mb-6">
+              <div className="bg-ger w-3 h-7 mr-2"></div>
+              <div className="mr-16">请上传您的作品</div>
+            </div>
+            <div>
+              <GoodUpload
+                type="default"
+                fileList={file}
+                setFileList={setFile}
+              />
+            </div>
+          </div>
+        </Hide>
         <TimeSelect ref={timeRef} initalDate={formateDate!} />
         <div className="mb-12">
           <div className="flex items-center mb-4">
