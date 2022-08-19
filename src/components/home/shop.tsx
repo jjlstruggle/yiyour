@@ -3,7 +3,7 @@ import { searchWorksByPage } from "@/api/work";
 import { TaskList, SearchWorksByPageParams } from "@/interface/api";
 import { memo } from "react";
 import Card from "@/common/card";
-import { Empty } from "antd";
+import { Empty, Spin } from "antd";
 
 function Shop({}) {
   let body: SearchWorksByPageParams = {
@@ -57,7 +57,7 @@ function Shop({}) {
       className="columns-5 gap-x-2-3 mt-6 mx-40"
       style={{ columnFill: "auto" }}
     >
-      <Empty />
+      <Spin />
     </div>
   );
 }
