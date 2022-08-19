@@ -110,10 +110,10 @@ export default function Person() {
           />
         ) : (
           <div className=" text-lg text-purple-500 border-solid rounded-lg px-4 flex items-center w-80 h-10  my-5  border-2 border-gray-500 hover:border-purple-500 ">
-            邮箱：
+            手机号：
             {
               //@ts-ignore
-              user.userInfo.email
+              user.userInfo.phone
             }
           </div>
         )}
@@ -126,7 +126,7 @@ export default function Person() {
             onClick={() => setIsEdit(true)}
             className="my-3 w-28 h-10 bg-main text-white text-sm"
           >
-            编辑
+            修改
           </Button>
         )}
       </div>
@@ -141,7 +141,7 @@ export default function Person() {
       }}
     >
       <Button
-        className="shadow-xl w-24 mb-2 h-10 bg-white text-main font-semibold"
+        className="shadow-sm w-24 mb-2 h-10 bg-white text-main font-semibold -translate-y-1"
         onClick={() => {
           navigate("/home");
         }}
