@@ -9,14 +9,15 @@ import {
 interface SelectProps {
   item: string[];
   defaultSelect?: number;
+  change?: Function;
 }
 
 type ExtraSelectProps = SelectProps & { s: ForwardedRef<number> };
 
-function Select({ defaultSelect, item, s }: ExtraSelectProps) {
+function Select({ defaultSelect, item, s, change }: ExtraSelectProps) {
   const [select, setSelect] = useState(defaultSelect || 0);
   const transformSelect = useRef(defaultSelect || 0);
-  transformSelect.current = select;
+
   useImperativeHandle(s, () => transformSelect.current);
 
   return (
@@ -26,6 +27,8 @@ function Select({ defaultSelect, item, s }: ExtraSelectProps) {
           <div
             onClick={() => {
               setSelect(index);
+              transformSelect.current = index;
+              change && change(index);
             }}
             className={
               select === index

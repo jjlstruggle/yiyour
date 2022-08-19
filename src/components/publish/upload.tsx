@@ -1,5 +1,5 @@
 import { PlusCircleFilled } from "@ant-design/icons";
-import { Image, Upload } from "antd";
+import { Image, Upload, Button } from "antd";
 import type { RcFile } from "antd/es/upload";
 import { Dispatch, SetStateAction, useState } from "react";
 
@@ -21,23 +21,26 @@ const getBase64 = (file: RcFile): Promise<string> =>
 export default function GoodUpload({
   setFileList,
   fileList,
+  type,
 }: {
   setFileList: Dispatch<SetStateAction<RcFile[]>>;
   fileList: RcFile[];
+  type: "card" | "default";
 }) {
   const [preview, setPreview] = useState<string[]>([]);
 
   return (
     <div className="flex">
-      {preview.map((item, index) => (
-        <Image src={item} key={index} style={{ width: 104, height: 104 }} />
-      ))}
+      {type === "card" &&
+        preview.map((item, index) => (
+          <Image src={item} key={index} style={{ width: 104, height: 104 }} />
+        ))}
       <Upload
         className="ml-4"
-        accept="image/*"
-        listType="picture-card"
+        listType={type === "card" ? "picture-card" : "text"}
+        accept={type === "card" ? "image/*" : "*"}
         fileList={fileList}
-        showUploadList={false}
+        showUploadList={type === "default"}
         beforeUpload={async (file) => {
           const base64 = await Promise.all(
             [...fileList, file].map(async (item) => await getBase64(item))
@@ -46,8 +49,19 @@ export default function GoodUpload({
           setFileList([...fileList, file]);
           return false;
         }}
+        onRemove={(file) => {
+          // @ts-ignore
+          const index = fileList.indexOf(file);
+          const newFileList = fileList.slice();
+          newFileList.splice(index, 1);
+          setFileList(newFileList);
+        }}
       >
-        {fileList.length >= 8 ? null : uploadButton}
+        {fileList.length >= 3 ? null : type === "card" ? (
+          uploadButton
+        ) : (
+          <Button type="primary">点击上传文件</Button>
+        )}
       </Upload>
     </div>
   );

@@ -16,6 +16,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { DDate } from "@/interface/type";
 import { publish } from "@/api/task";
 import { upload } from "@/api/oss";
+import Hide from "@/common/hideComponent";
 const task = ["任务", "作品"];
 const type = ["文本文案", "图片", "音频"];
 
@@ -97,6 +98,7 @@ export default function Publish() {
   const [topAd, setTopAd] = useState(formatTopAd);
   const [bottomAd, setBottomAd] = useState(formatBottomAd);
   const [file, setFile] = useState<RcFile[]>([]);
+  const [value, update] = useState<any>(formateTask);
 
   let allPrice = 1000 * topAd + 800 * bottomAd + price;
 
@@ -120,8 +122,7 @@ export default function Publish() {
 
   const handleSubmit = async () => {
     let date = timeRef.current?.date;
-    const res = await upload(file[0]);
-    console.log(res);
+    // const res = await upload(file[0]);
 
     if (taskRef.current == 0) {
       /* const res = await publish({
@@ -144,7 +145,7 @@ export default function Publish() {
         <div className="flex items-center mb-6">
           <div className="bg-ger w-3 h-7 mr-2"></div>
           <div className="mr-16">您选择发布一个</div>
-          <Select item={task} ref={taskRef} />
+          <Select item={task} ref={taskRef} change={update} />
         </div>
         <div className="flex items-center">
           <div className="bg-ger w-3 h-7 mr-2"></div>
@@ -160,10 +161,27 @@ export default function Publish() {
             <div className="mr-16">请上传封面作品</div>
           </div>
           <div>
-            <GoodUpload fileList={file} setFileList={setFile} />
+            <GoodUpload type="card" fileList={file} setFileList={setFile} />
           </div>
         </div>
-        <TimeSelect ref={timeRef} initalDate={formateDate!} />
+        <Hide itShould={value == 1}>
+          <div className="mb-12">
+            <div className="flex mb-6">
+              <div className="bg-ger w-3 h-7 mr-2"></div>
+              <div className="mr-16">请上传您的作品</div>
+            </div>
+            <div>
+              <GoodUpload
+                type="default"
+                fileList={file}
+                setFileList={setFile}
+              />
+            </div>
+          </div>
+        </Hide>
+        <Hide itShould={value == 0}>
+          <TimeSelect ref={timeRef} initalDate={formateDate!} />
+        </Hide>
         <div className="mb-12">
           <div className="flex items-center mb-4">
             <div className="bg-ger w-3 h-7 mr-2"></div>
@@ -176,7 +194,9 @@ export default function Publish() {
         <div className="mb-12">
           <div className="flex items-center mb-6">
             <div className="bg-ger w-3 h-7 mr-2"></div>
-            <div className="mr-16">请输入悬赏金额</div>
+            <div className="mr-16">
+              请输入{value == 0 ? "您理想的价格" : "悬赏金额"}
+            </div>
             <InputNumber
               min={0}
               addonBefore="￥"
@@ -237,7 +257,9 @@ export default function Publish() {
           <div className="bg-ger w-3 h-7 mr-2"></div>
           <div className="mr-16">发布流程</div>
         </div>
-        <div className="ml-5 font-normal text-lg mb-2">发布任务：</div>
+        <div className="ml-5 font-normal text-lg mb-2">
+          发布{value == 0 ? "任务" : "作品"}：
+        </div>
         <div className="ml-5 font-normal text-lg">
           填写任务信息→设定悬赏金额（平台扣除5%）→发布→挑选作品→公布选中作品
         </div>

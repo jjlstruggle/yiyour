@@ -8,22 +8,26 @@ interface GoodCardProps {
   price: number;
   tag: string;
   linked: boolean;
+  ddl: string;
 }
 
-export default function GoodCard({}: GoodCardProps) {
+export default function GoodCard({
+  title,
+  price,
+  ddl,
+  tag,
+  img,
+}: GoodCardProps) {
   return (
-    <Card
-      className="mr-12"
-      style={{ width: 240 }}
-      hoverable
-      cover={
-        <img src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />
-      }
-    >
-      <Meta title="急需微信头像" description="www.instagram.com" />
-      <div className="text-main text-base mt-2">悬赏： 20元</div>
-      <div className="absolute right-0 bottom-0 bg-main w-7 h-7 rounded-full flex items-center justify-center text-white">
-        <HeartFilled />
+    <Card hoverable cover={<img src={img} />}>
+      <Meta title={title} description={ddl} />
+      <div className="text-xs text-gray-400">{tag}</div>
+      <div className="flex justify-between items-end">
+        <div className="text-main text-base mt-2">悬赏： {price}元</div>
+
+        <div className=" bg-main w-7 h-7 rounded-full flex items-center justify-center text-white">
+          <HeartFilled />
+        </div>
       </div>
     </Card>
   );
