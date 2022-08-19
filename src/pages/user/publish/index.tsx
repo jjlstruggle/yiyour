@@ -187,7 +187,7 @@ export default function Publish() {
       }}
     >
       <Button
-        className="shadow-sm w-24 mb-2 h-10 bg-white text-main font-semibold -translate-y-1"
+        className="shadow-sm w-24 mb-2 h-10 text-base bg-white text-main font-semibold -translate-y-1"
         onClick={() => {
           navigate("/home");
         }}

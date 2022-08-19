@@ -141,7 +141,7 @@ export default function Person() {
       }}
     >
       <Button
-        className="shadow-sm w-24 mb-2 h-10 bg-white text-main font-semibold -translate-y-1"
+        className="shadow-sm w-24 mb-2 h-10 bg-white text-main text-base font-semibold -translate-y-1"
         onClick={() => {
           navigate("/home");
         }}
