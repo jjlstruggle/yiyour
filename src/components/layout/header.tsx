@@ -8,6 +8,7 @@ import { getAd } from "@/api/work";
 import useRequest from "@/hooks/useRequest";
 import { AdList } from "@/interface/api";
 import { User as UserType } from "@/interface/type";
+import Language from "./header/language";
 
 function Head({
   headerContainer,
@@ -48,6 +49,7 @@ function Head({
           <HeaderInput />
         </div>
         <div className="flex items-center">
+          <Language />
           <User />
           <MailOutlined className="text-white text-2xl flex items-center cursor-pointer" />
         </div>
