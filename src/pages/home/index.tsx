@@ -33,7 +33,7 @@ export default function Index() {
 
   return (
     <div>
-      <div className="mt-4">
+      <div className="my-4">
         <Tabs
           centered
           defaultActiveKey="1"

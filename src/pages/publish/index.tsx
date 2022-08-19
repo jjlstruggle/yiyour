@@ -122,8 +122,7 @@ export default function Publish() {
 
   const handleSubmit = async () => {
     let date = timeRef.current?.date;
-    const res = await upload(file[0]);
-    console.log(res);
+    // const res = await upload(file[0]);
 
     if (taskRef.current == 0) {
       /* const res = await publish({
@@ -180,7 +179,9 @@ export default function Publish() {
             </div>
           </div>
         </Hide>
-        <TimeSelect ref={timeRef} initalDate={formateDate!} />
+        <Hide itShould={value == 0}>
+          <TimeSelect ref={timeRef} initalDate={formateDate!} />
+        </Hide>
         <div className="mb-12">
           <div className="flex items-center mb-4">
             <div className="bg-ger w-3 h-7 mr-2"></div>
@@ -193,7 +194,9 @@ export default function Publish() {
         <div className="mb-12">
           <div className="flex items-center mb-6">
             <div className="bg-ger w-3 h-7 mr-2"></div>
-            <div className="mr-16">请输入悬赏金额</div>
+            <div className="mr-16">
+              请输入{value == 0 ? "您理想的价格" : "悬赏金额"}
+            </div>
             <InputNumber
               min={0}
               addonBefore="￥"
@@ -254,7 +257,9 @@ export default function Publish() {
           <div className="bg-ger w-3 h-7 mr-2"></div>
           <div className="mr-16">发布流程</div>
         </div>
-        <div className="ml-5 font-normal text-lg mb-2">发布任务：</div>
+        <div className="ml-5 font-normal text-lg mb-2">
+          发布{value == 0 ? "任务" : "作品"}：
+        </div>
         <div className="ml-5 font-normal text-lg">
           填写任务信息→设定悬赏金额（平台扣除5%）→发布→挑选作品→公布选中作品
         </div>

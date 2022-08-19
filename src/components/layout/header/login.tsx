@@ -7,13 +7,16 @@ import useLazy from "@/hooks/useLazy";
 import UserContext from "@/context/user";
 const { TabPane } = Tabs;
 const Register = useLazy(import("./register"));
+const Forget = useLazy(import("./forget"));
 
 export default function Login({
   setVisble,
 }: {
   setVisble: Dispatch<SetStateAction<boolean>>;
 }) {
-  const [mode, setMode] = useState<"code" | "password" | "register">("code");
+  const [mode, setMode] = useState<
+    "code" | "password" | "register" | "forgetPassword"
+  >("code");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
@@ -76,7 +79,9 @@ export default function Login({
         </div>
       </div>
       <div className="px-24">
-        {mode === "register" ? (
+        {mode === "forgetPassword" ? (
+          <Forget setVisble={setVisble} />
+        ) : mode === "register" ? (
           <Register setVisble={setVisble} />
         ) : (
           <>
@@ -169,7 +174,12 @@ export default function Login({
               登录
             </Button>
             <div className="flex items-center justify-between pb-6 py-3">
-              <div>忘记密码？</div>
+              <div
+                className="cursor-pointer hover:text-main transition-colors duration-200"
+                onClick={() => setMode("forgetPassword")}
+              >
+                忘记密码？
+              </div>
               <div
                 className="cursor-pointer hover:text-main transition-colors duration-200"
                 onClick={() => setMode("register")}
