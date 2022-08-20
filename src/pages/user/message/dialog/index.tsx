@@ -4,21 +4,22 @@ import Draggable from "react-draggable";
 import DialogContext from "@/context/dialog";
 import { useEffect, useState, useContext } from "react";
 export default function Dialog({ ws }: any) {
+  const { Search } = Input;
   const [inputValue, setInputValue] = useState("");
   const { dialog, dispatchDialogInfo } = useContext(DialogContext);
+  const [mesHis, setMesHis] = useState("");
   let token: any = localStorage.getItem("token");
   var ws: any = new WebSocket("ws://47.96.86.132:88/api-websocket/chat", token);
-  ws.onopen = function () {
-    console.log(1123);
+  ws.onopen = function (res: any) {
+    console.log("消息连接成功", res);
   };
-  ws.onmessage = function (event: any) {
-    console.log("收到了");
-
-    console.log(event.data);
+  ws.onmessage = function (res: any) {
+    if (JSON.parse(res.data).code === 1) {
+      // 刷新统计数据
+      console.log("获取数据成功", res.data);
+    }
   };
   const sendMes = () => {
-    console.log(ws.readyState);
-
     if (ws.readyState === 1) {
       ws.send(
         JSON.stringify({
@@ -28,7 +29,8 @@ export default function Dialog({ ws }: any) {
           sendTime: new Date().toLocaleDateString(),
         })
       );
-      console.log(true);
+
+      console.log("消息发送成功");
     }
 
     setInputValue("");
@@ -53,7 +55,12 @@ export default function Dialog({ ws }: any) {
             bordered={true}
             extra={
               <div
-                onTouchStart={(e) => {
+                onDoubleClick={() => {
+                  dispatchDialogInfo({ open: false });
+                }}
+                onTouchStart={() => {
+                  console.log(123);
+
                   dispatchDialogInfo({ open: false });
                 }}
               >
@@ -93,7 +100,7 @@ export default function Dialog({ ws }: any) {
                 setInputValue(e.target.value);
               }}
               className=" absolute bottom-3 w-4/5  h-10 text-xl"
-              placeholder="请输入内容!"
+              placeholder="开始聊天沟通!"
             />
             <Button
               className=" absolute bottom-3 text-white text-sm right-10 w-20 h-10 bg-main"
