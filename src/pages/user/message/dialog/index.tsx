@@ -3,11 +3,129 @@ import { UserOutlined, ArrowRightOutlined } from "@ant-design/icons";
 import Draggable from "react-draggable";
 import DialogContext from "@/context/dialog";
 import { useEffect, useState, useContext } from "react";
+import { getHisMes } from "@/api/mes";
 export default function Dialog({ ws }: any) {
   const { Search } = Input;
   const [inputValue, setInputValue] = useState("");
   const { dialog, dispatchDialogInfo } = useContext(DialogContext);
-  const [mesHis, setMesHis] = useState("");
+  let user: any = localStorage.getItem("user");
+  let { id } = JSON.parse(user);
+  console.log(id);
+
+  const [mesHis, setMesHis] = useState([
+    {
+      content: "你好",
+      fromUserId: "",
+      id: "1844",
+      receiveUserId: "1851",
+      sendTime: "",
+    },
+    {
+      content: "你好",
+      fromUserId: "",
+      id: "1844",
+      receiveUserId: "1851",
+      sendTime: "",
+    },
+    {
+      content: "你好",
+      fromUserId: "",
+      id: "1844",
+      receiveUserId: "1851",
+      sendTime: "",
+    },
+    {
+      content: "你好",
+      fromUserId: "",
+      id: "1851",
+      receiveUserId: "1844",
+      sendTime: "",
+    },
+    {
+      content: "你好",
+      fromUserId: "",
+      id: "",
+      receiveUserId: "",
+      sendTime: "",
+    },
+    {
+      content: "你好",
+      fromUserId: "",
+      id: "1851",
+      receiveUserId: "1844",
+      sendTime: "",
+    },
+    {
+      content: "你好",
+      fromUserId: "",
+      id: "1851",
+      receiveUserId: "1844",
+      sendTime: "",
+    },
+    {
+      content: "你好",
+      fromUserId: "",
+      id: "1851",
+      receiveUserId: "1844",
+      sendTime: "",
+    },
+    {
+      content: "你好",
+      fromUserId: "",
+      id: "1851",
+      receiveUserId: "1844",
+      sendTime: "",
+    },
+    {
+      content: "你好",
+      fromUserId: "",
+      id: "1851",
+      receiveUserId: "1844",
+      sendTime: "",
+    },
+    {
+      content: "你好",
+      fromUserId: "",
+      id: "1851",
+      receiveUserId: "1844",
+      sendTime: "",
+    },
+    {
+      content: "你好",
+      fromUserId: "",
+      id: "1851",
+      receiveUserId: "1844",
+      sendTime: "",
+    },
+    {
+      content: "你好",
+      fromUserId: "",
+      id: "1851",
+      receiveUserId: "1844",
+      sendTime: "",
+    },
+    {
+      content: "你好",
+      fromUserId: "",
+      id: "1844",
+      receiveUserId: "1851",
+      sendTime: "",
+    },
+    {
+      content: "你好",
+      fromUserId: "",
+      id: "1851",
+      receiveUserId: "1844",
+      sendTime: "",
+    },
+    {
+      content: "你好",
+      fromUserId: "",
+      id: "1851",
+      receiveUserId: "1844",
+      sendTime: "",
+    },
+  ]);
   let token: any = localStorage.getItem("token");
   var ws: any = new WebSocket("ws://47.96.86.132:88/api-websocket/chat", token);
   ws.onopen = function (res: any) {
@@ -24,7 +142,7 @@ export default function Dialog({ ws }: any) {
       ws.send(
         JSON.stringify({
           isSystem: 0,
-          toUserId: 1851,
+          toUserId: "1844",
           content: inputValue,
           sendTime: new Date().toLocaleDateString(),
         })
@@ -35,6 +153,19 @@ export default function Dialog({ ws }: any) {
 
     setInputValue("");
   };
+  useEffect(() => {
+    // (async () => {
+    //   let res = await getHisMes({
+    //     current: 1,
+    //     size: 5,
+    //     toUserId: "1844",
+    //   });
+    //   if (res.code === "0") {
+    //     setMesHis(res.data.list);
+    //   }
+    //   console.log(res.data);
+    // })();
+  }, []);
   return (
     <div className=" z-50">
       <Draggable handle=".ant-card-head">
@@ -59,8 +190,6 @@ export default function Dialog({ ws }: any) {
                   dispatchDialogInfo({ open: false });
                 }}
                 onTouchStart={() => {
-                  console.log(123);
-
                   dispatchDialogInfo({ open: false });
                 }}
               >
@@ -72,7 +201,8 @@ export default function Dialog({ ws }: any) {
               </div>
             }
             style={{
-              width: 800,
+              width: "70vw",
+              maxWidth: 800,
               height: 520,
               border: "2px solid #787878",
               backgroundColor: "#FEFEFE",
@@ -80,19 +210,38 @@ export default function Dialog({ ws }: any) {
             className=" z-50 b ml-7 absolute l-1/2 t-1/2 translate-x-20 -translate-y-10"
             loading={false}
           >
-            <div className=" overflow-y-auto  h-80 px-3 py-3">
-              {/* <p>Card content</p>
-              <p>Card content</p> <p>Card content</p> <p>Card content</p>{" "}
-              <p>Card content</p> <p>Card content</p> <p>Card content</p>{" "}
-              <p>Card content</p> <p>Card content</p> <p>Card content</p>{" "}
-              <p>Card content</p> <p>Card content</p> <p>Card content</p>{" "}
-              <p>Card content</p> <p>Card content</p> <p>Card content</p>{" "}
-              <p>Card content</p> <p>Card content</p> <p>Card content</p>{" "}
-              <p>Card content</p> <p>Card content</p> <p>Card content</p>{" "}
-              <p>Card content</p> <p>Card content</p> <p>Card content</p>{" "}
-              <p>Card content</p> <p>Card content</p> <p>Card content</p>{" "}
-              <p>Card content</p> <p>Card content</p> <p>Card content</p>{" "}
-              <p>Card content</p> */}
+            <div className=" overflow-y-auto  h-80 px-3 py-3 flex flex-col text-lg">
+              {mesHis.map((item: any, index: number) => {
+                if (id == item.receiveUserId) {
+                  return (
+                    <div key={index} className=" mt-1  self-end">
+                      <div
+                        style={{
+                          border: "1px solid #3333",
+                          padding: "5px 30px",
+                          borderRadius: "10px",
+                        }}
+                      >
+                        {item.content}
+                      </div>
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div key={index} className=" mt-1  self-start ">
+                      <div
+                        style={{
+                          border: "1px solid #3333",
+                          padding: "5px 30px",
+                          borderRadius: "10px",
+                        }}
+                      >
+                        {item.content}
+                      </div>
+                    </div>
+                  );
+                }
+              })}
             </div>
             <Input
               value={inputValue}
