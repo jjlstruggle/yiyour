@@ -51,8 +51,8 @@ export default function Publish() {
   let formateDate = shouldLoadFromStorage
     ? storage!.date
       ? formate(dayjs(storage!.date))
-      : null
-    : null;
+      : formate(dayjs())
+    : formate(dayjs());
   let formateName = shouldLoadFromStorage
     ? storage?.name
       ? storage.name
@@ -61,13 +61,13 @@ export default function Publish() {
   let formateTask = shouldLoadFromStorage
     ? storage?.task
       ? storage.task
-      : null
-    : null;
+      : 0
+    : 0;
   let formateType = shouldLoadFromStorage
     ? storage?.type
       ? storage.type
-      : null
-    : null;
+      : 0
+    : 0;
   let formateText = shouldLoadFromStorage
     ? storage?.text
       ? storage.text
@@ -98,6 +98,7 @@ export default function Publish() {
   const [topAd, setTopAd] = useState(formatTopAd);
   const [bottomAd, setBottomAd] = useState(formatBottomAd);
   const [file, setFile] = useState<RcFile[]>([]);
+  const [file2, setFile2] = useState<RcFile[]>([]);
   const [value, update] = useState<any>(formateTask);
 
   let allPrice = 1000 * topAd + 800 * bottomAd + price;
@@ -122,7 +123,8 @@ export default function Publish() {
 
   const handleSubmit = async () => {
     let date = timeRef.current?.date;
-    // const res = await upload(file[0]);
+    const res = await upload(file[0]);
+    console.log(res);
 
     if (taskRef.current == 0) {
       /* const res = await publish({
@@ -135,6 +137,9 @@ export default function Publish() {
         taskPrice: price,
         taskDemands: textRef.current!.resizableTextArea!.props
           .value as unknown as string,
+        publisherId: Number(location.hostname.split("=")[1]),
+        taskPicture: "",
+        taskStatus: 1,
       }); */
     }
   };
@@ -173,8 +178,8 @@ export default function Publish() {
             <div>
               <GoodUpload
                 type="default"
-                fileList={file}
-                setFileList={setFile}
+                fileList={file2}
+                setFileList={setFile2}
               />
             </div>
           </div>

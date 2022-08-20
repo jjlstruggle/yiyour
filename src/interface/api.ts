@@ -26,7 +26,6 @@ export interface PublishParams {
   taskPrice: number;
   taskStatus: number;
   type: string;
-  typeId: number;
 }
 
 export interface OperateWorksParams {
