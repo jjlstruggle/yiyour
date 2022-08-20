@@ -42,7 +42,6 @@ export const searchWorksByUser = (page: number, id: string) => {
     },
   });
 };
-
 export const getWorkDetail = (workId: string) => {
   return request.get(`/api-works/${workId}`, {
     headers: {

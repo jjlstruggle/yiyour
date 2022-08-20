@@ -1,0 +1,11 @@
+.ant-tabs-large > div > .ant-tabs-nav .ant-tabs-tab {
+  font-size: 1.5rem;
+  padding: 8px 0;
+}
+
+.ant-tabs-bottom > .ant-tabs-nav .ant-tabs-ink-bar,
+.ant-tabs-bottom > div > .ant-tabs-nav .ant-tabs-ink-bar,
+.ant-tabs-top > .ant-tabs-nav .ant-tabs-ink-bar,
+.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-ink-bar {
+  height: 0.25rem;
+}
