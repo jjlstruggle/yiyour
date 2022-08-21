@@ -20,9 +20,10 @@ import { DownOutlined } from "@ant-design/icons";
  };
  
  export default function Index() {
-   const {state}= useLocation();
    const [searchKey,setSearchKey]=useState("")
    const [select, setSelect] = useState(0);
+   const location = useLocation();
+   const {state}= useLocation(); //搜索参数
    const menu = useRef(
      <Menu
        onClick={({ key }) => {

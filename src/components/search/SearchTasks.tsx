@@ -1,14 +1,25 @@
 import { HeartFilled } from "@ant-design/icons";
-
+import useLazy from "@/hooks/useLazy";
 import useRequest from "@/hooks/useRequest";
 import { searchList } from "@/api/task";
 import { TaskList } from "@/interface/api";
-import { memo } from "react";
+import { memo,useState} from "react";
 
-function SearchTasks() {
+function SearchTasks(props:any) {
+  const [SearchKey,setSearchKey] = useState(props.searchKey) 
+  const NoFound = useLazy(import("@/components/search/NoFound"));
   const { data, loading, error } = useRequest<TaskList>(() => searchList(1));
-
-  if (data && data.code == "0") {
+  if (data && data.code == "404") {
+    return(
+      <div
+      className="columns-5 gap-x-2-3 mt-6 mx-40"
+      style={{ columnFill: "auto" }}
+    > 
+      <NoFound/>
+      </div>
+    )
+  } 
+  else if (data && data.code == "0") {
     return (
       <div
         className="columns-5 gap-x-2-3 mt-6 mx-40"

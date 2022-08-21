@@ -1,8 +1,9 @@
 import { HeartFilled } from "@ant-design/icons";
 import useRequest from "@/hooks/useRequest";
+import useLazy from "@/hooks/useLazy";
 import { searchWorksByPage } from "@/api/work";
 import { SearchWorksByPageParams,List,GetList } from "@/interface/api";
-import { memo } from "react";
+import { memo,useState} from "react";
 
   const searchParams:SearchWorksByPageParams = {
     "currentPage": 0,
@@ -12,10 +13,22 @@ import { memo } from "react";
     "timeSort": 0,
     "typeId": ""
   }
-function SearchWorks() {
+function SearchWorks(props:any) {
+  const [SearchKey,setSearchKey] = useState(props.searchKey) 
+   const NoFound = useLazy(import("@/components/search/NoFound"));
   const { data, loading, error } = useRequest<GetList>(() => searchWorksByPage(searchParams));
-
-  if (data && data.code == "0") {
+  if (data && data.code == "404") {
+    return(
+      <div
+      className="columns-5 gap-x-2-3 mt-6 mx-40"
+      style={{ columnFill: "auto" }}
+    > 
+      <NoFound/>
+      </div>
+    )
+  } 
+  else if (data && data.code == "0") {
+    console.log(data)
     return (
       <div
         className="columns-5 gap-x-2-3 mt-6 mx-40"
