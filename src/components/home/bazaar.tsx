@@ -34,7 +34,12 @@ function Bazaar() {
             </div>
           ))
         ) : (
-          <Empty />
+          <div
+          className="w-256 h-256 mt-6"
+          style={{ margin: "0 25%", columnFill: "auto" }}
+        >
+          <Empty/>
+          </div>
         )}
       </div>
     );

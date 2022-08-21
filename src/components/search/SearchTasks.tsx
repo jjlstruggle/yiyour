@@ -4,6 +4,7 @@ import useRequest from "@/hooks/useRequest";
 import { searchList } from "@/api/task";
 import { TaskList } from "@/interface/api";
 import { memo,useState} from "react";
+import Card from "@/common/card";
 
 function SearchTasks(props:any) {
   const [SearchKey,setSearchKey] = useState(props.searchKey) 
@@ -20,6 +21,7 @@ function SearchTasks(props:any) {
     )
   } 
   else if (data && data.code == "0") {
+    console.log(data)
     return (
       <div
         className="columns-5 gap-x-2-3 mt-6 mx-40"
@@ -27,7 +29,8 @@ function SearchTasks(props:any) {
       >
         {data.data.list.map((item, index) => (
           <div key={index} className="mb-5 relative inline-block mt-1">
-            <img src={item.taskPicture} style={{ objectFit: "cover" }} />
+            <img src={item.taskPicture} style={{ width:'240px',height:"200px",
+objectFit: "cover" }} />
             <div className="font-bold text-base">{item.taskName}</div>
             <div className="text-xs text-gray-400">{item.taskDeadline}截止</div>
             <div className="text-xs text-gray-400">

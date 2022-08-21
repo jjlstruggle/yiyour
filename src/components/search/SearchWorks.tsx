@@ -4,7 +4,8 @@ import useLazy from "@/hooks/useLazy";
 import { searchWorksByPage } from "@/api/work";
 import { SearchWorksByPageParams,List,GetList } from "@/interface/api";
 import { memo,useState} from "react";
-
+import { Empty,Spin} from "antd"
+import Card from "@/common/card"
   const searchParams:SearchWorksByPageParams = {
     "currentPage": 0,
     "pageSize": 0,
@@ -17,37 +18,42 @@ function SearchWorks(props:any) {
   const [SearchKey,setSearchKey] = useState(props.searchKey) 
    const NoFound = useLazy(import("@/components/search/NoFound"));
   const { data, loading, error } = useRequest<GetList>(() => searchWorksByPage(searchParams));
-  if (data && data.code == "404") {
-    return(
-      <div
-      className="columns-5 gap-x-2-3 mt-6 mx-40"
-      style={{ columnFill: "auto" }}
-    > 
-      <NoFound/>
-      </div>
-    )
-  } 
-  else if (data && data.code == "0") {
+   if (data && data.code == "0") {
     console.log(data)
     return (
       <div
         className="columns-5 gap-x-2-3 mt-6 mx-40"
         style={{ columnFill: "auto" }}
       >
-        {data.data.list.map((item, index) => (
-          <div key={index} className="mb-5 relative inline-block mt-1">
-            <img src={item.worksCover} style={{ objectFit: "cover" }} />
-            <div className="font-bold text-base">{item.worksName}</div>
-            <div className="text-xs text-gray-400">{item.worksDeadline}截止</div>
-            <div className="text-xs text-gray-400">
-              {item.type}/{item.type}
+        {data.data.list.length ? (
+          data.data.list.map((item, index) => (
+            <div
+              key={index}
+              className="mb-5 relative mt-1"
+              style={{
+                breakInside: "avoid",
+              }}
+            >
+              <Card
+                title={item.worksName}
+                price={item.worksPrice}
+                img={
+                  index === 0
+                    ? "https://www.mooyuu.com/uploadfile/2021/1011/thumb_1000_0_20211011032316905.png"
+                    : item.worksCover
+                }
+                tag={item.type}
+                linked={false}
+                ddl={item.worksDeadline}
+              />
             </div>
-            <div className="text-main text-base">悬赏： {item.worksPrice}元</div>
-            <div className="absolute right-0 bottom-0 bg-main w-10 h-10 rounded-full flex items-center justify-center text-white">
-              <HeartFilled />
-            </div>
+          ))
+        ) : (
+          <div
+          className="mt-6 mx-40 columns-5" style={{ display:"flex",flexFlow:"center",columnFill: "auto" }}>
+          <Empty/>
           </div>
-        ))}
+        )}
       </div>
     );
   }
@@ -55,7 +61,9 @@ function SearchWorks(props:any) {
     <div
       className="columns-5 gap-x-2-3 mt-6 mx-40"
       style={{ columnFill: "auto" }}
-    ></div>
+    >
+      <Spin/>
+    </div>
   );
 }
 
