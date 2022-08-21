@@ -1,18 +1,19 @@
 import { Input ,Select} from "antd";
 import { useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom"
+import { useNavigate,useSearchParams  } from "react-router-dom"
 
 
 export default function HeaderInput() {
   const navigate = useNavigate();
   const [val, setVal] = useState("");
-  // const [searchType, setsearchType] = useState("1");  
+  const [search, setSearch] = useSearchParams();  
+  const SearchKeyParams = search.get('val')
   const SearchEnterHandle = (e:any)=>{
     if(e.keyCode === 13)
     navigate("/search",{
      state:{
-      SearchKeyParams:val
+      SearchKeyParams
      } 
     });
     }
