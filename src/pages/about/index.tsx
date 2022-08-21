@@ -1,14 +1,25 @@
 import { Card } from "antd";
 import { HeartFilled } from "@ant-design/icons";
-
+import { useNavigate } from "react-router-dom";
+import { Button } from "antd";
 const { Meta } = Card;
 /**
  * 关于我们
  */
 
 export default function About() {
+  const navigate = useNavigate();
+
   return (
     <div className="px-40 pt-8">
+      <Button
+        className="shadow-sm w-24 mb-2 h-10 text-base bg-white text-main font-semibold -translate-y-1"
+        onClick={() => {
+          navigate("/home");
+        }}
+      >
+        返回
+      </Button>
       <div className="mb-12">
         <div className="flex items-center text-2xl font-bold mb-4">
           <div className="bg-main w-3 h-7 mr-2"></div>

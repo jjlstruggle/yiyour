@@ -4,8 +4,10 @@ import { Input, Button, Avatar, message, Upload, Pagination } from "antd";
 import { useState, useEffect, useContext } from "react";
 import { getMes } from "../../../api/user";
 import UserContext from "@/context/user";
+import DialogContext from "@/context/dialog";
 import { Space, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
+const Dialog = useLazy(import("./dialog/index"));
 const ContentLeft = ({ choose, setChoose }: any) => {
   const onclickBut = (e: any) => {
     if (e.target.innerText === "全部消息" && choose.all !== true) {
@@ -184,6 +186,7 @@ const ContentRight = ({
 };
 export default function Message() {
   const navigate = useNavigate();
+  const { dialog, dispatchDialogInfo } = useContext(DialogContext);
   const [choose, setChoose] = useState({
     all: true,
     system: false,
@@ -197,18 +200,7 @@ export default function Message() {
     total: 5,
   });
   const { user } = useContext(UserContext);
-  useEffect(() => {
-    let token: any = localStorage.getItem("token");
-    var ws = new WebSocket("ws://121.40.19.111:88/api-websocket/chat", token);
-    console.log(ws.readyState);
-
-    ws.onopen = function () {
-      console.log("ws连接状态：" + ws.readyState);
-      console.log(1123);
-
-      ws.send("test1");
-    };
-  }, []);
+  useEffect(() => {}, []);
   useEffect(() => {
     let fn = async () => {
       if (choose.all) {
@@ -255,6 +247,7 @@ export default function Message() {
         }}
       >
         <ContentLeft choose={choose} setChoose={setChoose} />
+        {dialog.open ? <Dialog /> : null}
         <ContentRight
           mesAllData={mesAllData}
           mesSystemData={mesSystemData}

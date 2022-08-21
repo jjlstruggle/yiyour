@@ -36,6 +36,12 @@ function UserHeader(props: any) {
       content: "个人信息",
       key: "/user/person",
     },
+    {
+      icon: props.purse ? "purse1" : "purse2",
+      style: props.purse ? "#F6B76C" : "#9FA6AC",
+      content: "我的钱包",
+      key: "/user/purse",
+    },
   ];
   return (
     <div

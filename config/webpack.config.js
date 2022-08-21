@@ -28,7 +28,11 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 const createEnvironmentHash = require('./webpack/persistentCache/createEnvironmentHash');
 const CompressionPlugin = require('compression-webpack-plugin')
 const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin');
+const HappyPack = require('happypack')
 const WebpackBar = require('webpackbar')
+const os = require('os')
+const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length })
+
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -93,6 +97,7 @@ module.exports = function (webpackEnv) {
   // common function to get style loaders
   const getStyleLoaders = (cssOptions, preProcessor) => {
     const loaders = [
+      'cache-loader',
       isEnvDevelopment && require.resolve('style-loader'),
       isEnvProduction && {
         loader: MiniCssExtractPlugin.loader,
@@ -269,7 +274,7 @@ module.exports = function (webpackEnv) {
           enforce: 'pre',
           exclude: /@babel(?:\/|\\{1,2})runtime/,
           test: /\.(js|mjs|jsx|ts|tsx|css)$/,
-          loader: require.resolve('source-map-loader'),
+          use: ['cache-loader', require.resolve('source-map-loader')],
         },
         {
           // "oneOf" will traverse all following loaders until one will
@@ -331,33 +336,7 @@ module.exports = function (webpackEnv) {
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
               include: paths.appSrc,
-              loader: require.resolve('babel-loader'),
-              options: {
-                customize: require.resolve(
-                  'babel-preset-react-app/webpack-overrides'
-                ),
-                presets: [
-                  [
-                    require.resolve('babel-preset-react-app'),
-                    {
-                      runtime: hasJsxRuntime ? 'automatic' : 'classic',
-                    },
-                  ],
-                ],
-
-                plugins: [
-                  isEnvDevelopment &&
-                  shouldUseReactRefresh &&
-                  require.resolve('react-refresh/babel'),
-                ].filter(Boolean),
-                // This is a feature of `babel-loader` for webpack (not Babel itself).
-                // It enables caching results in ./node_modules/.cache/babel-loader/
-                // directory for faster rebuilds.
-                cacheDirectory: true,
-                // See #6846 for context on why cacheCompression is disabled
-                cacheCompression: false,
-                compact: isEnvProduction,
-              },
+              loader: 'happypack/loader'
             },
             // Process any JS outside of the app with Babel.
             // Unlike the application JS, we only compile the standard ES features.
@@ -385,15 +364,8 @@ module.exports = function (webpackEnv) {
             {
               test: cssRegex,
               exclude: cssModuleRegex,
-              use: getStyleLoaders({
-                importLoaders: 1,
-                sourceMap: isEnvProduction
-                  ? shouldUseSourceMap
-                  : isEnvDevelopment,
-                modules: {
-                  mode: 'icss',
-                },
-              }),
+              loader: 'happypack/loader',
+              options: { id: "styles" },
               sideEffects: true,
             },
             {
@@ -593,6 +565,52 @@ module.exports = function (webpackEnv) {
         test: /\.js$|\.css$/,
         threshold: 10240,
         minRatio: 0.8,
+      }),
+      new HappyPack({
+        loaders: ['cache-loader', {
+          loader: require.resolve('babel-loader'),
+          options: {
+            customize: require.resolve(
+              'babel-preset-react-app/webpack-overrides'
+            ),
+            presets: [
+              [
+                require.resolve('babel-preset-react-app'),
+                {
+                  runtime: hasJsxRuntime ? 'automatic' : 'classic',
+                },
+              ],
+            ],
+
+            plugins: [
+              isEnvDevelopment &&
+              shouldUseReactRefresh &&
+              require.resolve('react-refresh/babel'),
+            ].filter(Boolean),
+            // This is a feature of `babel-loader` for webpack (not Babel itself).
+            // It enables caching results in ./node_modules/.cache/babel-loader/
+            // directory for faster rebuilds.
+            cacheDirectory: true,
+            // See #6846 for context on why cacheCompression is disabled
+            cacheCompression: false,
+            compact: isEnvProduction,
+          },
+        }],
+        threadPool: happyThreadPool
+      }),
+      new HappyPack({
+        id: 'styles',
+        loaders: getStyleLoaders({
+          importLoaders: 1,
+          sourceMap: isEnvProduction
+            ? shouldUseSourceMap
+            : isEnvDevelopment,
+          modules: {
+            mode: 'icss',
+          },
+        }),
+        threadPool: happyThreadPool
+
       }),
       new AntdDayjsWebpackPlugin()
     ].filter(Boolean),

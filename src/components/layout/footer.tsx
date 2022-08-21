@@ -2,6 +2,7 @@ import { Divider } from "antd";
 import { ForwardedRef, forwardRef, memo } from "react";
 import { QqOutlined, WechatFilled, WeiboOutlined } from "@ant-design/icons";
 import { FriendIcon } from "@/assets/svg";
+import { useNavigate } from "react-router-dom";
 import Item from "./item";
 
 const footData = [
@@ -45,6 +46,7 @@ function Foot({
 }: {
   footContainer: ForwardedRef<HTMLDivElement>;
 }) {
+  const navigate = useNavigate();
   return (
     <div className="px-40 bg-main py-8" ref={footContainer}>
       <div className="flex relative">
@@ -53,6 +55,7 @@ function Foot({
         ))}
         <div className="relative flex-1 flex flex-col justify-between">
           <div className="text-base text-white mb-2 font-bold">一隅立画</div>
+
           <div className="text-gray-300 mt-1 mb-4">
             再繁华的落笔也不能尽数表达此刻似澎湃，似思念的心音。感觉我们是很老的朋友
             再繁华的落笔也不能尽数表达此刻似澎湃，似思念的心音。感觉我们是很老的朋友
@@ -69,6 +72,14 @@ function Foot({
             </div>
             <div className="rounded-full w-10 h-10 flex justify-center items-center bg-yel cursor-pointer mr-4">
               <QqOutlined />
+            </div>
+            <div
+              onClick={() => {
+                navigate("/about");
+              }}
+              className=" text-base text-white  mt-4 font-bold cursor-pointer"
+            >
+              关于我们
             </div>
           </div>
         </div>

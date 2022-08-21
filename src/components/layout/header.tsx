@@ -21,7 +21,7 @@ function Head({
     list: AdList[];
   }>(getAd);
   const { pathname } = useLocation();
-  const navegate = useNavigate();
+  const navigate = useNavigate();
   const handleToPublish = () => {
     if (user.hasLogin) {
       // @ts-ignore

@@ -51,8 +51,8 @@ export default function Publish() {
   let formateDate = shouldLoadFromStorage
     ? storage!.date
       ? formate(dayjs(storage!.date))
-      : null
-    : null;
+      : formate(dayjs())
+    : formate(dayjs());
   let formateName = shouldLoadFromStorage
     ? storage?.name
       ? storage.name
@@ -61,13 +61,13 @@ export default function Publish() {
   let formateTask = shouldLoadFromStorage
     ? storage?.task
       ? storage.task
-      : null
-    : null;
+      : 0
+    : 0;
   let formateType = shouldLoadFromStorage
     ? storage?.type
       ? storage.type
-      : null
-    : null;
+      : 0
+    : 0;
   let formateText = shouldLoadFromStorage
     ? storage?.text
       ? storage.text
@@ -98,6 +98,7 @@ export default function Publish() {
   const [topAd, setTopAd] = useState(formatTopAd);
   const [bottomAd, setBottomAd] = useState(formatBottomAd);
   const [file, setFile] = useState<RcFile[]>([]);
+  const [file2, setFile2] = useState<RcFile[]>([]);
   const [value, update] = useState<any>(formateTask);
 
   let allPrice = 1000 * topAd + 800 * bottomAd + price;
@@ -136,6 +137,9 @@ export default function Publish() {
         taskPrice: price,
         taskDemands: textRef.current!.resizableTextArea!.props
           .value as unknown as string,
+        publisherId: Number(location.hostname.split("=")[1]),
+        taskPicture: "",
+        taskStatus: 1,
       }); */
     }
   };
@@ -174,13 +178,15 @@ export default function Publish() {
             <div>
               <GoodUpload
                 type="default"
-                fileList={file}
-                setFileList={setFile}
+                fileList={file2}
+                setFileList={setFile2}
               />
             </div>
           </div>
         </Hide>
-        <TimeSelect ref={timeRef} initalDate={formateDate!} />
+        <Hide itShould={value == 0}>
+          <TimeSelect ref={timeRef} initalDate={formateDate!} />
+        </Hide>
         <div className="mb-12">
           <div className="flex items-center mb-4">
             <div className="bg-ger w-3 h-7 mr-2"></div>
@@ -193,7 +199,9 @@ export default function Publish() {
         <div className="mb-12">
           <div className="flex items-center mb-6">
             <div className="bg-ger w-3 h-7 mr-2"></div>
-            <div className="mr-16">请输入悬赏金额</div>
+            <div className="mr-16">
+              请输入{value == 0 ? "您理想的价格" : "悬赏金额"}
+            </div>
             <InputNumber
               min={0}
               addonBefore="￥"
@@ -254,7 +262,9 @@ export default function Publish() {
           <div className="bg-ger w-3 h-7 mr-2"></div>
           <div className="mr-16">发布流程</div>
         </div>
-        <div className="ml-5 font-normal text-lg mb-2">发布任务：</div>
+        <div className="ml-5 font-normal text-lg mb-2">
+          发布{value == 0 ? "任务" : "作品"}：
+        </div>
         <div className="ml-5 font-normal text-lg">
           填写任务信息→设定悬赏金额（平台扣除5%）→发布→挑选作品→公布选中作品
         </div>
