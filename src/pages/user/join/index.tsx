@@ -107,10 +107,16 @@ const ContentRight = ({
       >
         {data ? (
           <>
-            {data.map((item: Object) => {
+            {data.map((item: any, index: number) => {
               return (
-                <div className="flex rounded-lg bg-white  shadow-lg flex-col">
-                  <div className="rounded-lg bg-neutral-400  h-1/2"></div>
+                <div
+                  key={index}
+                  className="flex rounded-lg bg-white  shadow-lg flex-col"
+                >
+                  <img
+                    src={item.taskPicture}
+                    className="rounded-lg bg-neutral-400  h-1/2"
+                  ></img>
                   <div
                     className="h-1/2 flex flex-col justify-around px-3"
                     style={{
@@ -118,11 +124,13 @@ const ContentRight = ({
                     }}
                   >
                     <div className=" text-black font-semibold">
-                      收一份情书模板
+                      {item.taskName}
                     </div>
-                    <div className=" text-zinc-500">2022/5/12 12:00截止</div>
-                    <div className=" text-zinc-500">文本/文案</div>
-                    <div className="text-main">悬赏：20元</div>
+                    <div className=" text-zinc-500">
+                      {item.taskDeadline}截止
+                    </div>
+                    <div className=" text-zinc-500">{item.type}</div>
+                    <div className="text-main">悬赏：{item.taskPrice}元</div>
                   </div>
                 </div>
               );

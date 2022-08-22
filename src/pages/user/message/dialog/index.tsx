@@ -151,16 +151,16 @@ export default function Dialog({ ws }: any) {
       ws.send(
         JSON.stringify({
           isSystem: 0,
-          toUserId: "1844",
+          toUserId: "1",
           content: inputValue,
-          sendTime: "2021-02-04 12:12:21",
+          sendTime: "2022-08-22 14:12:21",
         })
       );
       (async () => {
         let res = await getHisMes({
           current: 1,
-          size: 20,
-          toUserId: "1844",
+          size: 10,
+          toUserId: "1",
         });
         if (res.code === "0") {
           setMesHis(res.data.list);
@@ -176,8 +176,8 @@ export default function Dialog({ ws }: any) {
     (async () => {
       let res = await getHisMes({
         current: 1,
-        size: 20,
-        toUserId: "1844",
+        size: 10,
+        toUserId: "1",
       });
       if (res.code === "0") {
         setMesHis(res.data.list);
@@ -212,7 +212,7 @@ export default function Dialog({ ws }: any) {
                   dispatchDialogInfo({ open: false });
                 }}
               >
-                {" "}
+                {""}
                 <CloseOutlined
                   className=" relative -left-6"
                   style={{ fontSize: "26px", color: "#08c" }}
