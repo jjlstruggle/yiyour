@@ -30,7 +30,7 @@ const ContentLeft = ({
   const onClickButton = async (e: any) => {
     if (e.target.innerText === "任 务" && choose == false) {
       setChoose(true);
-      let res = await getUserCollected(1);
+      let res: any = await getUserCollected(1);
       if (res.code == "0") {
         setUseTask(res.data.list);
       }
