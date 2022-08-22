@@ -45,27 +45,25 @@ const sleep = (time: number) =>
     }, time);
   });
 
-const resolveConfig = (config?: RequestGetConfig | RequestPostConfig) => {
+const resolveConfig = (
+  config?: RequestGetConfig | RequestPostConfig,
+  shouldHandle?: boolean
+) => {
   let token = localStorage.getItem("token");
   let header = localStorage.getItem("header");
   // 如果没有请求头则添加默认请求头
   if ((config && !config.headers) || !config) {
     config = {};
-    config.headers =
-      token && header
-        ? {
-            [header]: token,
-            "Content-Type": "application/json",
-          }
-        : {
-            "Content-Type": "application/json",
-          };
+    // @ts-ignore
+    config.headers = token && {
+      [header!]: token,
+    };
   } else if (config.headers) {
     if (token && header) {
       config.headers[header] = token;
     }
     if (!config.headers["Content-Type"]) {
-      config.headers["Content-Type"] = "application/json";
+      shouldHandle && (config.headers["Content-Type"] = "application/json");
     }
   }
   return config;
@@ -88,18 +86,18 @@ function initalRequest() {
   request.post = async (
     url: string,
     data?: BodyInit,
-    config?: RequestPostConfig
+    config?: RequestPostConfig,
+    shouldHandle: boolean = true
   ) => {
-    if ((config && !config.headers) || !config) {
-      config = {};
-      config.headers = {
-        "Content-Type": "application/json",
-      };
-    }
+    config = config || {};
     const res = await Promise.race([
       fetch(
         baseUrl + url,
-        Object.assign(resolveConfig(config), { body: data }, postBaseConfig)
+        Object.assign(
+          resolveConfig(config, shouldHandle),
+          { body: data },
+          postBaseConfig
+        )
       ),
       sleep(config?.timeout || 8000),
     ]);

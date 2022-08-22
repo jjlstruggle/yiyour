@@ -5,7 +5,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 
 const uploadButton = (
   <div>
-    <PlusCircleFilled className="text-yel text-lg" />
+    <PlusCircleFilled className="text-yel text-base" />
     <div className="mt-2 text-base font-normal text-black">上传封面</div>
   </div>
 );
@@ -38,6 +38,7 @@ export default function GoodUpload({
           <Image src={item} key={index} style={{ width: 104, height: 104 }} />
         ))}
       <Upload
+        maxCount={1}
         className="ml-4"
         listType={type === "card" ? "picture-card" : "text"}
         accept={type === "card" ? "image/*" : accept!.join(",")}
@@ -59,7 +60,7 @@ export default function GoodUpload({
           setFileList(newFileList);
         }}
       >
-        {fileList.length >= 3 ? null : type === "card" ? (
+        {fileList.length ? null : type === "card" ? (
           uploadButton
         ) : (
           <Button type="primary">点击上传文件</Button>

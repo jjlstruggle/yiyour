@@ -18,3 +18,9 @@ export interface User {
       }
     | {};
 }
+
+export type Formate = {
+  id: string;
+  children: Formate[];
+  format: string;
+};

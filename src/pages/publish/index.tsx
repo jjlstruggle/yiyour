@@ -15,10 +15,12 @@ import { TextAreaRef } from "antd/lib/input/TextArea";
 import dayjs, { Dayjs } from "dayjs";
 import { DDate } from "@/interface/type";
 import { publish } from "@/api/task";
-// import { upload } from "@/api/oss";
+import { upload } from "@/api/oss";
 import Hide from "@/common/hideComponent";
-import useRequest from "@/hooks/useRequest";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import ReduxStore from "@/interface/redux";
+import { operateWorks } from "@/api/work";
 const task = ["任务", "作品"];
 const type = ["文本文案", "图片", "音频"];
 
@@ -33,12 +35,6 @@ type PublishStorage = null | {
   type: number;
 };
 
-type Formate = {
-  id: string;
-  children: Formate[];
-  format: string;
-};
-
 function formate(date: Dayjs): { date: DDate } {
   return {
     date: {
@@ -49,29 +45,6 @@ function formate(date: Dayjs): { date: DDate } {
     },
   };
 }
-
-const upload = async (file: Blob) => {
-  let token = localStorage.getItem("token")!;
-  let header = localStorage.getItem("header")!;
-  let form = new FormData();
-  form.append("file", file);
-  const response = await fetch("/api", {
-    method: "POST",
-    headers: {
-      [header]: token,
-    },
-    credentials: "include",
-    body: form,
-  });
-  return response.json();
-};
-
-const getType = async () => {
-  const response = await fetch("/api", {
-    credentials: "include",
-  });
-  return response.json();
-};
 
 export default function Publish() {
   let storage: PublishStorage = JSON.parse(
@@ -132,9 +105,24 @@ export default function Publish() {
   const [file2, setFile2] = useState<RcFile[]>([]);
   const [value, update] = useState<number>(formateTask);
   const [typeValue, updateType] = useState<number>(formateType);
-  const { data, loading } = useRequest<Formate[]>(getType);
+  const data = useSelector((redux: ReduxStore) => redux.oss);
   const navigate = useNavigate();
   let allPrice = 1000 * topAd + 800 * bottomAd + price;
+  const map = new Map();
+
+  if (!data.format) {
+    return <Spin />;
+  }
+
+  data.format.forEach((item) => {
+    item.children.forEach(({ id, format }) => {
+      map.set(format, id);
+    });
+  });
+
+  const accept = data.format[typeValue].children.map(
+    (prev: any) => "." + prev.format
+  );
 
   const handleSave = () => {
     let date = timeRef.current?.date;
@@ -185,16 +173,11 @@ export default function Publish() {
         localStorage.removeItem("publishTemp");
         navigate("/");
       }
+    } else {
+      const pic = await upload(file[0]);
+      const product = await upload(file2[0]);
     }
   };
-
-  if (loading) {
-    return <Spin />;
-  }
-
-  const accept = data?.data[typeValue].children.map(
-    (prev) => "." + prev.format
-  );
 
   return (
     <div className="bg-slate-50">
