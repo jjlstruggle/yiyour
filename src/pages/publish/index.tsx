@@ -4,7 +4,7 @@
 
 import Select from "@/components/publish/select";
 import GoodUpload from "@/components/publish/upload";
-import { InputNumber, Checkbox, Button, InputRef } from "antd";
+import { InputNumber, Checkbox, Button, InputRef, Spin, message } from "antd";
 import { useRef, useState } from "react";
 import Text from "@/components/publish/text";
 import TimeSelect from "@/components/publish/timeSelect";
@@ -15,8 +15,10 @@ import { TextAreaRef } from "antd/lib/input/TextArea";
 import dayjs, { Dayjs } from "dayjs";
 import { DDate } from "@/interface/type";
 import { publish } from "@/api/task";
-import { upload } from "@/api/oss";
+// import { upload } from "@/api/oss";
 import Hide from "@/common/hideComponent";
+import useRequest from "@/hooks/useRequest";
+import { useNavigate } from "react-router-dom";
 const task = ["任务", "作品"];
 const type = ["文本文案", "图片", "音频"];
 
@@ -31,6 +33,12 @@ type PublishStorage = null | {
   type: number;
 };
 
+type Formate = {
+  id: string;
+  children: Formate[];
+  format: string;
+};
+
 function formate(date: Dayjs): { date: DDate } {
   return {
     date: {
@@ -41,6 +49,29 @@ function formate(date: Dayjs): { date: DDate } {
     },
   };
 }
+
+const upload = async (file: Blob) => {
+  let token = localStorage.getItem("token")!;
+  let header = localStorage.getItem("header")!;
+  let form = new FormData();
+  form.append("file", file);
+  const response = await fetch("/api", {
+    method: "POST",
+    headers: {
+      [header]: token,
+    },
+    credentials: "include",
+    body: form,
+  });
+  return response.json();
+};
+
+const getType = async () => {
+  const response = await fetch("/api", {
+    credentials: "include",
+  });
+  return response.json();
+};
 
 export default function Publish() {
   let storage: PublishStorage = JSON.parse(
@@ -99,8 +130,10 @@ export default function Publish() {
   const [bottomAd, setBottomAd] = useState(formatBottomAd);
   const [file, setFile] = useState<RcFile[]>([]);
   const [file2, setFile2] = useState<RcFile[]>([]);
-  const [value, update] = useState<any>(formateTask);
-
+  const [value, update] = useState<number>(formateTask);
+  const [typeValue, updateType] = useState<number>(formateType);
+  const { data, loading } = useRequest<Formate[]>(getType);
+  const navigate = useNavigate();
   let allPrice = 1000 * topAd + 800 * bottomAd + price;
 
   const handleSave = () => {
@@ -123,26 +156,45 @@ export default function Publish() {
 
   const handleSubmit = async () => {
     let date = timeRef.current?.date;
-    const res = await upload(file[0]);
-    console.log(res);
 
     if (taskRef.current == 0) {
-      /* const res = await publish({
+      const pic = await upload(file[0]);
+      const res = await publish({
         bottomAds: bottomAd,
         taskName: nameRef.current!.input!.value,
         type: type[typeRef.current!],
         frontPageAds: topAd,
         taskDeadline:
-          date?.year + "-" + date?.month + "-" + date?.date + "-" + date?.time,
+          date?.year +
+          "-" +
+          date?.month +
+          "-" +
+          date?.date +
+          " " +
+          date?.time +
+          ":00",
         taskPrice: price,
         taskDemands: textRef.current!.resizableTextArea!.props
           .value as unknown as string,
-        publisherId: Number(location.hostname.split("=")[1]),
-        taskPicture: "",
+        publisherId: Number(location.search.split("=")[1]),
+        taskPicture: pic.data.realUrl,
         taskStatus: 1,
-      }); */
+      });
+      if (res.code == "0") {
+        message.success("发布成功");
+        localStorage.removeItem("publishTemp");
+        navigate("/");
+      }
     }
   };
+
+  if (loading) {
+    return <Spin />;
+  }
+
+  const accept = data?.data[typeValue].children.map(
+    (prev) => "." + prev.format
+  );
 
   return (
     <div className="bg-slate-50">
@@ -155,7 +207,7 @@ export default function Publish() {
         <div className="flex items-center">
           <div className="bg-ger w-3 h-7 mr-2"></div>
           <div className="mr-16">您需要哪类作品</div>
-          <Select item={type} ref={typeRef} />
+          <Select item={type} ref={typeRef} change={updateType} />
         </div>
       </div>
       <div className="w-4/5 shadow-xl mx-auto pt-4 px-6 text-2xl font-bold mt-8 mb-10 pb-6 bg-white">
@@ -180,6 +232,7 @@ export default function Publish() {
                 type="default"
                 fileList={file2}
                 setFileList={setFile2}
+                accept={accept}
               />
             </div>
           </div>

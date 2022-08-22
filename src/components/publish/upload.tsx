@@ -22,10 +22,12 @@ export default function GoodUpload({
   setFileList,
   fileList,
   type,
+  accept,
 }: {
   setFileList: Dispatch<SetStateAction<RcFile[]>>;
   fileList: RcFile[];
   type: "card" | "default";
+  accept?: string[];
 }) {
   const [preview, setPreview] = useState<string[]>([]);
 
@@ -38,7 +40,7 @@ export default function GoodUpload({
       <Upload
         className="ml-4"
         listType={type === "card" ? "picture-card" : "text"}
-        accept={type === "card" ? "image/*" : "*"}
+        accept={type === "card" ? "image/*" : accept!.join(",")}
         fileList={fileList}
         showUploadList={type === "default"}
         beforeUpload={async (file) => {
