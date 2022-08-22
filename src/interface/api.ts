@@ -63,7 +63,7 @@ export interface UpdateWorksParams {
   worksProcess: string;
   worksStatus: number;
 }
-
+//按条件分页查询
 export interface SearchWorksByPageParams {
   currentPage: number;
   pageSize: number;
