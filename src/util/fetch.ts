@@ -54,10 +54,17 @@ const resolveConfig = (
   // 如果没有请求头则添加默认请求头
   if ((config && !config.headers) || !config) {
     config = {};
-    // @ts-ignore
-    config.headers = token && {
-      [header!]: token,
-    };
+    if (shouldHandle) {
+      // @ts-ignore
+      config.headers = token
+        ? {
+            [header!]: token,
+            "Content-Type": "application/json",
+          }
+        : {
+            "Content-Type": "application/json",
+          };
+    }
   } else if (config.headers) {
     if (token && header) {
       config.headers[header] = token;

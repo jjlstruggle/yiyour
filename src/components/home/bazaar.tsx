@@ -17,16 +17,13 @@ function Bazaar() {
               className="mb-5 relative mt-1"
               style={{
                 breakInside: "avoid",
+                order: index,
               }}
             >
               <Card
                 title={item.taskName}
                 price={item.taskPrice}
-                img={
-                  index === 0
-                    ? "https://www.mooyuu.com/uploadfile/2021/1011/thumb_1000_0_20211011032316905.png"
-                    : item.taskPicture
-                }
+                img={item.taskPicture}
                 tag={item.type}
                 linked={false}
                 ddl={item.taskDeadline}
@@ -35,10 +32,10 @@ function Bazaar() {
           ))
         ) : (
           <div
-          className="w-256 h-256 mt-6"
-          style={{ margin: "0 25%", columnFill: "auto" }}
-        >
-          <Empty/>
+            className="w-256 h-256 mt-6"
+            style={{ margin: "0 25%", columnFill: "auto" }}
+          >
+            <Empty />
           </div>
         )}
       </div>

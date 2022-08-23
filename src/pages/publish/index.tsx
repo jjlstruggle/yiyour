@@ -109,12 +109,14 @@ export default function Publish() {
   const navigate = useNavigate();
   let allPrice = 1000 * topAd + 800 * bottomAd + price;
   const map = new Map();
+  const typeMap: string[] = [];
 
   if (!data.format) {
     return <Spin />;
   }
 
   data.format.forEach((item) => {
+    typeMap.push(item.id);
     item.children.forEach(({ id, format }) => {
       map.set(format, id);
     });
@@ -148,10 +150,8 @@ export default function Publish() {
     if (taskRef.current == 0) {
       const pic = await upload(file[0]);
       const res = await publish({
-        bottomAds: bottomAd,
         taskName: nameRef.current!.input!.value,
         type: type[typeRef.current!],
-        frontPageAds: topAd,
         taskDeadline:
           date?.year +
           "-" +
@@ -161,12 +161,13 @@ export default function Publish() {
           " " +
           date?.time +
           ":00",
-        taskPrice: price,
+        taskPrice: allPrice,
         taskDemands: textRef.current!.resizableTextArea!.props
           .value as unknown as string,
         publisherId: Number(location.search.split("=")[1]),
         taskPicture: pic.data.realUrl,
         taskStatus: 1,
+        typeId: Number(typeMap[typeRef.current]),
       });
       if (res.code == "0") {
         message.success("发布成功");

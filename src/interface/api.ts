@@ -16,8 +16,6 @@ export interface GetList {
   totalPage: number;
 }
 export interface PublishParams {
-  bottomAds: number;
-  frontPageAds: number;
   publisherId: number;
   taskDeadline: string;
   taskDemands: string;
@@ -26,7 +24,7 @@ export interface PublishParams {
   taskPrice: number;
   taskStatus: number;
   type: string;
-  typeId?: any;
+  typeId?: number;
 }
 
 export interface OperateWorksParams {
