@@ -148,7 +148,21 @@ export default function Publish() {
     let date = timeRef.current?.date;
 
     if (taskRef.current == 0) {
+      let cvs = document.createElement("canvas");
+      let img = new Image();
+      let fd = new FileReader();
+      fd.readAsDataURL(file[0]);
+      fd.onload = () => {
+        img.src = fd.result as string;
+        cvs.width = img.width;
+        cvs.height = img.height;
+        let ctx = cvs.getContext("2d");
+        ctx!.drawImage(img, 0, 0);
+        // 在后面添加水印即可
+      };
+
       const pic = await upload(file[0]);
+
       const res = await publish({
         taskName: nameRef.current!.input!.value,
         type: type[typeRef.current!],
@@ -165,7 +179,7 @@ export default function Publish() {
         taskDemands: textRef.current!.resizableTextArea!.props
           .value as unknown as string,
         publisherId: Number(location.search.split("=")[1]),
-        taskPicture: pic.data.realUrl,
+        taskPicture: pic.data.imageUrl,
         taskStatus: 1,
         typeId: Number(typeMap[typeRef.current]),
       });

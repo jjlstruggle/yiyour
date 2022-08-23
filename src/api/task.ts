@@ -14,7 +14,7 @@ export const getTaskInfo = (id: string) => {
 };
 
 export const searchList = (page: number) => {
-  return request.get(`/api-task/list?lint=10&page=${page}`, {
+  return request.get(`/api-task/list?limit=16&page=${page}`, {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },

@@ -9,7 +9,10 @@ function Bazaar() {
 
   if (data && data.code == "0") {
     return (
-      <div className="mt-6 mx-40 columns-5" style={{ columnFill: "auto" }}>
+      <div
+        className="mt-6 mx-32 columns-5 bg-slate-200 px-8 py-8 rounded-md"
+        style={{ columnFill: "auto" }}
+      >
         {data.data.list.length ? (
           data.data.list.map((item, index) => (
             <div
