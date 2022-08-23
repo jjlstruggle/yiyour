@@ -100,8 +100,8 @@ export default function Dialog({ ws }: any) {
     {
       content: "你好",
       fromUserId: "",
-      id: "1851",
-      receiveUserId: "1844",
+      id: "1845",
+      receiveUserId: "1851",
       sendTime: "2022-01-01 00:00:00",
     },
     {
@@ -122,7 +122,7 @@ export default function Dialog({ ws }: any) {
       content:
         "开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!",
       fromUserId: "",
-      id: "1851",
+      id: "1844",
       receiveUserId: "1844",
       sendTime: "2022-01-01 00:00:00",
     },
@@ -231,7 +231,7 @@ export default function Dialog({ ws }: any) {
           >
             <div className=" overflow-y-auto  h-80 px-3 py-3 flex flex-col text-lg">
               {mesHis.map((item: any, index: number) => {
-                if (id !== item.receiveUserId) {
+                if (id != item.receiveUserId) {
                   return (
                     <div key={index} className=" mt-1  self-end">
                       <div>{item.sendTime}</div>

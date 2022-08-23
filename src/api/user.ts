@@ -12,5 +12,5 @@ export const postUser = (user: any) => {
         avatar, code, id, organization, password, phone, username
     }
 
-    return request.post("/api-user/update", data)
+    return request.post("/api-user/update", JSON.stringify(data))
 }
