@@ -1,4 +1,4 @@
-import { Button, Carousel, message } from "antd";
+import { Button, Carousel } from "antd";
 import HeaderInput from "./header/input";
 import { MailOutlined } from "@ant-design/icons";
 import { ForwardedRef, forwardRef, memo } from "react";

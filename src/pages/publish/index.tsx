@@ -4,7 +4,7 @@
 
 import Select from "@/components/publish/select";
 import GoodUpload from "@/components/publish/upload";
-import { InputNumber, Checkbox, Button, InputRef } from "antd";
+import { InputNumber, Checkbox, Button, InputRef, Spin, message } from "antd";
 import { useRef, useState } from "react";
 import Text from "@/components/publish/text";
 import TimeSelect from "@/components/publish/timeSelect";
@@ -17,6 +17,10 @@ import { DDate } from "@/interface/type";
 import { publish } from "@/api/task";
 import { upload } from "@/api/oss";
 import Hide from "@/common/hideComponent";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import ReduxStore from "@/interface/redux";
+import { operateWorks } from "@/api/work";
 const task = ["任务", "作品"];
 const type = ["文本文案", "图片", "音频"];
 
@@ -40,6 +44,48 @@ function formate(date: Dayjs): { date: DDate } {
       time: String(date.hour() + ":" + date.minute()),
     },
   };
+}
+
+function resolveImage(file: Blob) {
+  return new Promise((resolve) => {
+    let cvs = document.createElement("canvas");
+    let img = new Image();
+    let fd = new FileReader();
+    fd.readAsDataURL(file);
+    fd.onload = () => {
+      img.src = fd.result as string;
+      cvs.width = img.width;
+      cvs.height = img.height;
+      let ctx = cvs.getContext("2d")!;
+      ctx.drawImage(img, 0, 0);
+      // 在后面添加水印即可
+      ctx.fillStyle = "rgb(255,255,255)";
+      ctx.globalAlpha = 1;
+      ctx.font = "28px";
+      ctx.rotate((Math.PI / 180) * -15);
+      let lineNumX = 0; // X轴行号
+      let lineNumY = 0; // Y轴行号
+      let tempX = 0;
+      let targetX = 0; // 水印写入的X轴位置
+      let targetY = 0; // 水印写入的Y轴位置
+      for (let ix = 10; ix < cvs.width; ix += 90) {
+        // 水印横向间隔
+        lineNumX++;
+        lineNumY = 0;
+        for (let iy = 10; iy <= cvs.height; iy += 50) {
+          // 水印纵向间隔
+          lineNumY++;
+          tempX = lineNumY * 50 * Math.sin((Math.PI / 180) * 15); // 由于canvas被旋转，所以需要计算偏移量
+          targetX = lineNumY & 1 ? ix - tempX : ix - tempX + 60;
+          targetY = iy + lineNumX * 90 * Math.tan((Math.PI / 180) * 15);
+          ctx.fillText("一隅立画", targetX, targetY);
+        }
+      }
+      cvs.toBlob((blob) => {
+        resolve(blob);
+      });
+    };
+  });
 }
 
 export default function Publish() {
@@ -99,9 +145,28 @@ export default function Publish() {
   const [bottomAd, setBottomAd] = useState(formatBottomAd);
   const [file, setFile] = useState<RcFile[]>([]);
   const [file2, setFile2] = useState<RcFile[]>([]);
-  const [value, update] = useState<any>(formateTask);
-
+  const [value, update] = useState<number>(formateTask);
+  const [typeValue, updateType] = useState<number>(formateType);
+  const data = useSelector((redux: ReduxStore) => redux.oss);
+  const navigate = useNavigate();
   let allPrice = 1000 * topAd + 800 * bottomAd + price;
+  const map = new Map();
+  const typeMap: string[] = [];
+
+  if (!data.format) {
+    return <Spin />;
+  }
+
+  data.format.forEach((item) => {
+    typeMap.push(item.id);
+    item.children.forEach(({ id, format }) => {
+      map.set(format, id);
+    });
+  });
+
+  const accept = data.format[typeValue].children.map(
+    (prev: any) => "." + prev.format
+  );
 
   const handleSave = () => {
     let date = timeRef.current?.date;
@@ -123,24 +188,38 @@ export default function Publish() {
 
   const handleSubmit = async () => {
     let date = timeRef.current?.date;
-    const res = await upload(file[0]);
-    console.log(res);
 
     if (taskRef.current == 0) {
-      /* const res = await publish({
-        bottomAds: bottomAd,
+      const pic = await upload(file[0]);
+      const watermarkImg = await resolveImage(file[0]); // 添加水印的图片
+      const res = await publish({
         taskName: nameRef.current!.input!.value,
         type: type[typeRef.current!],
-        frontPageAds: topAd,
         taskDeadline:
-          date?.year + "-" + date?.month + "-" + date?.date + "-" + date?.time,
-        taskPrice: price,
+          date?.year +
+          "-" +
+          date?.month +
+          "-" +
+          date?.date +
+          " " +
+          date?.time +
+          ":00",
+        taskPrice: allPrice,
         taskDemands: textRef.current!.resizableTextArea!.props
           .value as unknown as string,
-        publisherId: Number(location.hostname.split("=")[1]),
-        taskPicture: "",
+        publisherId: Number(location.search.split("=")[1]),
+        taskPicture: pic.data.imageUrl,
         taskStatus: 1,
-      }); */
+        typeId: Number(typeMap[typeRef.current]),
+      });
+      if (res.code == "0") {
+        message.success("发布成功");
+        localStorage.removeItem("publishTemp");
+        navigate("/");
+      }
+    } else {
+      const pic = await upload(file[0]);
+      const product = await upload(file2[0]);
     }
   };
 
@@ -155,7 +234,7 @@ export default function Publish() {
         <div className="flex items-center">
           <div className="bg-ger w-3 h-7 mr-2"></div>
           <div className="mr-16">您需要哪类作品</div>
-          <Select item={type} ref={typeRef} />
+          <Select item={type} ref={typeRef} change={updateType} />
         </div>
       </div>
       <div className="w-4/5 shadow-xl mx-auto pt-4 px-6 text-2xl font-bold mt-8 mb-10 pb-6 bg-white">
@@ -180,6 +259,7 @@ export default function Publish() {
                 type="default"
                 fileList={file2}
                 setFileList={setFile2}
+                accept={accept}
               />
             </div>
           </div>

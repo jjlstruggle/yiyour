@@ -3,9 +3,9 @@ import request from "@/util/fetch";
 export const upload = (file: Blob) => {
   let form = new FormData();
   form.append("file", file);
-  return request.post("/api-oss", form, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  return request.post("/api-oss", form, { timeout: 100000 }, false);
+};
+
+export const getType = () => {
+  return request.get("/api-oss");
 };

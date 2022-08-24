@@ -1,38 +1,59 @@
 import useLazy from "@/hooks/useLazy";
 const Header = useLazy(import("../../../components/user/header"));
-import { useState, useContext } from "react";
+import { useState, useContext, useRef } from "react";
 import UserContext from "@/context/user";
 import { useNavigate } from "react-router-dom";
+import { postUser } from "@/api/user";
+import { sendCode } from "@/api/auth";
 import {
   UserOutlined,
-  UploadOutlined,
-  BorderOutlined,
+  IdcardOutlined,
+  InsuranceOutlined,
+  KeyOutlined,
 } from "@ant-design/icons";
 import { Input, Button, Avatar, message, Upload } from "antd";
 import type { UploadProps } from "antd";
 import "./person.css";
-const props: UploadProps = {
-  name: "file",
-  action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-  headers: {
-    authorization: "authorization-text",
-  },
-  onChange(info) {
-    if (info.file.status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (info.file.status === "done") {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-};
 //个人信息
 export default function Person() {
+  const props: UploadProps = {
+    beforeUpload: (file) => {
+      const isPNG = file.type === "image/png" || "image/jpg";
+      if (!isPNG) {
+        message.error(`${file.name} is not a png or jpg file`);
+      }
+      return isPNG || Upload.LIST_IGNORE;
+    },
+    name: "file",
+    action: "http://47.96.86.132:88/api-oss/",
+    headers: {
+      authorization: "authorization-text",
+    },
+    onChange(info) {
+      if (info.file.status !== "uploading") {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === "done") {
+        message.success(`${info.file.name} file uploaded successfully`);
+        setAvatarUrl(info.file.response.data.realUrl);
+        console.log(info.file);
+      } else if (info.file.status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
   const navigate = useNavigate();
   const [isEdit, setIsEdit] = useState(false);
-  const { user } = useContext(UserContext);
+  const [avatarUrl, setAvatarUrl] = useState("");
+  const [userName, setUserName] = useState("");
+  const [userOrganization, setUserOrganization] = useState("");
+  const [userPassWord, setUserPassWord] = useState("");
+  const [userCheck, setUserCheck] = useState("");
+  const [time, setTime] = useState(60);
+  const [hasSendCode, setHasSendCode] = useState(false);
+  const { user }: any = useContext(UserContext);
+  const timer = useRef<ReturnType<typeof setTimeout>>();
+  const $temp = useRef<string>();
   const Content = () => {
     return (
       <div
@@ -49,30 +70,15 @@ export default function Person() {
           <Avatar
             size={64}
             className="flex justify-center items-center"
-            icon={<UserOutlined />}
+            //@ts-ignore
+            icon={!avatarUrl && !user.userInfo.avatar ? <UserOutlined /> : null}
             src={
               //@ts-ignore
-              user.userInfo.avatar
+              avatarUrl ? avatarUrl : user.userInfo.avatar
             }
           />
-
-          {isEdit ? (
-            <Upload
-              {...props}
-              className="border-solid  rounded-md my-3 w-28 h-10 bg-main text-white text-sm ml-4 flex justify-center items-center"
-            >
-              {" "}
-              更换头像
-            </Upload>
-          ) : null}
         </div>
-        {isEdit ? (
-          <Input
-            className="my-4 w-80"
-            placeholder="用户昵称"
-            prefix={<UserOutlined />}
-          />
-        ) : (
+        <>
           <div className="text-lg text-purple-500 border-solid px-4 flex items-center rounded-md w-80 h-10 my-5 border-2 border-gray-500 hover:border-purple-500">
             用户昵称：
             {
@@ -83,14 +89,7 @@ export default function Person() {
                 : "还未设置姓名哦！"
             }
           </div>
-        )}
-        {isEdit ? (
-          <Input
-            className="my-4  w-80"
-            placeholder="企业/学校"
-            prefix={<UserOutlined />}
-          />
-        ) : (
+
           <div className="text-lg text-purple-500 border-solid px-4 flex items-center rounded-md w-80 h-10  my-5 border-2 border-gray-500 hover:border-purple-500 ">
             企业/学校：
             {
@@ -101,14 +100,7 @@ export default function Person() {
                 : "还未设置组织哦！"
             }
           </div>
-        )}
-        {isEdit ? (
-          <Input
-            className="my-4  w-80"
-            placeholder="设置密码"
-            prefix={<BorderOutlined />}
-          />
-        ) : (
+
           <div className=" text-lg text-purple-500 border-solid rounded-lg px-4 flex items-center w-80 h-10  my-5  border-2 border-gray-500 hover:border-purple-500 ">
             手机号：
             {
@@ -116,19 +108,16 @@ export default function Person() {
               user.userInfo.phone
             }
           </div>
-        )}
-        {isEdit ? (
-          <Button className="my-3 w-28 h-10 bg-main text-white text-sm">
-            确认
-          </Button>
-        ) : (
-          <Button
-            onClick={() => setIsEdit(true)}
-            className="my-3 w-28 h-10 bg-main text-white text-sm"
-          >
-            修改
-          </Button>
-        )}
+        </>
+
+        <Button
+          onClick={() => {
+            navigate("/user/edit");
+          }}
+          className="my-3 w-28 h-10 bg-main text-white text-sm"
+        >
+          修改
+        </Button>
       </div>
     );
   };

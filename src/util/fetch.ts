@@ -45,27 +45,32 @@ const sleep = (time: number) =>
     }, time);
   });
 
-const resolveConfig = (config?: RequestGetConfig | RequestPostConfig) => {
+const resolveConfig = (
+  config?: RequestGetConfig | RequestPostConfig,
+  shouldHandle?: boolean
+) => {
   let token = localStorage.getItem("token");
   let header = localStorage.getItem("header");
   // 如果没有请求头则添加默认请求头
   if ((config && !config.headers) || !config) {
     config = {};
-    config.headers =
-      token && header
+    if (shouldHandle) {
+      // @ts-ignore
+      config.headers = token
         ? {
-            [header]: token,
+            [header!]: token,
             "Content-Type": "application/json",
           }
         : {
             "Content-Type": "application/json",
           };
+    }
   } else if (config.headers) {
     if (token && header) {
       config.headers[header] = token;
     }
     if (!config.headers["Content-Type"]) {
-      config.headers["Content-Type"] = "application/json";
+      shouldHandle && (config.headers["Content-Type"] = "application/json");
     }
   }
   return config;
@@ -74,7 +79,7 @@ const resolveConfig = (config?: RequestGetConfig | RequestPostConfig) => {
 function initalRequest() {
   const baseUrl = "http://47.96.86.132:88";
   function request(config: RequestConfig) {}
-  request.get = async (url: string, config?: RequestGetConfig) => {
+  request.get = async <T = any>(url: string, config?: RequestGetConfig) => {
     const res = await Promise.race([
       fetch(baseUrl + url, Object.assign(resolveConfig(config), getBaseConfig)),
       sleep(config?.timeout || 5000),
@@ -82,31 +87,31 @@ function initalRequest() {
     if (typeof res === "number") {
       throw "timeout";
     } else {
-      return res.json();
+      return res.json().then((data) => data as T);
     }
   };
-  request.post = async (
+  request.post = async <T = any>(
     url: string,
     data?: BodyInit,
-    config?: RequestPostConfig
+    config?: RequestPostConfig,
+    shouldHandle: boolean = true
   ) => {
-    if ((config && !config.headers) || !config) {
-      config = {};
-      config.headers = {
-        "Content-Type": "application/json",
-      };
-    }
+    config = config || {};
     const res = await Promise.race([
       fetch(
         baseUrl + url,
-        Object.assign(resolveConfig(config), { body: data }, postBaseConfig)
+        Object.assign(
+          resolveConfig(config, shouldHandle),
+          { body: data },
+          postBaseConfig
+        )
       ),
       sleep(config?.timeout || 8000),
     ]);
     if (typeof res === "number") {
       throw "timeout";
     } else {
-      return res.json();
+      return res.json().then((data) => data as T);
     }
   };
   request.put = async (
