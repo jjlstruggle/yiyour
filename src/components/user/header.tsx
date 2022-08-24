@@ -87,4 +87,4 @@ function UserHeader(props: any) {
     </div>
   );
 }
-export default UserHeader;
+export default React.memo(UserHeader);

@@ -11,7 +11,7 @@ const Join = useLazy(import("../pages/user/join/index"));
 const Message = useLazy(import("../pages/user/message/index"));
 const Navigater = useLazy(import("../pages/navigate"));
 const Purse = useLazy(import("../pages/user/purse/index"));
-const Edit = useLazy(import("../pages/user/person/edit/index"));
+const Edit = useLazy(import("../pages/user/person/edit/edit"));
 const Search = useLazy(import("../pages/search/index"));
 
 export default function Router() {
