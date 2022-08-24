@@ -3,6 +3,7 @@ import { useState, useContext, useRef, useMemo } from "react";
 import UserContext from "@/context/user";
 import { postUser } from "@/api/user";
 import { sendCode } from "@/api/auth";
+import { useNavigate } from "react-router-dom";
 import {
   UserOutlined,
   IdcardOutlined,
@@ -15,6 +16,7 @@ const Header = useLazy(import("@/components/user/header"));
 const Back = useLazy(import("@/components/user/back"));
 const Myavatar = useLazy(import("@/components/user/upload"));
 export default function Edit() {
+  const navigate = useNavigate();
   const [avatarUrl, setAvatarUrl] = useState("");
   const [userName, setUserName] = useState<{ status: boolean; value: string }>({
     status: false,
@@ -42,7 +44,7 @@ export default function Edit() {
     value: "",
   });
   const [hasSendCode, setHasSendCode] = useState(false);
-  const { user }: any = useContext(UserContext);
+  const { user, dispatchUserInfo }: any = useContext(UserContext);
   const timer = useRef<ReturnType<typeof setTimeout>>();
   const [time, setTime] = useState(60);
   const postUserMes = () => {
@@ -65,6 +67,21 @@ export default function Edit() {
       let res = await postUser(body);
       if (res.code == "0") {
         message.success("编辑成功");
+        let obj = {
+          avatar: avatarUrl,
+          email: "1010029097@qq.com",
+          id: 1851,
+          organization: userOrg.value,
+          phone: "13594934190",
+          token: {
+            tokenHead: "Authorization",
+            token: "7cd3e6e7-45b8-40de-b113-876e36b7d1da",
+          },
+          username: userName.value,
+        };
+        localStorage.setItem("user", JSON.stringify(obj));
+        dispatchUserInfo(obj);
+        navigate("/user");
       }
     };
     fn();

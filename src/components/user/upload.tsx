@@ -41,8 +41,11 @@ export default function UserUpload({ pic, setPic }: any) {
             console.log(123);
 
             message.success(`${info.file.name} 文件上传成功`);
-            setPic(info.file.response.data.realUrl);
-            console.log(info.file.response.data.realUrl);
+            setPic(info.file.response.data.imageUrl);
+            console.log(
+              "info.file.response.data.imageUrl",
+              info.file.response.data.imageUrl
+            );
           } else if (info.file.status === "error") {
             message.error(`${info.file.name} 文件上传失败`);
           }
