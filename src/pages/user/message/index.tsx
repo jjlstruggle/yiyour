@@ -89,16 +89,28 @@ const ContentRight = ({
       let res = await getMes(page, user.userInfo.id);
       if (res.code == "0") {
         setMesAllData(res.data.list);
+        setPageData({
+          current: page,
+          total: res.data.totalCount,
+        });
       }
     } else if (choose.system) {
       let res = await getMes(page, user.userInfo.id);
       if (res.code == "0") {
         setMesSystemData(res.data.list);
+        setPageData({
+          current: page,
+          total: res.data.totalCount,
+        });
       }
     } else if (choose.user) {
       let res = await getMes(page, user.userInfo.id);
       if (res.code == "0") {
         setMesUserData(res.data.list);
+        setPageData({
+          current: page,
+          total: res.data.totalCount,
+        });
       }
     }
   };

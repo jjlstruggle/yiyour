@@ -19,6 +19,7 @@ interface ContentRightParams {
   user: any;
   setUseTask: any;
   setUseWork: any;
+  setPage: any;
 }
 const ContentLeft = ({
   choose,
@@ -80,6 +81,7 @@ const ContentRight = ({
   user,
   setUseTask,
   setUseWork,
+  setPage,
 }: ContentRightParams) => {
   const data = !choose ? userWork : userTask;
   const onPageChange = async (page: number, pageSize: number) => {
@@ -90,12 +92,20 @@ const ContentRight = ({
       let res = await getUserCommitted(page);
       if (res.code == "0") {
         setUseTask(res.data.list);
+        setPage({
+          current: page,
+          total: res.data.totalCount,
+        });
       }
     } else {
       console.log("false");
       let res = await searchWorksOrder(page);
       if (res.code == "0") {
         setUseWork(res.data.list);
+        setPage({
+          current: page,
+          total: res.data.totalCount,
+        });
       }
     }
   };
@@ -228,6 +238,7 @@ export default function Join() {
           user={user}
           setUseTask={setUseTask}
           setUseWork={setUseWork}
+          setPage={setPage}
         />
       </div>
     </div>

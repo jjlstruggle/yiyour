@@ -19,6 +19,7 @@ interface ContentRightParams {
   user: any;
   setUseTask: any;
   setUseWork: any;
+  setPage: any;
 }
 const ContentLeft = ({
   choose,
@@ -80,6 +81,7 @@ const ContentRight = ({
   user,
   setUseTask,
   setUseWork,
+  setPage,
 }: ContentRightParams) => {
   const data = !choose ? userWork : userTask;
   const onPageChange = async (page: number, pageSize: number) => {
@@ -90,12 +92,20 @@ const ContentRight = ({
       let res = await getUserPublish(page, user.userInfo.id);
       if (res.code == "0") {
         setUseTask(res.data.list);
+        setPage({
+          current: page,
+          total: res.data.totalCount,
+        });
       }
     } else {
       console.log("false");
       let res = await searchWorksByUser(page, user.userInfo.id);
       if (res.code == "0") {
         setUseWork(res.data.list);
+        setPage({
+          current: page,
+          total: res.data.totalCount,
+        });
       }
     }
   };
@@ -155,7 +165,7 @@ const ContentRight = ({
         }}
         onChange={onPageChange}
         // current={page.current}
-        defaultPageSize={8}
+        pageSize={8}
         total={page.total}
         current={page.current}
       />
@@ -228,6 +238,7 @@ export default function Publish() {
           user={user}
           setUseTask={setUseTask}
           setUseWork={setUseWork}
+          setPage={setPage}
         />
       </div>
     </div>
