@@ -1,9 +1,44 @@
 import useRequest from "@/hooks/useRequest";
 import { searchList } from "@/api/task";
 import { TaskList, TaskListInfo } from "@/interface/api";
-import { memo, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import Card from "@/common/card";
 import { Empty, Spin } from "antd";
+import Loading from "@/common/loading";
+
+const Task = ({
+  index,
+  item,
+  io,
+}: {
+  index: number;
+  item: TaskListInfo;
+  io: IntersectionObserver;
+}) => {
+  const root = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    io.observe(root.current!);
+  }, []);
+  return (
+    <div
+      ref={root}
+      className="mb-5 relative mt-1"
+      style={{
+        breakInside: "avoid",
+        order: index,
+      }}
+    >
+      <Card
+        title={item.taskName}
+        price={item.taskPrice}
+        img={item.taskPicture}
+        tag={item.type}
+        linked={false}
+        ddl={item.taskDeadline}
+      />
+    </div>
+  );
+};
 
 function Bazaar() {
   const [page, setPage] = useState(1);
@@ -19,7 +54,8 @@ function Bazaar() {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           io.unobserve(entry.target);
-          if (io.takeRecords().length == 0) {
+
+          if (entries.length <= 1) {
             setPage((page) => page + 1);
           }
         }
@@ -29,49 +65,24 @@ function Bazaar() {
 
   let taskList = data as unknown as TaskListInfo[];
 
-  if (taskList && taskList.length) {
+  if (loading) return <Loading loading={loading} />;
+  else if (!taskList.length)
     return (
       <div
-        className="mt-6 mx-32 columns-5 bg-slate-200 px-8 py-8 rounded-md"
-        style={{ columnFill: "auto" }}
+        className="w-256 h-256 mt-6"
+        style={{ margin: "0 25%", columnFill: "auto" }}
       >
-        {taskList.length ? (
-          taskList.map((item, index) => (
-            <div
-              key={index}
-              className="mb-5 relative mt-1"
-              style={{
-                breakInside: "avoid",
-                order: index,
-              }}
-            >
-              <Card
-                title={item.taskName}
-                price={item.taskPrice}
-                img={item.taskPicture}
-                tag={item.type}
-                linked={false}
-                ddl={item.taskDeadline}
-              />
-            </div>
-          ))
-        ) : (
-          <div
-            className="w-256 h-256 mt-6"
-            style={{ margin: "0 25%", columnFill: "auto" }}
-          >
-            <Empty />
-          </div>
-        )}
+        <Empty />
       </div>
     );
-  }
   return (
-    <div
-      className="columns-5 gap-x-2-3 mt-6 mx-40"
-      style={{ columnFill: "auto" }}
-    >
-      <Spin />
+    <div className="bg-slate-200 mt-6 mx-32 px-8 pt-8 rounded-md">
+      <div className=" columns-5   " style={{ columnFill: "auto" }}>
+        {taskList.map((item, index) => (
+          <Task key={index} item={item} index={index} io={io} />
+        ))}
+      </div>
+      <div className="text-center py-4">到底啦~~~</div>
     </div>
   );
 }
