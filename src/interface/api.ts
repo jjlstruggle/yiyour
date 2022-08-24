@@ -96,15 +96,14 @@ export interface AdList {
   title: string;
 }
 
-<<<<<<< HEAD
+
 export interface adminLogin{
   email:string;
   password:string
 } 
-=======
+
 export interface RequestData<T> {
   code: string;
   data: T;
   message: string;
 }
->>>>>>> 79ba7481f48d7833137f8cc7c5ef7266fdc17440
