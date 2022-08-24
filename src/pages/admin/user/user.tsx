@@ -1,4 +1,10 @@
+import {UserTable} from "@/components/table/userAdmin/userAdmin"
 export default function UserAdmin() {
-    return <div>123111111111111111111111111</div>;
+    return (
+      <div>
+          <UserTable/>
+        </div>
+
+    )
   }
   

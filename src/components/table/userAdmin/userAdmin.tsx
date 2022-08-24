@@ -113,12 +113,18 @@ for (let i = 0; i < 100; i++) {
   });
 }
 
-const UserAdmin = () => (
-  <Table
-    columns={columns}
-    dataSource={data}
-    bordered
-    size="middle"
-    scroll={{ x: 'calc(700px + 50%)', y: 240 }}
-  />
-);
+export const UserTable = () =>{
+    return (
+        <div>
+            <Table
+              columns={columns}
+              dataSource={data}
+              bordered
+              size="middle"
+              scroll={{ x: 'calc(700px + 50%)', y: 240 }}
+            />
+        </div>
+    
+    )
+}
+
