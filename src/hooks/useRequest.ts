@@ -1,12 +1,8 @@
 import { useLayoutEffect, useState } from "react";
 
-interface RequestData<T> {
-  code: string;
-  data: T;
-  message: string;
-}
+import { RequestData } from "@/interface/api";
 
-export default function <T>(request: Function, dep?: []) {
+export default function <T>(request: Function, dep?: any[]) {
   const [data, setData] = useState<null | RequestData<T>>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<unknown>();

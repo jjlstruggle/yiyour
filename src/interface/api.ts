@@ -95,3 +95,9 @@ export interface AdList {
   sort: number;
   title: string;
 }
+
+export interface RequestData<T> {
+  code: string;
+  data: T;
+  message: string;
+}

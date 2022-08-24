@@ -79,7 +79,7 @@ const resolveConfig = (
 function initalRequest() {
   const baseUrl = "http://47.96.86.132:88";
   function request(config: RequestConfig) {}
-  request.get = async (url: string, config?: RequestGetConfig) => {
+  request.get = async <T = any>(url: string, config?: RequestGetConfig) => {
     const res = await Promise.race([
       fetch(baseUrl + url, Object.assign(resolveConfig(config), getBaseConfig)),
       sleep(config?.timeout || 5000),
@@ -87,10 +87,10 @@ function initalRequest() {
     if (typeof res === "number") {
       throw "timeout";
     } else {
-      return res.json();
+      return res.json().then((data) => data as T);
     }
   };
-  request.post = async (
+  request.post = async <T = any>(
     url: string,
     data?: BodyInit,
     config?: RequestPostConfig,
@@ -111,7 +111,7 @@ function initalRequest() {
     if (typeof res === "number") {
       throw "timeout";
     } else {
-      return res.json();
+      return res.json().then((data) => data as T);
     }
   };
   request.put = async (

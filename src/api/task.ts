@@ -1,5 +1,5 @@
 import request from "@/util/fetch";
-import { PublishParams } from "@/interface/api";
+import { PublishParams, RequestData, TaskList } from "@/interface/api";
 
 export const publish = (data: PublishParams) => {
   return request.post("/api-task/build", JSON.stringify(data));
@@ -14,11 +14,14 @@ export const getTaskInfo = (id: string) => {
 };
 
 export const searchList = (page: number) => {
-  return request.get(`/api-task/list?limit=16&page=${page}`, {
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-  });
+  return request.get<RequestData<TaskList>>(
+    `/api-task/list?limit=16&page=${page}`,
+    {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    }
+  );
 };
 
 export const getUserPublish = (page: number, id: string) => {
