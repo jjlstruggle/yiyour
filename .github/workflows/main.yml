@@ -14,8 +14,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: "16.x"
-      - name: Install npm dependencies
+      - name: Install pnpm
         run: npm i pnpm -g
+      - name: Install dependencies
         run: pnpm i
       - name: Run build task
         run: yarn build
@@ -27,5 +28,5 @@ jobs:
           ARGS: "-rltgoDzvO --delete"
           SOURCE: yihua
           REMOTE_HOST: "121.40.19.111"
-          REMOTE_USER: root 
+          REMOTE_USER: root
           TARGET: /usr/share/nginx/html
