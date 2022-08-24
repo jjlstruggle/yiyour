@@ -18,19 +18,19 @@ export default function Router() {
   return (
     <Routes>
       <Route path="/" element={<Navigater />} />
-      <Route path="publish/*" element={<Publish />} />
-      <Route path="user/" element={<Person />} />
-      <Route path="user/person" element={<Person />} />
-      <Route path="user/collect" element={<Collect />} />
-      <Route path="user/publish" element={<Userpublish />} />
-      <Route path="user/message" element={<Message />} />
-      <Route path="user/edit" element={<Edit />} />
-      <Route path="user/join" element={<Join />} />
-      <Route path="user/purse" element={<Purse />} />
-      <Route path="home" element={<Home />} />
-      <Route path="home/detail" element={<Detail />} />
-      <Route path="search" element={<Search />} />
-      <Route path="about" element={<About />} />
+      <Route path="/publish/*" element={<Publish />} />
+      <Route path="/user/" element={<Person />} />
+      <Route path="/user/person" element={<Person />} />
+      <Route path="/user/collect" element={<Collect />} />
+      <Route path="/user/publish" element={<Userpublish />} />
+      <Route path="/user/message" element={<Message />} />
+      <Route path="/user/edit" element={<Edit />} />
+      <Route path="/user/join" element={<Join />} />
+      <Route path="/user/purse" element={<Purse />} />
+      <Route path="/home" element={<Home />} />
+      <Route path="/home/detail" element={<Detail />} />
+      <Route path="/search" element={<Search />} />
+      <Route path="/about" element={<About />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );

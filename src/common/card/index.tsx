@@ -19,7 +19,7 @@ export default function GoodCard({
   img,
 }: GoodCardProps) {
   return (
-    <Card hoverable cover={<img src={img} />}>
+    <Card hoverable cover={<img src={img} loading="lazy" />}>
       <Meta title={title} description={ddl} />
       <div className="text-xs text-gray-400">{tag}</div>
       <div className="flex justify-between items-end">
