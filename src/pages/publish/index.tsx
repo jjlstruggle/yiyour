@@ -46,6 +46,48 @@ function formate(date: Dayjs): { date: DDate } {
   };
 }
 
+function resolveImage(file: Blob) {
+  return new Promise((resolve) => {
+    let cvs = document.createElement("canvas");
+    let img = new Image();
+    let fd = new FileReader();
+    fd.readAsDataURL(file);
+    fd.onload = () => {
+      img.src = fd.result as string;
+      cvs.width = img.width;
+      cvs.height = img.height;
+      let ctx = cvs.getContext("2d")!;
+      ctx.drawImage(img, 0, 0);
+      // 在后面添加水印即可
+      ctx.fillStyle = "rgb(255,255,255)";
+      ctx.globalAlpha = 1;
+      ctx.font = "28px";
+      ctx.rotate((Math.PI / 180) * -15);
+      let lineNumX = 0; // X轴行号
+      let lineNumY = 0; // Y轴行号
+      let tempX = 0;
+      let targetX = 0; // 水印写入的X轴位置
+      let targetY = 0; // 水印写入的Y轴位置
+      for (let ix = 10; ix < cvs.width; ix += 90) {
+        // 水印横向间隔
+        lineNumX++;
+        lineNumY = 0;
+        for (let iy = 10; iy <= cvs.height; iy += 50) {
+          // 水印纵向间隔
+          lineNumY++;
+          tempX = lineNumY * 50 * Math.sin((Math.PI / 180) * 15); // 由于canvas被旋转，所以需要计算偏移量
+          targetX = lineNumY & 1 ? ix - tempX : ix - tempX + 60;
+          targetY = iy + lineNumX * 90 * Math.tan((Math.PI / 180) * 15);
+          ctx.fillText("一隅立画", targetX, targetY);
+        }
+      }
+      cvs.toBlob((blob) => {
+        resolve(blob);
+      });
+    };
+  });
+}
+
 export default function Publish() {
   let storage: PublishStorage = JSON.parse(
     localStorage.getItem("publishTemp")!
@@ -148,21 +190,8 @@ export default function Publish() {
     let date = timeRef.current?.date;
 
     if (taskRef.current == 0) {
-      let cvs = document.createElement("canvas");
-      let img = new Image();
-      let fd = new FileReader();
-      fd.readAsDataURL(file[0]);
-      fd.onload = () => {
-        img.src = fd.result as string;
-        cvs.width = img.width;
-        cvs.height = img.height;
-        let ctx = cvs.getContext("2d");
-        ctx!.drawImage(img, 0, 0);
-        // 在后面添加水印即可
-      };
-
       const pic = await upload(file[0]);
-
+      const watermarkImg = await resolveImage(file[0]); // 添加水印的图片
       const res = await publish({
         taskName: nameRef.current!.input!.value,
         type: type[typeRef.current!],
