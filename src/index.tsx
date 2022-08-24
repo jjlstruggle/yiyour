@@ -24,7 +24,7 @@ root.render(
       <UserProvider>
         <Provider>
           <LocaleProvider>
-            <BrowserRouter>
+            <BrowserRouter basename="/yihua">
               <Routes>
                 <Route path="/*" element={<Layout />} />
                 <Route path="/admin/*" element={<Admin />} />
