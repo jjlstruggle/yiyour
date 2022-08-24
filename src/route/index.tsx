@@ -28,8 +28,10 @@ export default function Router() {
       <Route path="user/purse" element={<Purse />} />
       <Route path="home" element={<Home />} />
       <Route path="home/detail" element={<Detail />} />
-      <Route path="search" element={<Search/>} />
       <Route path="about" element={<About />} />
+
+      <Route path="search" element={<Search/>} />
+
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );

@@ -25,7 +25,7 @@ function Head({
   const handleToPublish = () => {
     if (user.hasLogin) {
       // @ts-ignore
-      navegate(`/publish?uid=${user.userInfo.id}`);
+      navigate(`/publish?uid=${user.userInfo.id}`);
     } else {
       import("antd/es/message/index").then((m) => {
         m.default.error("请先登录");

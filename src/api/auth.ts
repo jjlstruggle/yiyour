@@ -2,9 +2,12 @@ import request from "@/util/fetch";
 
 export const login = (email: string, psword: string) => {
   const data = { email, password: psword };
-  return request.post("/api-auth/login", JSON.stringify(data));
+  return request.post("/api-auth/password/login", JSON.stringify(data));
 };
-
+export const codeLogin = (code: string, phone: string) => {
+  const data = { code, phone: phone };
+  return request.post("/api-auth/code/login", JSON.stringify(data));
+};
 export const register = (
   phone: string,
   psword: string,

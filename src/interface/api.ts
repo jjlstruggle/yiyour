@@ -96,3 +96,8 @@ export interface AdList {
   sort: number;
   title: string;
 }
+
+export interface adminLogin{
+  email:string;
+  password:string
+} 

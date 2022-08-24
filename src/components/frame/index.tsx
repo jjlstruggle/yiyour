@@ -8,9 +8,13 @@ import {
 import type { MenuProps } from "antd";
 import { Breadcrumb, Layout, Menu } from "antd";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 const { Header, Content, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>["items"][number];
+type MenuToRoute = {
+  [propName: string]: string;
+};
 
 function getItem(
   label: React.ReactNode,
@@ -27,15 +31,30 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem("1", "1", <PieChartOutlined />),
-  getItem("2", "2", <DesktopOutlined />),
-  getItem("3", "sub1", <UserOutlined />),
-  getItem("4", "sub2", <TeamOutlined />),
-  getItem("5", "9", <FileOutlined />),
+  getItem("统计面板", "1", <PieChartOutlined />),
+  getItem("操作面板", "2", <DesktopOutlined />),
+  getItem("用户管理", "3", <UserOutlined />),
+  getItem("组织管理", "4", <TeamOutlined />),
+  getItem("订单管理", "5", <FileOutlined />),
 ];
+  // 菜单标签的key值映射到路由
+  const menuToRoute: MenuToRoute = {
+    "1": "/console/statics",
+    "2": "/console/operator",
+    "3": "/console/user",
+    "4": "/console/organize",
+    "5": "/console/order",
+  };
+    // 菜单标签点击事件
 
 const AdminFrame: React.FC = (props: any) => {
+  const  navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
+  const onClick: MenuProps["onClick"] = (e) => {
+      const { key } = e;
+      const path = menuToRoute[key];
+      navigate(path);
+    };
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider
@@ -46,9 +65,11 @@ const AdminFrame: React.FC = (props: any) => {
         <div className="logo" />
         <Menu
           theme="dark"
+          // defaultOpenKeys={["1"]}
           defaultSelectedKeys={["1"]}
           mode="inline"
           items={items}
+          onClick={onClick}
         />
       </Sider>
       <Layout className="site-layout">
@@ -68,9 +89,9 @@ const AdminFrame: React.FC = (props: any) => {
               margin: "16px 0",
             }}
           >
-            <Breadcrumb.Item>admin</Breadcrumb.Item>
+            <Breadcrumb.Item>控制台</Breadcrumb.Item>
             <Breadcrumb.Item>
-              {props.children.props.children.props.path}
+              {props.children.path}
             </Breadcrumb.Item>
           </Breadcrumb>
           {props.children}
