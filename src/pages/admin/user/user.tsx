@@ -1,4 +1,4 @@
-import {UserTable} from "@/components/table/userAdmin/userAdmin"
+import {UserTable} from "@/components/admin/userAdmin/userAdmin"
 export default function UserAdmin() {
     return (
       <div>

@@ -50,7 +50,7 @@ export default function ConsoleLogin(){
           sessionStorage.setItem("id", String(id));
           sessionStorage.setItem("token", token);
           console.log(res)
-          message.success(`欢迎您，${user || "用户"}`);
+          message.success(`欢迎您，${user.email || "用户"}`);
           user.id === 1852
             ? navigate("/console")
             : navigate("/admin");

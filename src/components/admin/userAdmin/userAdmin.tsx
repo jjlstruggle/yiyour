@@ -1,6 +1,10 @@
 import { Table } from 'antd';
+import useLazy from "@/hooks/useLazy";
+
 import type { ColumnsType } from 'antd/es/table';
 import React from 'react';
+
+const SearchUser = useLazy(import('@/components/admin/search/searchUser'));
 
 interface DataType {
   key: React.Key;
@@ -116,6 +120,7 @@ for (let i = 0; i < 100; i++) {
 export const UserTable = () =>{
     return (
         <div>
+          <SearchUser></SearchUser>
             <Table
               columns={columns}
               dataSource={data}
