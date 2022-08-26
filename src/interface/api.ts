@@ -96,6 +96,12 @@ export interface AdList {
   title: string;
 }
 
+
+export interface adminLogin{
+  email:string;
+  password:string
+} 
+
 export interface RequestData<T> {
   code: string;
   data: T;

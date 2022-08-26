@@ -59,7 +59,7 @@ function Head({
           <div className="w-2/3 rounded-md h-[300px]">
             <Carousel autoplay style={{ height: 300 }}>
               {!loading &&
-                data!.data.list.map((item, index) => (
+                data!.data.list.map((item:any, index:any) => (
                   <div
                     key={index}
                     className="w-full flex items-center justify-center"

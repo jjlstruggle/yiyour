@@ -1,7 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-
 import oss from "./slice/oss";
 
-export default configureStore({
-  reducer: { oss },
-});
+const store = configureStore({
+  reducer: {oss},
+})
+export type AppDispatch = typeof store.dispatch;
+
+export default store;

@@ -1,13 +1,21 @@
 import useLazy from "../../hooks/useLazy";
 import { Routes, Route, Navigate } from "react-router-dom";
 const Frame = useLazy(import("../../components/frame/index"));
-const Test = useLazy(import("./test/index"));
+const OrderAdmin = useLazy(import("./order/order"));
+const UserAdmin = useLazy(import("./user/user"));
+const Statics = useLazy(import("./user/user"));
+const Operator = useLazy(import("./user/user"));
+const OrgAdmin = useLazy(import("./user/user"));
+// const ConsoleLogin = useLazy(import("./login/login"));
 export default function Admin() {
   return (
     <Frame>
-      {/* <Test /> */}
       <Routes>
-        <Route path="123" element={<Test />} />
+        <Route path={"order"} element={<OrderAdmin />} />
+        <Route path={"user"} element={<UserAdmin />} />
+        <Route path={"statics"} element={<Statics />} />
+        <Route path={"operator"} element={<Operator />} />
+        <Route path={"organiza"} element={<OrgAdmin />} />
       </Routes>
     </Frame>
   );
