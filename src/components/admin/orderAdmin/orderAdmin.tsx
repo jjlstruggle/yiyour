@@ -1,144 +1,167 @@
-import { Table } from 'antd';
+import type { InputRef } from 'antd';
+import { Button, Form, Input, Popconfirm, Table } from 'antd';
+import type { FormInstance } from 'antd/es/form';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import type { ColumnsType } from 'antd/es/table';
 import useLazy from "@/hooks/useLazy";
-import React, { useEffect,useState } from 'react';
 import { searchList } from '@/api/task'
 import  useRequest from '@/hooks/useRequest'
 import { TaskListInfo } from '@/interface/api';
-
+import locale from 'antd/lib/date-picker/locale/zh_CN';
+import 'moment/locale/zh-cn'
+const EditableContext = React.createContext<FormInstance<any> | null>(null);
+interface EditableRowProps {
+  index: number;
+}
+interface EditableCellProps {
+  title: React.ReactNode;
+  editable: boolean;
+  children: React.ReactNode;
+  dataIndex: keyof TaskListInfo;
+  record: TaskListInfo;
+  // handleSave: (record: Item) => void;
+}
+const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
+  const [form] = Form.useForm();
+  return (
+    <Form form={form} component={false}>
+      <EditableContext.Provider value={form}>
+        <tr {...props} />
+      </EditableContext.Provider>
+    </Form>
+  );
+};
 
 const SearchOrder = useLazy(import("@/components/admin/search/searchOrder"));
-interface DataType {
-  key: React.Key;
-  name: string;
-  age: number;
-  street: string;
-  building: string;
-  number: number;
-  companyAddress: string;
-  companyName: string;
-  gender: string;
-}
 
-const columns: ColumnsType<DataType> = [
+const columns: ColumnsType<TaskListInfo> = [
     {
-      // title:''
+      title: '编号',
+        dataIndex: 'id',
+        key: 'key-id-',
+        width: 30,
     },
     {
-
+      title: '任务名称',
+      dataIndex: 'taskName',
+      key: 'task-name',
+      width: 100,
     },
+    { 
+      title: '截止时间',
+      dataIndex: 'taskDeadline',
+      key: 'task-ddl',
+      width: 50,
+    },
+  
+    // {
+    //   title: '任务图片',
+    //   dataIndex: 'taskPicture',
+    //   key: 'task-pic',
+    //   width: 100,
+    // },
+    {
+      title: '任务赏金',
+      dataIndex: 'taskPrice',
+      key: 'task-Price',
+      width: 50,
+    },
+    {
+      title: '任务类型',
+      dataIndex: 'type',
+      key: 'task-type',
+      width: 50,
+    }
 ]
-  // {
-  //   title: 'Name',
-  //   dataIndex: 'name',
-  //   key: 'name',
-  //   width: 100,
-  //   fixed: 'left',
-  //   filters: [
-  //     {
-  //       text: 'Joe',
-  //       value: 'Joe',
-  //     },
-  //     {
-  //       text: 'John',
-  //       value: 'John',
-  //     },
-  //   ],
-  //   onFilter: (value: any, record) => record.name.indexOf(value) === 0,
-  // },
-  // {
-  //   title: 'Other',
-  //   children: [
-  //     {
-  //       title: 'Age',
-  //       dataIndex: 'age',
-  //       key: 'age',
-  //       width: 150,
-  //       sorter: (a, b) => a.age - b.age,
-  //     },
-  //     {
-  //       title: 'Address',
-  //       children: [
-  //         {
-  //           title: 'Street',
-  //           dataIndex: 'street',
-  //           key: 'street',
-  //           width: 150,
-  //         },
-  //         {
-  //           title: 'Block',
-  //           children: [
-  //             {
-  //               title: 'Building',
-  //               dataIndex: 'building',
-  //               key: 'building',
-  //               width: 100,
-  //             },
-  //             {
-  //               title: 'Door No.',
-  //               dataIndex: 'number',
-  //               key: 'number',
-  //               width: 100,
-  //             },
-  //           ],
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
-//   {
-//     title: 'Company',
-//     children: [
-//       {
-//         title: 'Company Address',
-//         dataIndex: 'companyAddress',
-//         key: 'companyAddress',
-//         width: 200,
-//       },
-//       {
-//         title: 'Company Name',
-//         dataIndex: 'companyName',
-//         key: 'companyName',
-//       },
-//     ],
-//   },
-//   {
-//     title: 'Gender',
-//     dataIndex: 'gender',
-//     key: 'gender',
-//     width: 80,
-//     fixed: 'right',
-//   },
-// ];
 
-// const data: DataType[] = []
-// for (let i = 0; i < 100; i++) {
-//   data.push({
-//     key: i,
-//     name: 'John Brown',
-//     age: i + 1,
-//     street: 'Lake Park',
-//     building: 'C',
-//     number: 2035,
-//     companyAddress: 'Lake Street 42',
-//     companyName: 'SoftLake Co',
-//     gender: 'M',
-//   });
-// }
-// const getList = async()=>{
-//   await searchList(1).then(
-//     (res)=>{ 
-//       console.log(res)
-//     }
-    
-//   )
-//     return 0;
+// const columns = defaultColumns.map(col => {
+//   if (!col.editable) {
+//     return col;
 //   }
-//   useEffect(()=>{
-//    getList
-//   },[])
-const [page, setPage] = useState(1);
-const { data, loading, error } = useRequest(async () => {
+//   return {
+//     ...col,
+//     onCell: (record: DataType) => ({
+//       record,
+//       editable: col.editable,
+//       dataIndex: col.dataIndex,
+//       title: col.title,
+//       handleSave,
+//     }),
+//   };
+// });
+type EditableTableProps = Parameters<typeof Table>[0];
+const EditableCell: React.FC<EditableCellProps> = ({
+  title,
+  editable,
+  children,
+  dataIndex,
+  record,
+  // handleSave,
+  ...restProps
+}) => {
+  const [editing, setEditing] = useState(false);
+  const inputRef = useRef<InputRef>(null);
+  const form = useContext(EditableContext)!;
+
+  useEffect(() => {
+    if (editing) {
+      inputRef.current!.focus();
+    }
+  }, [editing]);
+
+  const toggleEdit = () => {
+    setEditing(!editing);
+    form.setFieldsValue({ [dataIndex]: record[dataIndex] });
+  };
+
+  const save = async () => {
+    try {
+      const values = await form.validateFields();
+
+      toggleEdit();
+      // handleSave({ ...record, ...values });
+    } catch (errInfo) {
+      console.log('Save failed:', errInfo);
+    }
+  };
+
+  let childNode = children;
+
+  if (editable) {
+    childNode = editing ? (
+      <Form.Item
+        style={{ margin: 0 }}
+        // name={dataIndex}
+        rules={[
+          {
+            required: true,
+            message: `${title} is required.`,
+          },
+        ]}
+      >
+        <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+      </Form.Item>
+    ) : (
+      <div className="editable-cell-value-wrap" style={{ paddingRight: 24 }} onClick={toggleEdit}>
+        {children}
+      </div>
+    );
+  }
+
+  return <td {...restProps}>{childNode}</td>;
+};
+const components = {
+  body: {
+    row: EditableRow,
+    cell: EditableCell,
+  },
+};
+const AddOrderHandBy = () =>{
+
+}
+export default function OrderTable(){
+  const [page, setPage] = useState(1);
+  const { data, loading, error } = useRequest(async () => {
   const curRes = await searchList(page);
   const curTask = curRes.data.list;
   const pre = data || ([] as TaskListInfo[]);
@@ -146,16 +169,19 @@ const { data, loading, error } = useRequest(async () => {
   return pre.concat(curTask);
 }, [page]);
 
-export default function OrderTable(){
+let taskList = data as unknown as TaskListInfo[];
     return(
       <>
+       <Button onClick={AddOrderHandBy} type="primary" style={{ marginBottom: 16 }}>
+       新增一条
+      </Button>
        <SearchOrder></SearchOrder>
        <Table
         columns={columns}
-        dataSource={data}
+        dataSource={taskList}
         bordered
-        size="middle"
-        scroll={{ x: 'calc(700px + 50%)', y: 240 }}
+        scroll={{ x: 'calc(600px + 50%)', y: 600 }}
+        rowKey={(record,index)=>{return 'order-list'+index as string}}
       />
       </>
     );

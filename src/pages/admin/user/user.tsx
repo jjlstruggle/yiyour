@@ -1,10 +1,9 @@
-import {UserTable} from "@/components/admin/userAdmin/userAdmin"
+import  UserTable from "@/components/admin/userAdmin/userAdmin"
 export default function UserAdmin() {
     return (
-      <div>
+        <div>
           <UserTable/>
         </div>
-
     )
   }
   

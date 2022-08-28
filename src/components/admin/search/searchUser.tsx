@@ -10,18 +10,21 @@ export default function SearchUser() {
   const [search, setSearch] = useSearchParams();  
   const SearchKeyParams = search.get('val')
   const SearchEnterHandle = (e:any)=>{
-    if(e.keyCode === 13)
-    navigate("/console/user/",{
-     state:{
-      SearchKeyParams
-     } 
-    });
+    if(e.keyCode === 13){
+      
+    }
+    // navigate("/onsole/uscer/",{
+    //  state:{
+    //   SearchKeyParams
+    //  } 
+    // });
+
     }
 return (
     <>
     {/* <Select/> */}
     <Input
-      width={200}
+      style ={{width:'200px',}}
       value={val}
       onChange={(e) => setVal(e.target.value?.trim())}
       prefix={<SearchOutlined />}
