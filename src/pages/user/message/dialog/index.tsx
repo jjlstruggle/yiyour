@@ -2,7 +2,7 @@ import { Input, Button, Avatar, message, Upload, Pagination, Card } from "antd";
 import { UserOutlined, CloseOutlined } from "@ant-design/icons";
 import Draggable from "react-draggable";
 import DialogContext from "@/context/dialog";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import { getHisMes } from "@/api/mes";
 export default function Dialog({ ws }: any) {
   const { Search } = Input;
@@ -10,6 +10,7 @@ export default function Dialog({ ws }: any) {
   const { dialog, dispatchDialogInfo } = useContext(DialogContext);
   let user: any = localStorage.getItem("user");
   let { id } = JSON.parse(user);
+  const mesDiv: any = useRef(null);
   console.log(id);
 
   const [mesHis, setMesHis] = useState([
@@ -185,6 +186,9 @@ export default function Dialog({ ws }: any) {
       console.log(res.data);
     })();
   }, []);
+  useEffect(() => {
+    console.log(mesDiv.current.scrollHeight);
+  }, []);
   return (
     <div className=" z-50">
       <Draggable handle=".ant-card-head">
@@ -229,7 +233,10 @@ export default function Dialog({ ws }: any) {
             className=" z-50 b ml-7 absolute l-1/2 t-1/2 translate-x-20 -translate-y-10"
             loading={false}
           >
-            <div className=" overflow-y-auto  h-80 px-3 py-3 flex flex-col text-lg">
+            <div
+              ref={mesDiv}
+              className=" overflow-y-auto  h-80 px-3 py-3 flex flex-col text-lg"
+            >
               {mesHis.map((item: any, index: number) => {
                 if (id != item.receiveUserId) {
                   return (

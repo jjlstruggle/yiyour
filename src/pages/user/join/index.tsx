@@ -27,6 +27,7 @@ const ContentLeft = ({
   user,
   setUseWork,
   setUseTask,
+  setPage,
 }: any) => {
   const onClickButton = async (e: any) => {
     if (e.target.innerText === "任 务" && choose == false) {
@@ -34,12 +35,20 @@ const ContentLeft = ({
       let res = await getUserCommitted(1);
       if (res.code == "0") {
         setUseTask(res.data.list);
+        setPage({
+          current: 1,
+          total: res.data.totalCount,
+        });
       }
     } else if (e.target.innerText === "作 品" && choose == true) {
       setChoose(false);
       let res = await searchWorksOrder(1);
       if (res.code == "0") {
         setUseWork(res.data.list);
+        setPage({
+          current: 1,
+          total: res.data.totalCount,
+        });
       }
     }
   };
@@ -229,6 +238,7 @@ export default function Join() {
           setUseWork={setUseWork}
           setChoose={setChoose}
           user={user}
+          setPage={setPage}
         />
         <ContentRight
           page={page}
