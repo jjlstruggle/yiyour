@@ -1,7 +1,7 @@
-import { Button, Carousel } from "antd";
+import { Button, Carousel, Drawer } from "antd";
 import HeaderInput from "./header/input";
-import { MailOutlined } from "@ant-design/icons";
-import { ForwardedRef, forwardRef, memo } from "react";
+import { MailOutlined, MenuFoldOutlined } from "@ant-design/icons";
+import { ForwardedRef, forwardRef, memo, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import User from "./header/user";
 import { getAd } from "@/api/work";
@@ -32,46 +32,108 @@ function Head({
       });
     }
   };
+  const [visible, setVisible] = useState(false);
+
+  const showDrawer = () => {
+    setVisible(true);
+  };
+
+  const onClose = () => {
+    setVisible(false);
+  };
 
   return (
-    <div className="header">
-      <div
-        className="head flex items-center justify-between px-12 pt-8 pb-6"
-        ref={headerContainer}
-      >
-        <div className=" flex justify-between">
-          <Button className="text-main" onClick={handleToPublish}>
-            我要发布
-          </Button>
-          <Button className="text-main left-7 relative   ">版权帮助</Button>
-        </div>
-        <div className="w-96 ">
-          <HeaderInput />
-        </div>
-        <div className="flex items-center">
-          <Language />
-          <User />
-          <MailOutlined className="text-white text-2xl flex items-center cursor-pointer" />
-        </div>
-      </div>
-      {pathname === "/home" && (
-        <div className="flex flex-col items-center w-full py-8">
-          <div className="w-2/3 rounded-md h-[300px]">
-            <Carousel autoplay style={{ height: 300 }}>
-              {!loading &&
-                data!.data.list.map((item:any, index:any) => (
-                  <div
-                    key={index}
-                    className="w-full flex items-center justify-center"
-                  >
-                    <img src={item.coverUrl} className="w-full h-[300px]" />
-                  </div>
-                ))}
-            </Carousel>
+    <>
+      <div className="header">
+        <div
+          className="head flex items-center justify-between px-12 pt-8 pb-6 "
+          ref={headerContainer}
+        >
+          <div className=" flex justify-between md:hidden">
+            <Button className="text-main" onClick={handleToPublish}>
+              我要发布
+            </Button>
+            <Button className="text-main left-7 relative   ">版权帮助</Button>
+          </div>
+          <div className="hidden md:flex md:relative md:-left-8">
+            <MenuFoldOutlined
+              style={{ fontSize: "22px" }}
+              onClick={showDrawer}
+            />
+            <Drawer
+              title={"一隅立画"}
+              placement="left"
+              width={256}
+              drawerStyle={{
+                backgroundImage: "linear-gradient(#E2B886, #CE9AC1,#F4C9DB)",
+              }}
+              onClose={onClose}
+              visible={visible}
+              className="md:text-white"
+            >
+              <p
+                onClick={() => {
+                  navigate("/home");
+                  onClose();
+                }}
+              >
+                首页
+              </p>
+              <p
+                onClick={() => {
+                  navigate("/user/person");
+                  onClose();
+                }}
+              >
+                用户中心
+              </p>
+              <p
+                onClick={() => {
+                  navigate("/publish");
+                  onClose();
+                }}
+              >
+                我要发布
+              </p>
+              <p>版权帮助</p>
+              <p
+                onClick={() => {
+                  navigate("/about");
+                  onClose();
+                }}
+              >
+                关于我们
+              </p>
+            </Drawer>
+          </div>
+          <div className="w-96 md:relative md:-left-5 ">
+            <HeaderInput />
+          </div>
+          <div className="flex items-center md:hidden">
+            <Language />
+            <User />
+            <MailOutlined className="text-white text-2xl flex items-center cursor-pointer" />
           </div>
         </div>
-      )}
-    </div>
+        {pathname === "/home" && (
+          <div className="flex flex-col items-center w-full py-8">
+            <div className="w-2/3 rounded-md h-[300px]">
+              <Carousel autoplay style={{ height: 300 }}>
+                {!loading &&
+                  data!.data.list.map((item: any, index: any) => (
+                    <div
+                      key={index}
+                      className="w-full flex items-center justify-center"
+                    >
+                      <img src={item.coverUrl} className="w-full h-[300px]" />
+                    </div>
+                  ))}
+              </Carousel>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
 }
 

@@ -22,6 +22,7 @@ export default function Router() {
       <Route path="publish/*" element={<Publish />} />
       <Route path="user/" element={<Person />} />
       <Route path="user/person" element={<Person />} />
+      <Route path="user/edit" element={<Edit />} />
       <Route path="user/collect" element={<Collect />} />
       <Route path="user/publish" element={<Userpublish />} />
       <Route path="user/message" element={<Message />} />
@@ -31,7 +32,7 @@ export default function Router() {
       <Route path="home/detail" element={<Detail />} />
       <Route path="about" element={<About />} />
 
-      <Route path="search" element={<Search/>} />
+      <Route path="search" element={<Search />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );

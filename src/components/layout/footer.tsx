@@ -48,7 +48,7 @@ function Foot({
 }) {
   const navigate = useNavigate();
   return (
-    <div className="px-40 bg-main py-8" ref={footContainer}>
+    <div className="px-40 bg-main py-8 md:hidden " ref={footContainer}>
       <div className="flex relative">
         {footData.map((item, index) => (
           <Item mainTitle={item.title} key={index} item={item.item} />

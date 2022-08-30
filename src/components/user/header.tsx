@@ -45,7 +45,7 @@ function UserHeader(props: any) {
   ];
   return (
     <div
-      className="flex  mx-auto items-center  box-border"
+      className="flex  mx-auto items-center  box-border md:flex-col md:text-2xl md:pl-6  "
       style={{
         backgroundColor: "#FFFFFF",
         padding: "2.6vh 2.2vw",
@@ -66,8 +66,10 @@ function UserHeader(props: any) {
               justifyContent: "center",
               width: "13vw",
             }}
+            className=" md:w-full   md:justify-start"
           >
             <img
+              className="md:w-5"
               style={{ width: "2.6vw" }}
               src={require(`../../assets/userIconTemp/${icon}.png`)}
             />
@@ -78,6 +80,7 @@ function UserHeader(props: any) {
                 marginLeft: "0.5vw",
                 color: style,
               }}
+              className="md:text-lg font-semibold md:pl-3"
             >
               {content}
             </div>

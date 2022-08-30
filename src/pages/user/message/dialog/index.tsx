@@ -187,7 +187,12 @@ export default function Dialog({ ws }: any) {
     })();
   }, []);
   useEffect(() => {
-    console.log(mesDiv.current.scrollHeight);
+    mesDiv.current.scrollTop = 672;
+    // mesDiv.current.onscroll = (e: any) => {
+    //   console.log(e);
+    //   console.log((e.target.scrollTop = 672));
+    //   console.log(scrollHeight);
+    // };
   }, []);
   return (
     <div className=" z-50">
