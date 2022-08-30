@@ -1,6 +1,5 @@
 
-// import useLazy from "@/hooks/useLazy";
-import OrderTable  from "@/components/table/orderAdmin/orderAdmin"
+import OrderTable  from "@/components/admin/orderAdmin/orderAdmin"
 
 export default function OrderAdmin() {
     return (
