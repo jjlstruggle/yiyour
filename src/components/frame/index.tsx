@@ -56,7 +56,7 @@ const AdminFrame: React.FC = (props: any) => {
       navigate(path);
     };
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout style={{ minHeight: "135vh" }}>
       <Sider
         collapsible
         collapsed={collapsed}
