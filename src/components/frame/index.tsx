@@ -4,6 +4,7 @@ import {
   PieChartOutlined,
   TeamOutlined,
   UserOutlined,
+  AreaChartOutlined
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Breadcrumb, Layout, Menu } from "antd";
@@ -36,6 +37,7 @@ const items: MenuItem[] = [
   getItem("用户管理", "3", <UserOutlined />),
   getItem("组织管理", "4", <TeamOutlined />),
   getItem("订单管理", "5", <FileOutlined />),
+  getItem("作品管理", "6",<AreaChartOutlined />),
 ];
   // 菜单标签的key值映射到路由
   const menuToRoute: MenuToRoute = {
@@ -44,6 +46,7 @@ const items: MenuItem[] = [
     "3": "/console/user",
     "4": "/console/organize",
     "5": "/console/order",
+    "6": "/console/works",
   };
     // 菜单标签点击事件
 

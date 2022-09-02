@@ -44,7 +44,7 @@ export interface OperateWorksParams {
   worksStatus: number;
 }
 
-export interface UpdateWorksParams {
+export interface UpdateWorksParams{
   id: string;
   previewUrl: string;
   realUrl: string;
@@ -95,7 +95,6 @@ export interface AdList {
   sort: number;
   title: string;
 }
-
 
 export interface adminLogin{
   email:string;

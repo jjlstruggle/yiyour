@@ -13,11 +13,6 @@ export default function SearchUser() {
     if(e.keyCode === 13){
       
     }
-    // navigate("/onsole/uscer/",{
-    //  state:{
-    //   SearchKeyParams
-    //  } 
-    // });
 
     }
 return (

@@ -1,4 +1,4 @@
-import { Table } from 'antd';
+import { Table,Popconfirm,Button } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import useLazy from "@/hooks/useLazy";
 import React, { useEffect,useState } from 'react';
@@ -47,7 +47,30 @@ const columns: ColumnsType<TaskListInfo> = [
       dataIndex: 'type',
       key: 'task-type',
       width: 50,
-    }
+    },
+    {
+      title: "操作",
+      key: "taskid",
+      dataIndex: "taskid",
+      width: 50,
+      render: (publisherId, record) => {
+        const myId = Number(sessionStorage.getItem("id"));
+        return publisherId !== myId ? (
+          <Popconfirm
+            title="确认删除吗？"
+            onConfirm={confirm.bind(record, publisherId, Number(publisherId)!)}
+            okText="确认"
+            cancelText="取消"
+          >
+            <Button type="primary" danger>
+              删除
+            </Button>
+          </Popconfirm>
+        ) : (
+          "无"
+        );
+      },
+    },
 ]
  
 export default function UserTable(){

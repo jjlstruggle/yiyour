@@ -1,5 +1,10 @@
 import type { InputRef } from 'antd';
-import { Button, Form, Input, Popconfirm, Table } from 'antd';
+import { Button,
+         Form, 
+         Input,
+         Popconfirm,
+         Table,
+         message} from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import type { ColumnsType } from 'antd/es/table';
@@ -34,7 +39,22 @@ const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
 };
 
 const SearchOrder = useLazy(import("@/components/admin/search/searchOrder"));
-
+// const confirm = (worksId: number) => {
+//   const hideLoading = message.loading("请求中");
+//   deleteWork(worksId)  //此处因为缺少权限分级 使用 用户本人删除接口
+//     .then((res) => {
+//       const { code, message: msg } = res;
+//       if (code === 200) {
+//         message.success(msg);
+//         dispatch(getManagersAC());
+//       } else if (code === 501) {
+//         message.warn(msg);
+//       }
+//     })
+//     .finally(() => {
+//       hideLoading();
+//     });
+// };
 const columns: ColumnsType<TaskListInfo> = [
     {
       title: '编号',
@@ -72,7 +92,30 @@ const columns: ColumnsType<TaskListInfo> = [
       dataIndex: 'type',
       key: 'task-type',
       width: 50,
-    }
+    },
+    {
+      title: "操作",
+      key: "publisherId",
+      dataIndex: "id",
+      width: 50,
+      render: ({id,publisherId}, record) => {
+        const myId = Number(localStorage.getItem("id"));
+        return publisherId !== myId ? (
+          <Popconfirm
+            title="确认删除吗？"
+            onConfirm={confirm.bind(record, publisherId, Number(id)!)}
+            okText="确认"
+            cancelText="取消"
+          >
+            <Button type="primary" danger>
+              删除
+            </Button>
+          </Popconfirm>
+        ) : (
+          "无"
+        );
+      },
+    },
 ]
 
 // const columns = defaultColumns.map(col => {

@@ -1,40 +1,38 @@
 
 import OrderTable  from "@/components/admin/orderAdmin/orderAdmin"
-import SearchForm from "@/components/admin/search/searchForm/searchForm"
+// import SearchForm from "@/components/admin/search/searchForm/searchForm"
 
-const getFieldDecorator = ()=>{
-
-}
-const validateFields = ()=>{
+// s
+// const validateFields = ()=>{
   
-}
-const setFieldsValue = ()=>{
+// }
+// const setFieldsValue = ()=>{
   
-}
-const resetFields = ()=>{
+// }
+// const resetFields = ()=>{
   
-}
+// }
 const searchListData = [
   {
-    tagName:"订单信息",
+    tagName:"input",
     key:"search-key-1",
-    label:"order",
+    label:"搜索",
   },{
-    tagName:"用户信息",
+    tagName:"inputnumber",
     key:"search-key-2",
-    label:"user",   
+    label:"用户信息",   
   }
 ]
 const FunctionParams = {
-  getFieldDecorator,
-  validateFields,
-  setFieldsValue,
-  resetFields
+  getFieldDecorator:"", 
+  validateFields:"", 
+  setFieldsValue:"", 
+  resetFields :""
 }
 export default function OrderAdmin() {
     return (
       <div>
-        <SearchForm
+        {/* <SearchForm
             searchList = {searchListData}
             reset = {true}
             onDateChange= {()=>{}}
@@ -43,8 +41,8 @@ export default function OrderAdmin() {
             noSearchButton= {false}
             stopPagination= {()=>{}}
             onButtonClick= {()=>{}}
-            form={FunctionParams}
-          />
+            // form={FunctionParams}
+          /> */}
         <OrderTable></OrderTable>
       </div>
     )

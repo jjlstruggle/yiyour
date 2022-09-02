@@ -13,9 +13,9 @@ export interface SearchPanelInterface {
     noSearchButton:Boolean /** 不用搜索按钮 */,
     stopPagination:Function /** 是否返回true禁止其他如table的分页器关联操作 */,
     onButtonClick:Function /** 有其他额外button按钮时触发的操作 */,
-    form:{
-      getFieldDecorator:Function, validateFields:Function, setFieldsValue:Function, resetFields :Function
-    }
+    // form:{
+    //   getFieldDecorator:string, validateFields:string, setFieldsValue:string, resetFields :string
+    // }
   }
 
  export interface PickerPanel {
