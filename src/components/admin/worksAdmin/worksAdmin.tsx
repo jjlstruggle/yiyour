@@ -15,6 +15,7 @@ import 'moment/locale/zh-cn'
 import { FilterOutlined } from '@ant-design/icons';
 import { SizeType} from 'antd/lib/config-provider/SizeContext';
 
+const AddWorkList = useLazy(import("@/components/admin/addModal/addModalWorks"));
 const SearchUser = useLazy(import("@/components/admin/search/searchUser"));
 const confirm = (worksId:any) => {
   const hideLoading = message.loading("请求中");
@@ -119,6 +120,7 @@ const columns: ColumnsType<List> = [
         dataIndex: 'id',
         key: 'key-id',
         width: 30,
+        sorter: (a, b) => Number(a.id) - Number(b.id),
     },
     {
       title: '作品名称',
@@ -138,6 +140,11 @@ const columns: ColumnsType<List> = [
       dataIndex: 'worksDeadline',
       key: 'works-ddl',
       width: 50,
+      sorter: (a, b) => {
+        const aTime = new Date(a.worksDeadline).getTime(); // 需要先转换成时间戳
+        const bTime = new Date(b.worksDeadline).getTime();
+        return aTime - bTime;
+      }
     },
     {
       title: '任务赏金',
@@ -224,6 +231,7 @@ let worksList = data as unknown as List[];
     return(
       <>
        <SearchUser></SearchUser>
+        <AddWorkList/>
        <Table
         columns={columns}
         dataSource={worksList}
