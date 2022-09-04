@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "cross-env GENERATE_SOURCEMAP=false BUILD_PATH=yihua node scripts/build.js"
+    "build": "cross-env GENERATE_SOURCEMAP=false BUILD_PATH=yihua CI=false node scripts/build.js"
   },
   "browserslist": {
     "production": [
