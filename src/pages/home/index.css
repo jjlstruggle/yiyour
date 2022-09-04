@@ -9,3 +9,19 @@
 .ant-tabs-top > div > .ant-tabs-nav .ant-tabs-ink-bar {
   height: 0.25rem;
 }
+
+.my-masonry-grid {
+  display: flex;
+  margin-left: -30px;
+  width: auto;
+}
+.my-masonry-grid_column {
+  padding-left: 30px;
+  background-clip: padding-box;
+}
+
+/* Style your items */
+.my-masonry-grid_column > div {
+  background: grey;
+  margin-bottom: 30px;
+}
