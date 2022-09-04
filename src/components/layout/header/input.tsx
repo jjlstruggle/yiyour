@@ -1,4 +1,4 @@
-import { Input ,Select} from "antd";
+import { Input } from "antd";
 import { useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import { useNavigate,useSearchParams } from "react-router-dom"
@@ -19,7 +19,6 @@ export default function HeaderInput() {
     }
 return (
     <>
-    {/* <Select/> */}
     <Input
       value={val}
       onChange={(e) => setVal(e.target.value?.trim())}

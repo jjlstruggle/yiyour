@@ -4,7 +4,15 @@
 
 import Select from "@/components/publish/select";
 import GoodUpload from "@/components/publish/upload";
-import { InputNumber, Checkbox, Button, InputRef, Spin, message } from "antd";
+import {
+  InputNumber,
+  Checkbox,
+  Button,
+  InputRef,
+  Spin,
+  message,
+  BackTop,
+} from "antd";
 import { useRef, useState } from "react";
 import Text from "@/components/publish/text";
 import TimeSelect from "@/components/publish/timeSelect";
@@ -191,7 +199,7 @@ export default function Publish() {
 
     if (taskRef.current == 0) {
       const pic = await upload(file[0]);
-      const watermarkImg = await resolveImage(file[0]); // 添加水印的图片
+
       const res = await publish({
         taskName: nameRef.current!.input!.value,
         type: type[typeRef.current!],
@@ -220,6 +228,7 @@ export default function Publish() {
     } else {
       const pic = await upload(file[0]);
       const product = await upload(file2[0]);
+      const watermarkImg = await resolveImage(file[0]); // 添加水印的图片
     }
   };
 

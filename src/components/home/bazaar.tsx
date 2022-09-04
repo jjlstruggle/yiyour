@@ -1,33 +1,14 @@
-import useRequest from "@/hooks/useRequest";
 import { searchList } from "@/api/task";
-import { TaskList, TaskListInfo } from "@/interface/api";
+import { TaskListInfo } from "@/interface/api";
 import { memo, useEffect, useRef, useState } from "react";
 import Card from "@/common/card";
-import { Empty, Spin } from "antd";
-import Loading from "@/common/loading";
 
-const Task = ({
-  index,
-  item,
-  io,
-}: {
-  index: number;
-  item: TaskListInfo;
-  io: IntersectionObserver;
-}) => {
-  const root = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    io.observe(root.current!);
-  }, []);
+import Masonry from "react-masonry-css";
+import useAsyncEffect from "@/hooks/useAsyncEffect";
+
+const Task = ({ item }: { item: TaskListInfo }) => {
   return (
-    <div
-      ref={root}
-      className="mb-5 relative mt-1"
-      style={{
-        breakInside: "avoid",
-        order: index,
-      }}
-    >
+    <div className="mb-5 relative mt-1">
       <Card
         title={item.taskName}
         price={item.taskPrice}
@@ -40,49 +21,58 @@ const Task = ({
   );
 };
 
+const createIo = (load: any) => {
+  let io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        io.unobserve(entry.target);
+        io.disconnect();
+        load && load();
+      }
+    });
+  });
+  return io;
+};
+
 function Bazaar() {
   const [page, setPage] = useState(1);
-  const { data, loading, error } = useRequest(async () => {
-    const curRes = await searchList(page);
-    const curTask = curRes.data.list;
-    const pre = data || ([] as TaskListInfo[]);
-    // @ts-ignore
-    return pre.concat(curTask);
+  const [list, setList] = useState<TaskListInfo[]>([]);
+  const totalPage = useRef(0);
+  const obsever = useRef<HTMLDivElement>(null);
+
+  useAsyncEffect(async () => {
+    if (totalPage.current && page > totalPage.current) return;
+    const res = await searchList(page);
+    if (!totalPage.current) {
+      totalPage.current = res.data.totalPage;
+    }
+    let curList = res.data.list;
+    setList((list) => list.concat(curList));
   }, [page]);
-  const io = useRef(
-    new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          io.unobserve(entry.target);
+  useEffect(() => {
+    if (!totalPage.current) return;
+    createIo(() =>
+      setPage((page) => {
+        if (page == totalPage.current) return page;
+        else return page + 1;
+      })
+    ).observe(obsever.current!);
+  }, [list.length]);
 
-          if (entries.length <= 1) {
-            setPage((page) => page + 1);
-          }
-        }
-      });
-    })
-  ).current;
-
-  let taskList = data as unknown as TaskListInfo[];
-
-  if (loading) return <Loading loading={loading} />;
-  else if (!taskList.length)
-    return (
-      <div
-        className="w-256 h-256 mt-6"
-        style={{ margin: "0 25%", columnFill: "auto" }}
-      >
-        <Empty />
-      </div>
-    );
   return (
     <div className="bg-slate-200 mt-6 mx-32 px-8 pt-8 rounded-md">
-      <div className=" columns-5   " style={{ columnFill: "auto" }}>
-        {taskList.map((item, index) => (
-          <Task key={index} item={item} index={index} io={io} />
+      <Masonry
+        className="my-masonry-grid"
+        columnClassName="my-masonry-grid_column"
+        breakpointCols={5}
+      >
+        {list.map((item, index) => (
+          <Task key={index} item={item} />
         ))}
+      </Masonry>
+      <div className="text-center py-4" ref={obsever}>
+        {page <= totalPage.current ? "loading..." : "到底啦~~~"}
       </div>
-      <div className="text-center py-4">到底啦~~~</div>
     </div>
   );
 }
