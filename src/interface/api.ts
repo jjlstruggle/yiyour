@@ -27,6 +27,7 @@ export interface PublishParams {
   typeId?: number;
 }
 
+
 export interface OperateWorksParams {
   previewUrl: string;
   realUrl: string;
