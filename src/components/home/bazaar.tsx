@@ -71,7 +71,7 @@ function Bazaar() {
         ))}
       </Masonry>
       <div className="text-center py-4" ref={obsever}>
-        到底啦~~~
+        {page <= totalPage.current ? "loading..." : "到底啦~~~"}
       </div>
     </div>
   );
