@@ -1,8 +1,9 @@
 import { PlusCircleFilled } from "@ant-design/icons";
 import { Image, Upload, Button, Avatar, message } from "antd";
 import type { RcFile } from "antd/es/upload";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState, useContext } from "react";
 import { PlusOutlined } from "@ant-design/icons";
+import UserContext from "@/context/user";
 const getBase64 = (file: RcFile): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -12,14 +13,11 @@ const getBase64 = (file: RcFile): Promise<string> =>
   });
 
 export default function UserUpload({ pic, setPic }: any) {
+  const { user, dispatchUserInfo }: any = useContext(UserContext);
   const [preview, setPreview] = useState<string>("");
   return (
     <div className="flex ">
-      {preview ? (
-        <Avatar size={64} src={preview} />
-      ) : (
-        <Avatar size={64} icon={<PlusOutlined />} />
-      )}
+      <Avatar size={64} src={preview ? preview : user.userInfo.avatar} />
       <Upload
         maxCount={1}
         action={"http://47.96.86.132:88/api-oss/"}
@@ -52,7 +50,7 @@ export default function UserUpload({ pic, setPic }: any) {
         }}
       >
         <Button type="primary" className="bg-main">
-          更换头像
+          上传头像
         </Button>
       </Upload>
     </div>

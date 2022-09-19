@@ -4,7 +4,9 @@ import { useState, useContext, useEffect } from "react";
 import { Button, Pagination } from "antd";
 import { useNavigate } from "react-router-dom";
 import UserContext from "@/context/user";
-const ContentLeft = ({ choose }: any) => {
+const Balance = useLazy(import("./balance/index"));
+const Deposit = useLazy(import("./deposit/index"));
+const ContentLeft = ({ choose, setChoose }: any) => {
   return (
     <div
       className="flex flex-col w-32  h-full"
@@ -17,10 +19,16 @@ const ContentLeft = ({ choose }: any) => {
             : { backgroundColor: "#895DC3" }
         }
         className="shadow-xl  w-24 h-10  mt-6 text-white text-base font-semibold"
+        onClick={() => {
+          if (!choose) setChoose(true);
+        }}
       >
-        余额
+        我的余额
       </Button>
       <Button
+        onClick={() => {
+          if (choose) setChoose(false);
+        }}
         style={
           !choose
             ? { backgroundColor: "#F6B76C" }
@@ -28,7 +36,7 @@ const ContentLeft = ({ choose }: any) => {
         }
         className="shadow-xl w-24 mt-12 h-10 text-white font-semibold"
       >
-        押金
+        押金会员
       </Button>
     </div>
   );
@@ -64,16 +72,8 @@ export default function Purse() {
           border: "1px solid  #DEDEDE",
         }}
       >
-        <ContentLeft choose={choose} user={user} />
-        {/* <ContentRight
-          page={page}
-          choose={choose}
-          userWork={userWork}
-          userTask={userTask}
-          user={user}
-          setUseTask={setUseTask}
-          setUseWork={setUseWork}
-        /> */}
+        <ContentLeft choose={choose} user={user} setChoose={setChoose} />
+        {choose ? <Balance /> : <Deposit />}
       </div>
     </div>
   );

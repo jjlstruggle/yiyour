@@ -1,5 +1,7 @@
 import useLazy from "@/hooks/useLazy";
 const Header = useLazy(import("../../../components/user/header"));
+const PersonEdit = useLazy(import("./personEdit/index"));
+const AccountEdit = useLazy(import("./accountEdit/index"));
 import { useState, useContext, useRef } from "react";
 import UserContext from "@/context/user";
 import { useNavigate } from "react-router-dom";
@@ -16,108 +18,42 @@ import type { UploadProps } from "antd";
 import "./person.css";
 //个人信息
 export default function Person() {
-  const props: UploadProps = {
-    beforeUpload: (file) => {
-      const isPNG = file.type === "image/png" || "image/jpg";
-      if (!isPNG) {
-        message.error(`${file.name} is not a png or jpg file`);
-      }
-      return isPNG || Upload.LIST_IGNORE;
-    },
-    name: "file",
-    action: "http://47.96.86.132:88/api-oss/",
-    headers: {
-      authorization: "authorization-text",
-    },
-    onChange(info) {
-      if (info.file.status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === "done") {
-        message.success(`${info.file.name} file uploaded successfully`);
-        setAvatarUrl(info.file.response.data.realUrl);
-        console.log(info.file);
-      } else if (info.file.status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-  };
   const navigate = useNavigate();
-  const [isEdit, setIsEdit] = useState(false);
-  const [avatarUrl, setAvatarUrl] = useState("");
-  const [userName, setUserName] = useState("");
-  const [userOrganization, setUserOrganization] = useState("");
-  const [userPassWord, setUserPassWord] = useState("");
-  const [userCheck, setUserCheck] = useState("");
-  const [time, setTime] = useState(60);
-  const [hasSendCode, setHasSendCode] = useState(false);
-  const { user }: any = useContext(UserContext);
-  const timer = useRef<ReturnType<typeof setTimeout>>();
-  const $temp = useRef<string>();
+  const [contentType, setContentType] = useState(false);
   const Content = () => {
     return (
       <div
-        className="flex flex-col  mt-6 h-4/5"
+        className="flex flex-col  mt-6 "
         style={{
           backgroundColor: "#FFFFFF",
-          padding: "7.2vh 12.2vw",
+          padding: "4.2vh 2.2vw",
           borderRadius: "12px",
           boxShadow: "6px 6px 12px #DEDEDE",
           border: "1px solid  #DEDEDE",
         }}
       >
-        <div className="mt-3 flex ">
-          <Avatar
-            size={64}
-            className="flex justify-center items-center"
-            //@ts-ignore
-            icon={!avatarUrl && !user.userInfo.avatar ? <UserOutlined /> : null}
-            src={
-              //@ts-ignore
-              avatarUrl ? avatarUrl : user.userInfo.avatar
-            }
-          />
+        <ul className="flex list-none  text-xl">
+          <li
+            onClick={() => {
+              if (contentType) setContentType(false);
+            }}
+            style={!contentType ? { borderBottom: "3px solid #000000" } : {}}
+          >
+            个人资料
+          </li>
+          <li
+            onClick={() => {
+              if (!contentType) setContentType(true);
+            }}
+            style={contentType ? { borderBottom: "3px solid #000000" } : {}}
+            className="mx-12"
+          >
+            账号设置
+          </li>
+        </ul>
+        <div className="flex flex-col w-full   box-border h-full  px-9 mt-5">
+          {contentType ? <AccountEdit /> : <PersonEdit />}
         </div>
-        <>
-          <div className="text-lg text-purple-500 border-solid px-4 flex items-center rounded-md w-80 h-10 my-5 border-2 border-gray-500 hover:border-purple-500">
-            用户昵称：
-            {
-              //@ts-ignore
-              user.userInfo.username
-                ? //@ts-ignore
-                  user.userInfo.username
-                : "还未设置姓名哦！"
-            }
-          </div>
-
-          <div className="text-lg text-purple-500 border-solid px-4 flex items-center rounded-md w-80 h-10  my-5 border-2 border-gray-500 hover:border-purple-500 ">
-            企业/学校：
-            {
-              //@ts-ignore
-              user.userInfo.organization
-                ? //@ts-ignore
-                  user.userInfo.organization
-                : "还未设置组织哦！"
-            }
-          </div>
-
-          <div className=" text-lg text-purple-500 border-solid rounded-lg px-4 flex items-center w-80 h-10  my-5  border-2 border-gray-500 hover:border-purple-500 ">
-            手机号：
-            {
-              //@ts-ignore
-              user.userInfo.phone
-            }
-          </div>
-        </>
-
-        <Button
-          onClick={() => {
-            navigate("/user/edit");
-          }}
-          className="my-3 w-28 h-10 bg-main text-white text-sm"
-        >
-          修改
-        </Button>
       </div>
     );
   };
@@ -125,7 +61,6 @@ export default function Person() {
     <div
       style={{
         backgroundColor: "#F7F7F7",
-        height: "100vh",
         padding: "4vh 5vw",
       }}
     >
