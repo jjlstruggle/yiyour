@@ -44,12 +44,12 @@ export default function ConsoleLogin(){
         const res = await login(values.email,values.password);
         if (res.code === "0"){
           const user: IdentityType = res.data;
-          const token: string = res.data?.token;
+          const token: string = res.data?.token.token;
           const {email, id} = user;
-          sessionStorage.setItem("user", JSON.stringify(email));
-          sessionStorage.setItem("id", String(id));
-          sessionStorage.setItem("token", token);
-          console.log(res)
+          localStorage.setItem("user", JSON.stringify(email));
+          localStorage.setItem("id", String(id));
+          localStorage.setItem("token", token);
+          
           message.success(`欢迎您，${user.email || "用户"}`);
           user.id === 1852
             ? navigate("/console")

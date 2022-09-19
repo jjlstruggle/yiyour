@@ -1,34 +1,38 @@
-/**
- * 发布页
- */
 
-import Select from "@/components/publish/select";
-import GoodUpload from "@/components/publish/upload";
-import {
-  InputNumber,
-  Checkbox,
-  Button,
-  InputRef,
-  Spin,
-  message,
-  BackTop,
-} from "antd";
-import { useRef, useState } from "react";
+import { Button,
+         Modal,
+         Form,
+         Input,
+         InputNumber,
+         Select,
+          Checkbox, 
+          InputRef, 
+          Spin,
+           message} from 'antd';
+import React, { useRef,
+                useState,
+                memo} from 'react';
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import ReduxStore from "@/interface/redux";
+
+import dayjs, { Dayjs } from "dayjs";
+import { operateWorks} from "@/api/work"
+import { upload } from "@/api/oss";
+
+import { OperateWorksParams } from "@/interface/api"
+import { DDate } from "@/interface/type";
+
+import { SmileOutlined } from '@ant-design/icons';
+import type { RcFile } from "antd/es/upload";
+import { TextAreaRef } from "antd/lib/input/TextArea";
+
 import Text from "@/components/publish/text";
 import TimeSelect from "@/components/publish/timeSelect";
 import NameInput from "@/components/publish/nameInput";
 import AddNumber from "@/components/publish/addNumber";
-import type { RcFile } from "antd/es/upload";
-import { TextAreaRef } from "antd/lib/input/TextArea";
-import dayjs, { Dayjs } from "dayjs";
-import { DDate } from "@/interface/type";
-import { publish } from "@/api/task";
-import { upload } from "@/api/oss";
-import Hide from "@/common/hideComponent";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import ReduxStore from "@/interface/redux";
-import { operateWorks } from "@/api/work";
+import GoodUpload from "@/components/publish/upload";
+
 const task = ["任务", "作品"];
 const type = ["文本文案", "图片", "音频"];
 
@@ -43,6 +47,8 @@ type PublishStorage = null | {
   type: number;
 };
 
+
+//格式化时间轴
 function formate(date: Dayjs): { date: DDate } {
   return {
     date: {
@@ -54,6 +60,7 @@ function formate(date: Dayjs): { date: DDate } {
   };
 }
 
+//添加封面水印
 function resolveImage(file: Blob) {
   return new Promise((resolve) => {
     let cvs = document.createElement("canvas");
@@ -96,12 +103,12 @@ function resolveImage(file: Blob) {
   });
 }
 
-export default function Publish() {
+function AddWorksList (){
   let storage: PublishStorage = JSON.parse(
     localStorage.getItem("publishTemp")!
   );
   const shouldLoadFromStorage = storage === null ? false : true;
-
+  
   let formateDate = shouldLoadFromStorage
     ? storage!.date
       ? formate(dayjs(storage!.date))
@@ -142,7 +149,27 @@ export default function Publish() {
       ? storage.bottomAd
       : 0
     : 0;
-
+  // let tempParams:OperateWorksParams = {
+  //   previewUrl: "",
+  //   realUrl: "",
+  //   remark: "",
+  //   subtype: "",
+  //   subtypeId: "",
+  //   type: "",
+  //   typeId: "",
+  //   worksCover: "",
+  //   worksDeadline: "",
+  //   worksDemand: "",
+  //   worksName: "",
+  //   worksPrice:0,
+  //   worksProcess: "",
+  //   worksStatus:0
+  // }
+  const [visible, setVisible] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [addParams, setAddParams] = useState();
+  const [modalText, setModalText] = useState('Content of the modal');
+  
   const timeRef = useRef<{ date: DDate }>(null);
   const nameRef = useRef<InputRef>(null);
   const taskRef = useRef(formateTask);
@@ -153,29 +180,31 @@ export default function Publish() {
   const [bottomAd, setBottomAd] = useState(formatBottomAd);
   const [file, setFile] = useState<RcFile[]>([]);
   const [file2, setFile2] = useState<RcFile[]>([]);
-  const [value, update] = useState<number>(formateTask);
-  const [typeValue, updateType] = useState<number>(formateType);
+  const [value, update] = useState<number|string>(formateTask);
+  const [typeValue, updateType] = useState<number|string>(formateType);
   const data = useSelector((redux: ReduxStore) => redux.oss);
   const navigate = useNavigate();
   let allPrice = 1000 * topAd + 800 * bottomAd + price;
+
   const map = new Map();
   const typeMap: string[] = [];
-
   if (!data.format) {
     return <Spin />;
   }
-
   data.format.forEach((item) => {
     typeMap.push(item.id);
     item.children.forEach(({ id, format }) => {
       map.set(format, id);
     });
   });
-
   const accept = data.format[typeValue].children.map(
     (prev: any) => "." + prev.format
   );
-
+    //激活模态框
+  const showModal = () => {
+    setVisible(true);
+  };
+  //暂存信息到浏览器
   const handleSave = () => {
     let date = timeRef.current?.date;
     localStorage.setItem(
@@ -193,17 +222,19 @@ export default function Publish() {
       })
     );
   };
-
+  //提交信息到sql
   const handleSubmit = async () => {
     let date = timeRef.current?.date;
 
     if (taskRef.current == 0) {
       const pic = await upload(file[0]);
-
-      const res = await publish({
-        taskName: nameRef.current!.input!.value,
-        type: type[typeRef.current!],
-        taskDeadline:
+      const watermarkImg = await resolveImage(file[0]); // 添加水印的图片
+      const res = await operateWorks({
+        previewUrl:"",
+        realUrl:"", 
+        worksName: nameRef.current!.input!.value,
+       
+        worksDeadline:
           date?.year +
           "-" +
           date?.month +
@@ -212,14 +243,19 @@ export default function Publish() {
           " " +
           date?.time +
           ":00",
-        taskPrice: allPrice,
-        taskDemands: textRef.current!.resizableTextArea!.props
+        worksPrice: allPrice,
+        worksDemand: textRef.current!.resizableTextArea!.props
           .value as unknown as string,
-        publisherId: Number(location.search.split("=")[1]),
-        taskPicture: pic.data.imageUrl,
-        taskStatus: 1,
-        typeId: Number(typeMap[typeRef.current]),
-      });
+        // publisherId: Number(location.search.split("=")[1]),
+        worksCover: pic.data.imageUrl,
+        worksStatus: 1,
+        type: type[typeRef.current!],
+        typeId: String(typeMap[typeRef.current]),
+        subtype:"",
+        subtypeId:"",
+        worksProcess:"",
+        remark:"121"
+        });
       if (res.code == "0") {
         message.success("发布成功");
         localStorage.removeItem("publishTemp");
@@ -228,79 +264,141 @@ export default function Publish() {
     } else {
       const pic = await upload(file[0]);
       const product = await upload(file2[0]);
-      const watermarkImg = await resolveImage(file[0]); // 添加水印的图片
     }
   };
 
+  const handleOk = async () => {
+    setModalText("保存中");
+    setConfirmLoading(true);
+  //  let res =  await operateWorks(addParams)
+  //   if(res.data.code === '0' ){
+  //       setVisible(false)
+  //       setConfirmLoading(false);
+  //   }
+    
+  };
+
+  const handleCancel = () => {
+    console.log("Clicked cancel button");
+    setVisible(false);
+  };  
+  const [addForm] = Form.useForm();
+  const  formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 6 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 14 },
+  },
+};
+const onFinish = (val:any) => {
+  new Promise(  
+  ()=>{}
+  )
+};
+const onFinishFailed = (val:any) => {
+  console.log("onFinishFailed", val);
+};
   return (
-    <div className="bg-slate-50">
-      <div className="w-4/5 shadow-xl mx-auto pt-4 px-6 text-2xl font-bold mt-8 mb-10 pb-6 bg-white">
-        <div className="flex items-center mb-6">
-          <div className="bg-ger w-3 h-7 mr-2"></div>
-          <div className="mr-16">您选择发布一个</div>
-          <Select item={task} ref={taskRef} change={update} />
-        </div>
-        <div className="flex items-center">
-          <div className="bg-ger w-3 h-7 mr-2"></div>
-          <div className="mr-16">您需要哪类作品</div>
-          <Select item={type} ref={typeRef} change={updateType} />
-        </div>
-      </div>
-      <div className="w-4/5 shadow-xl mx-auto pt-4 px-6 text-2xl font-bold mt-8 mb-10 pb-6 bg-white">
-        <NameInput ref={nameRef} initalName={formateName!} />
-        <div className="mb-12">
-          <div className="flex mb-6">
-            <div className="bg-ger w-3 h-7 mr-2"></div>
-            <div className="mr-16">请上传封面作品</div>
-          </div>
-          <div>
-            <GoodUpload type="card" fileList={file} setFileList={setFile} />
-          </div>
-        </div>
-        <Hide itShould={value == 1}>
-          <div className="mb-12">
-            <div className="flex mb-6">
-              <div className="bg-ger w-3 h-7 mr-2"></div>
-              <div className="mr-16">请上传您的作品</div>
-            </div>
-            <div>
-              <GoodUpload
+    <>
+      <Button type="primary" onClick={showModal}>
+        新增
+      </Button>
+
+      <Modal
+        title="作品新增"
+        visible={visible}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+        onOk={handleOk}
+      > 
+      
+    <Form {...formItemLayout} 
+           form={addForm} onFinish={onFinish} onFinishFailed={onFinishFailed}>
+            
+    <Form.Item
+      label="作品名称"
+      validateStatus={
+        ((e:any)=>{e.value ===""})?"error":'success'
+      }
+      help="请填写作品名称"
+    >
+     {/* <Input ref={nameRef}
+             placeholder="请填写作品名称"  
+             id={
+              (nameRef===null)?"error":"success"
+             }/> */}
+             <NameInput ref={nameRef} initalName={formateName!} />
+    </Form.Item>
+
+    <Form.Item
+      label="作品分类"
+      help="请填写作品名称"
+    >
+      {/* @ts-ignore */}
+        <Select item={task} ref={taskRef} change={update} />
+         {/* @ts-ignore */}
+        <Select item={type} ref={typeRef} change={updateType} />
+    </Form.Item>
+    <Form.Item
+      label="作品封面"
+      hasFeedback
+      validateStatus="validating"
+      help="请上传作品封面"
+    >   <GoodUpload
+          type="card" fileList={file} setFileList={setFile} 
+          />
+    </Form.Item>
+
+    <Form.Item
+      label="作品原件"
+      hasFeedback
+      validateStatus="validating"
+      help="请上传作品"
+    >   
+       <GoodUpload
                 type="default"
                 fileList={file2}
                 setFileList={setFile2}
                 accept={accept}
               />
-            </div>
-          </div>
-        </Hide>
-        <Hide itShould={value == 0}>
-          <TimeSelect ref={timeRef} initalDate={formateDate!} />
-        </Hide>
-        <div className="mb-12">
-          <div className="flex items-center mb-4">
-            <div className="bg-ger w-3 h-7 mr-2"></div>
-            <div className="mr-16">请尽可能详细的描述您的需求</div>
-          </div>
-          <Text ref={textRef} initalText={formateText} />
-        </div>
-      </div>
-      <div className="w-4/5 shadow-xl mx-auto pt-4 px-6 text-2xl font-bold mt-8 mb-10 pb-6 bg-white">
-        <div className="mb-12">
-          <div className="flex items-center mb-6">
-            <div className="bg-ger w-3 h-7 mr-2"></div>
-            <div className="mr-16">
-              请输入{value == 0 ? "您理想的价格" : "悬赏金额"}
-            </div>
-            <InputNumber
+    </Form.Item>
+             
+    <Form.Item
+      label="截止日期"
+      hasFeedback
+      validateStatus="validating"
+      help="请选择截止日期"
+    >   
+      <TimeSelect ref={timeRef} initalDate={formateDate!} />
+    </Form.Item>
+
+    <Form.Item
+      label="作品描述"
+      hasFeedback
+      validateStatus="validating"
+      help="请输入作品描述"
+    >
+       <Text ref={textRef} initalText={formateText} />
+    </Form.Item>
+
+    <Form.Item
+      label="作品报价"
+      hasFeedback
+      validateStatus="validating"
+    >
+         <InputNumber
               min={0}
               addonBefore="￥"
               value={price}
+              placeholder={"请输入"+(value == 0 ? "您理想的价格" : "悬赏金额")}
               onChange={(e) => {
                 if (!isNaN(e)) setPrice(e);
               }}
             />
-          </div>
-          <div className="text-gray-400 font-normal text-base ml-4 mb-12">
+             <div className="text-gray-400 font-normal text-base ml-4 mb-12">
             <div>金额1--499，奖项限定1，最小参与数2，奖金比例100%</div>
             <div>金额500--1499，奖项限定2，最小参与数4，奖金比例6:4</div>
             <div>金额1500--2999，奖项限定3，最小参与数6，奖金比例5:3:2</div>
@@ -323,49 +421,24 @@ export default function Publish() {
           <div className="text-lg text-gray-400 font-normal">
             （提示：广告内容如需更换，请联系我们）
           </div>
-        </div>
-        <div className="flex items-center justify-between">
-          <div>
-            <Checkbox>
-              <div className="flex items-center">
-                <div className="text-gray-400 text-base font-normal">
-                  我已同意
-                </div>
-                <div className="text-lg font-normal text-black">
-                  《用户协议》
-                </div>
-              </div>
-            </Checkbox>
-          </div>
-          <div className="flex items-center">
-            <div className="text-base font-normal">合计</div>
-            <div className="text-3xl text-yel mr-5">￥{allPrice}.00</div>
-            <Button type="primary" className="bg-yel font-bold">
-              结算
-            </Button>
-          </div>
-        </div>
-      </div>
-      <div className="w-4/5 shadow-xl mx-auto pt-4 px-6 text-2xl font-bold mt-8 mb-10 pb-6 bg-white">
-        <div className="flex items-center mb-6">
-          <div className="bg-ger w-3 h-7 mr-2"></div>
-          <div className="mr-16">发布流程</div>
-        </div>
-        <div className="ml-5 font-normal text-lg mb-2">
-          发布{value == 0 ? "任务" : "作品"}：
-        </div>
-        <div className="ml-5 font-normal text-lg">
-          填写任务信息→设定悬赏金额（平台扣除5%）→发布→挑选作品→公布选中作品
-        </div>
-      </div>
-      <div className="flex items-center justify-around mb-12 w-80 mx-auto">
-        <Button type="primary" className="bg-ger" onClick={handleSave}>
-          保存
-        </Button>
-        <Button type="primary" className="bg-ger" onClick={handleSubmit}>
-          发布
-        </Button>
-      </div>
-    </div>
+    </Form.Item>
+
+
+    {/* <Form.Item label="Success" hasFeedback validateStatus="success">
+      <Input placeholder="I'm the content" id="success" />
+    </Form.Item>
+
+      <Form.Item label="Warning" hasFeedback validateStatus="warning">
+        <Input placeholder="Warning" id="warning2" />
+      </Form.Item> */}
+      <Form.Item label="Warning" hasFeedback validateStatus="warning">
+        <Button type="primary" size="large" htmlType="submit" >保存</Button>
+        <Button type="default" size="large" onClick={()=>handleCancel} >取消</Button>
+      </Form.Item>
+      </Form>
+      </Modal>
+    </>
   );
 }
+
+export default memo(AddWorksList);

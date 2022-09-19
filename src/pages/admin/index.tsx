@@ -6,6 +6,7 @@ const UserAdmin = useLazy(import("./user/user"));
 const Statics = useLazy(import("./user/user"));
 const Operator = useLazy(import("./user/user"));
 const OrgAdmin = useLazy(import("./user/user"));
+const WorksAdmin = useLazy(import("./works/works"));
 // const ConsoleLogin = useLazy(import("./login/login"));
 export default function Admin() {
   return (
@@ -15,7 +16,8 @@ export default function Admin() {
         <Route path={"user"} element={<UserAdmin />} />
         <Route path={"statics"} element={<Statics />} />
         <Route path={"operator"} element={<Operator />} />
-        <Route path={"organiza"} element={<OrgAdmin />} />
+        <Route path={"organize"} element={<OrgAdmin />} />
+        <Route path={"works"} element={<WorksAdmin />} />
       </Routes>
     </Frame>
   );
