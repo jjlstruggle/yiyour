@@ -20,7 +20,7 @@ function Shop({}) {
   if (data && data.code == "0") {
     return (
       <div
-        className="columns-5 gap-x-2-3 mt-6 mx-40"
+        className="columns-5 gap-x-2-3 mt-6 mx-40 "
         style={{ columnFill: "auto" }}
       >
         {data.data.list.length ? (
@@ -47,7 +47,9 @@ function Shop({}) {
             </div>
           ))
         ) : (
-          <Empty />
+          <div className="empty">
+            <Empty description="" />
+          </div>
         )}
       </div>
     );

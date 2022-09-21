@@ -5,10 +5,16 @@ import Card from "@/common/card";
 
 import Masonry from "react-masonry-css";
 import useAsyncEffect from "@/hooks/useAsyncEffect";
-
+import { useNavigate } from "react-router-dom";
 const Task = ({ item }: { item: TaskListInfo }) => {
+  const navigate = useNavigate();
   return (
-    <div className="mb-5 relative mt-1">
+    <div
+      className="mb-5 relative mt-1"
+      onClick={() => {
+        navigate("/home/detail", { state: { cardId: item.id } });
+      }}
+    >
       <Card
         title={item.taskName}
         price={item.taskPrice}

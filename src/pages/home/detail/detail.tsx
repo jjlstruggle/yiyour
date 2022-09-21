@@ -1,10 +1,38 @@
-import React, { useRef, useState } from "react";
+import React, { Dispatch, useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { UploadOutlined } from "@ant-design/icons";
+import { Avatar, UploadProps } from "antd";
+import { Button, Divider, message, Upload } from "antd";
 import useLazy from "@/hooks/useLazy";
 import img1 from "../../../assets/temp/shell.jpg";
-import { UploadOutlined } from "@ant-design/icons";
-import type { UploadProps } from "antd";
-import { Button, Divider, message, Upload } from "antd";
+import { getTaskInfo } from "@/api/task";
+
 function Detail() {
+  const [detailInfo, setDetailInfo]: [any, Dispatch<any>] = useState({
+    id: 29,
+    publisherAvatar: null,
+    publisherId: 1845,
+    publisherName: "13476179629",
+    taskDeadline: "2026-08-23 22:19:00",
+    taskDemands: "无",
+    taskName: "NANA也来一只qwq",
+    taskPicture: "",
+    taskPrice: 0,
+    taskProcess: null,
+    taskWorksNumber: 0,
+    type: "",
+  });
+  const location = useLocation();
+  useEffect(() => {
+    (async () => {
+      const { cardId }: any = location.state;
+      let res = await getTaskInfo(cardId);
+      if (res.code == "0") {
+        console.log(res.data);
+        setDetailInfo(res.data);
+      }
+    })();
+  }, []);
   // 上传
   const props: UploadProps = {
     name: "file",
@@ -32,10 +60,7 @@ function Detail() {
           需求描述
         </div>
         <Divider />
-        <p className="text-xl">显示由发起者编辑的需求</p>
-        <p className="text-xl">显示由发起者编辑的需求</p>
-        <p className="text-xl">显示由发起者编辑的需求</p>
-        <p className="text-xl">显示由发起者编辑的需求</p>
+        <div className="text-xl"> {detailInfo.taskDemands}</div>
       </div>
     );
   };
@@ -47,7 +72,7 @@ function Detail() {
           已经提交的作品数量
         </div>
         <Divider />
-        <p className="text-xl">25件</p>
+        <p className="text-xl">{detailInfo.taskWorksNumber}件</p>
       </div>
     );
   };
@@ -140,23 +165,26 @@ function Detail() {
       >
         <div className=" relative w-1/2">
           <div className="absolute text-xl -top-8 left-1/4  flex">
-            /任务集市/文本文案
+            /任务集市/{detailInfo.type}
           </div>
           <img
-            src={img1}
-            className=" h-1/2.5"
+            src={detailInfo.taskPicture}
             style={{
               borderRadius: "0 30% 30% 0 / 0  50%  50%  0",
               background: "#3333",
               width: "47vw",
+              height: "490px",
             }}
           ></img>
         </div>
         <div className="flex flex-col ml-20 justify-around w-1/2 ">
-          <div className="text-3xl font-bold">收一份情书模板(表白女生)</div>
-          <div className="text-2xl">用户昵称 </div>
-          <div className="text-2xl font-bold">￥ 20元</div>
-          <div className="text-2xl">截止日期：2020/05/01 12:00</div>
+          <div className="text-3xl font-bold">{detailInfo.taskName}</div>
+          <div className="flex items-center">
+            <Avatar size={48} src={detailInfo.publisherAvatar} />{" "}
+            <div className="text-2xl ml-5">{detailInfo.publisherName} </div>
+          </div>
+          <div className="text-2xl font-bold">￥ {detailInfo.taskPrice}元</div>
+          <div className="text-2xl">截止日期：{detailInfo.taskDeadline}</div>
           <Button className="w-52 h-10 bg-main text-amber-50 font-semibold">
             我要提交
           </Button>
