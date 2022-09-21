@@ -1,5 +1,6 @@
 import useLazy from "@/hooks/useLazy";
 const Header = useLazy(import("../../../components/user/header"));
+const HeaderBack = useLazy(import("@/components/user/headerback"));
 import { Input, Button, Avatar, message, Upload, Pagination } from "antd";
 import { useState, useEffect, useContext } from "react";
 import { getMes } from "../../../api/user";
@@ -232,47 +233,50 @@ export default function Message() {
     fn();
   }, []);
   return (
-    <div
-      style={{
-        backgroundColor: "#F7F7F7",
-        height: "100vh",
-        padding: "4vh 5vw",
-      }}
-    >
-      <Button
-        className="shadow-sm w-24 mb-2 h-10 text-base bg-white text-main font-semibold -translate-y-1"
-        onClick={() => {
-          navigate("/home");
-        }}
-      >
-        返回
-      </Button>
-      <Header message={true} />
+    <>
+      <HeaderBack />
       <div
-        className="flex  mt-6 h-4/5"
         style={{
-          backgroundColor: "#FFFFFF",
-          padding: "2.6vh 2.2vw",
-          borderRadius: "12px",
-          boxShadow: "6px 6px 12px #DEDEDE",
-          border: "1px solid  #DEDEDE",
+          backgroundColor: "#F7F7F7",
+          height: "100vh",
+          padding: "4vh 5vw",
         }}
       >
-        <ContentLeft choose={choose} setChoose={setChoose} />
-        {dialog.open ? <Dialog /> : null}
-        <ContentRight
-          mesAllData={mesAllData}
-          mesSystemData={mesSystemData}
-          mesUserData={mesUserData}
-          pageData={pageData}
-          setPageData={setPageData}
-          setMesAllData={setMesAllData}
-          setMesSystemData={setMesSystemData}
-          setMesUserData={setMesUserData}
-          choose={choose}
-          user={user}
-        />
+        <Button
+          className="shadow-sm w-24 mb-2 h-10 text-base bg-white text-main font-semibold -translate-y-1"
+          onClick={() => {
+            navigate("/home");
+          }}
+        >
+          返回
+        </Button>
+        <Header message={true} />
+        <div
+          className="flex  mt-6 h-4/5"
+          style={{
+            backgroundColor: "#FFFFFF",
+            padding: "2.6vh 2.2vw",
+            borderRadius: "12px",
+            boxShadow: "6px 6px 12px #DEDEDE",
+            border: "1px solid  #DEDEDE",
+          }}
+        >
+          <ContentLeft choose={choose} setChoose={setChoose} />
+          {dialog.open ? <Dialog /> : null}
+          <ContentRight
+            mesAllData={mesAllData}
+            mesSystemData={mesSystemData}
+            mesUserData={mesUserData}
+            pageData={pageData}
+            setPageData={setPageData}
+            setMesAllData={setMesAllData}
+            setMesSystemData={setMesSystemData}
+            setMesUserData={setMesUserData}
+            choose={choose}
+            user={user}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 }

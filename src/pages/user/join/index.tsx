@@ -1,5 +1,6 @@
 import useLazy from "@/hooks/useLazy";
 const Header = useLazy(import("../../../components/user/header"));
+const HeaderBack = useLazy(import("@/components/user/headerback"));
 import { Button, Pagination } from "antd";
 import { getUserCommitted } from "../../../api/task";
 import { searchWorksOrder } from "../../../api/work";
@@ -206,51 +207,54 @@ export default function Join() {
     fn();
   }, []);
   return (
-    <div
-      style={{
-        backgroundColor: "#F7F7F7",
-        height: "100vh",
-        padding: "4vh 5vw",
-      }}
-    >
-      <Button
-        className="shadow-sm w-24 mb-2 h-10  text-base bg-white text-main font-semibold -translate-y-1"
-        onClick={() => {
-          navigate("/home");
-        }}
-      >
-        返回
-      </Button>
-      <Header web={true} />
+    <>
+      <HeaderBack />
       <div
-        className="flex  mt-6 h-4/5"
         style={{
-          backgroundColor: "#FFFFFF",
-          padding: "2.6vh 2.2vw",
-          borderRadius: "12px",
-          boxShadow: "6px 6px 12px #DEDEDE",
-          border: "1px solid  #DEDEDE",
+          backgroundColor: "#F7F7F7",
+          height: "100vh",
+          padding: "4vh 5vw",
         }}
       >
-        <ContentLeft
-          choose={choose}
-          setUseTask={setUseTask}
-          setUseWork={setUseWork}
-          setChoose={setChoose}
-          user={user}
-          setPage={setPage}
-        />
-        <ContentRight
-          page={page}
-          choose={choose}
-          userWork={userWork}
-          userTask={userTask}
-          user={user}
-          setUseTask={setUseTask}
-          setUseWork={setUseWork}
-          setPage={setPage}
-        />
+        <Button
+          className="shadow-sm w-24 mb-2 h-10  text-base bg-white text-main font-semibold -translate-y-1"
+          onClick={() => {
+            navigate("/home");
+          }}
+        >
+          返回
+        </Button>
+        <Header web={true} />
+        <div
+          className="flex  mt-6 h-4/5"
+          style={{
+            backgroundColor: "#FFFFFF",
+            padding: "2.6vh 2.2vw",
+            borderRadius: "12px",
+            boxShadow: "6px 6px 12px #DEDEDE",
+            border: "1px solid  #DEDEDE",
+          }}
+        >
+          <ContentLeft
+            choose={choose}
+            setUseTask={setUseTask}
+            setUseWork={setUseWork}
+            setChoose={setChoose}
+            user={user}
+            setPage={setPage}
+          />
+          <ContentRight
+            page={page}
+            choose={choose}
+            userWork={userWork}
+            userTask={userTask}
+            user={user}
+            setUseTask={setUseTask}
+            setUseWork={setUseWork}
+            setPage={setPage}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -56,6 +56,7 @@ export default function PersonEdit() {
             生日
           </div>
           <DatePicker
+            placeholder="请输入生日…"
             //   onChange={onChange}
             style={{ width: "240px" }}
           />
