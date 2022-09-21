@@ -2,6 +2,7 @@ import useLazy from "@/hooks/useLazy";
 const Header = useLazy(import("../../../components/user/header"));
 const PersonEdit = useLazy(import("./personEdit/index"));
 const AccountEdit = useLazy(import("./accountEdit/index"));
+const HeaderBack = useLazy(import("@/components/user/headerback"));
 import { useState, useContext, useRef } from "react";
 import UserContext from "@/context/user";
 import { useNavigate } from "react-router-dom";
@@ -58,22 +59,25 @@ export default function Person() {
     );
   };
   return (
-    <div
-      style={{
-        backgroundColor: "#F7F7F7",
-        padding: "4vh 5vw",
-      }}
-    >
-      <Button
-        className="shadow-sm w-24 mb-2 h-10 bg-white text-main text-base font-semibold -translate-y-1"
-        onClick={() => {
-          navigate("/home");
+    <>
+      <HeaderBack />
+      <div
+        style={{
+          backgroundColor: "#F7F7F7",
+          padding: "4vh 5vw",
         }}
       >
-        返回
-      </Button>
-      <Header star={true} />
-      <Content />
-    </div>
+        <Button
+          className="shadow-sm w-24 mb-2 h-10 bg-white text-main text-base font-semibold -translate-y-1"
+          onClick={() => {
+            navigate("/home");
+          }}
+        >
+          返回
+        </Button>
+        <Header star={true} />
+        <Content />
+      </div>
+    </>
   );
 }

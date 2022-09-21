@@ -2,12 +2,8 @@ import purse from "@/assets/userIconTemp/purse.png";
 import { Button } from "antd";
 import React, { useRef, useEffect, useState } from "react";
 export default function Balance() {
-  const [imgHeight, setImgHeight] = useState();
   const imgs = useRef(null);
-  useEffect(() => {
-    console.log(imgs.current);
-    setImgHeight(imgs.current.height);
-  }, []);
+  useEffect(() => {}, []);
   return (
     <div className="w-full relative">
       <img

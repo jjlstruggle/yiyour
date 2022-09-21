@@ -1,4 +1,4 @@
-import { Button, Carousel, Drawer } from "antd";
+import { Button, Carousel, Drawer, Image } from "antd";
 import HeaderInput from "./header/input";
 import { MailOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import { ForwardedRef, forwardRef, memo, useState } from "react";
@@ -45,15 +45,23 @@ function Head({
   return (
     <>
       <div className="header">
+        <div className="w-full flex justify-center items-center">
+          <Image preview={false} src={require("@/assets/backIcon.png")} />
+        </div>
         <div
           className="head flex items-center justify-between px-12 pt-8 pb-6 "
           ref={headerContainer}
         >
           <div className=" flex justify-between md:hidden">
-            <Button className="text-main" onClick={handleToPublish}>
+            <Button className="text-main w-32" onClick={handleToPublish}>
               我要发布
             </Button>
-            <Button className="text-main left-7 relative   ">版权帮助</Button>
+            <Button
+              className="text-main left-7 relative "
+              style={{ visibility: "hidden" }}
+            >
+              版权帮助
+            </Button>
           </div>
           <div className="hidden md:flex md:relative md:-left-8">
             <MenuFoldOutlined
@@ -95,7 +103,7 @@ function Head({
               >
                 我要发布
               </p>
-              <p>版权帮助</p>
+              {/* <p>版权帮助</p> */}
               <p
                 onClick={() => {
                   navigate("/about");
