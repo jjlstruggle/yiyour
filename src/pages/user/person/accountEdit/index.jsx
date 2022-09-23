@@ -9,7 +9,6 @@ function AccountEdit() {
     <div className="flex flex-col">
       <Call />
       <Wx />
-      <Pwd />
     </div>
   );
 }

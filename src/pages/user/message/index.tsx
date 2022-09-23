@@ -182,6 +182,7 @@ const ContentRight = ({
       </div>
 
       <Pagination
+        hideOnSinglePage={true}
         style={{
           position: "absolute",
           bottom: "0",
@@ -241,6 +242,7 @@ export default function Message() {
           height: "100vh",
           padding: "4vh 5vw",
         }}
+        className="md:mb-4 md:h-auto "
       >
         <Button
           className="shadow-sm w-24 mb-2 h-10 text-base bg-white text-main font-semibold -translate-y-1"
@@ -252,7 +254,7 @@ export default function Message() {
         </Button>
         <Header message={true} />
         <div
-          className="flex  mt-6 h-4/5"
+          className="flex  mt-6 h-4/5 md:flex-col md:h-auto md:mb-12"
           style={{
             backgroundColor: "#FFFFFF",
             padding: "2.6vh 2.2vw",

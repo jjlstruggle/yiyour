@@ -14,14 +14,14 @@ export default function Wx() {
       </header>
       <div className=" flex justify-between mt-6 ">
         <div
-          className="flex items-center  justify-around"
+          className="flex items-center  justify-around md:flex-col md:items-center"
           style={{ width: "400px" }}
         >
-          电话 <Input placeholder="请绑定电话" style={{ width: "260px" }} />
-          <Button>绑定电话</Button>
+          QQ <Input placeholder="请绑定QQ" style={{ width: "260px" }} />
+          <Button>绑定QQ</Button>
         </div>
         <div
-          className="flex items-center  justify-around"
+          className="flex items-center  justify-around md:flex-col md:items-center"
           style={{ width: "400px" }}
         >
           微信 <Input placeholder="请绑定账号" style={{ width: "260px" }} />

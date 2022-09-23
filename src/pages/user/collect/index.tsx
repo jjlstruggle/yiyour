@@ -55,7 +55,7 @@ const ContentLeft = ({
   };
   return (
     <div
-      className="flex flex-col w-32   h-full md:flex md:flex-row md:w-32 md:border-b-2  md:px-8  md:w-full md:h-20 md:justify-between md:items-center   md:border-gray-300"
+      className="flex flex-col w-32   h-full md:flex md:flex-row  md:border-b-2  md:px-8  md:w-full md:h-20 md:justify-between md:items-center   md:border-gray-300"
       style={{ borderRight: "2px solid #E2E2E2" }}
     >
       <Button
@@ -122,7 +122,7 @@ const ContentRight = ({
   return (
     <div className="flex flex-col relative w-full">
       <div
-        className="gap-6 grid-cols-4 grid-rows-2 ml-4  grid box-border w-full"
+        className="gap-6 grid-cols-4 grid-rows-2 ml-4  grid box-border w-full md:grid-cols-2 md:grid-rows-4 md:mb-8  md:mt-4 md:mx-auto"
         style={{ padding: "0 4vw 3vh 3vw", height: "95%" }}
       >
         {data ? (
@@ -166,6 +166,7 @@ const ContentRight = ({
         )}
       </div>
       <Pagination
+        hideOnSinglePage={true}
         style={{
           position: "absolute",
           bottom: "0",
@@ -215,7 +216,7 @@ export default function Collect() {
           height: "100vh",
           padding: "4vh 5vw",
         }}
-        className="md:mb-4"
+        className="md:mb-4 md:h-auto "
       >
         <Button
           className="shadow-sm w-24 mb-2 h-10 text-base bg-white text-main font-semibold -translate-y-1"
@@ -227,7 +228,7 @@ export default function Collect() {
         </Button>
         <Header love={true} />
         <div
-          className="flex  mt-6 h-4/5 md:flex-col"
+          className="flex  mt-6 h-4/5 md:flex-col md:h-auto md:mb-12"
           style={{
             backgroundColor: "#FFFFFF",
             padding: "2.6vh 2.2vw",

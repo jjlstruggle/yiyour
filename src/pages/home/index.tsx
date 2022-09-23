@@ -33,23 +33,26 @@ export default function Index() {
 
   return (
     <div>
-      <div className="my-4">
+      <div className="my-4 flex justify-center">
         <Tabs
           centered
           defaultActiveKey="1"
           onChange={onChange}
           size="large"
           tabBarGutter={96}
-          className="text-xl"
+          className="text-xl "
           renderTabBar={(props, DefaultTabbar) => (
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center md:w-[100vw] md:flex-col md:px-4">
               <DefaultTabbar {...props} />
               <Dropdown
                 className="ml-10"
                 overlay={menu}
                 trigger={["click"]}
                 children={
-                  <Button type="primary" className="flex items-center">
+                  <Button
+                    type="primary"
+                    className="flex items-center md:self-end "
+                  >
                     {sorts[select]}
                     <DownOutlined />
                   </Button>

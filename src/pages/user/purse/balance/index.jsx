@@ -5,7 +5,7 @@ export default function Balance() {
   const imgs = useRef(null);
   useEffect(() => {}, []);
   return (
-    <div className="w-full relative">
+    <div className="w-full relative " style={{ height: "100%" }}>
       <img
         ref={imgs}
         src={purse}

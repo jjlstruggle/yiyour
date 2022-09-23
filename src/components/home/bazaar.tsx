@@ -1,6 +1,6 @@
 import { searchList } from "@/api/task";
 import { TaskListInfo } from "@/interface/api";
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState, useLayoutEffect } from "react";
 import Card from "@/common/card";
 
 import Masonry from "react-masonry-css";
@@ -45,6 +45,19 @@ function Bazaar() {
   const [list, setList] = useState<TaskListInfo[]>([]);
   const totalPage = useRef(0);
   const obsever = useRef<HTMLDivElement>(null);
+  const [isPhone, setIsPhone] = useState(false);
+
+  useEffect(() => {
+    if (
+      navigator.userAgent.match(/Mobi/i) ||
+      navigator.userAgent.match(/Android/i) ||
+      navigator.userAgent.match(/iPhone/i)
+    ) {
+      setIsPhone(true);
+    } else {
+      setIsPhone(false);
+    }
+  }, []);
 
   useAsyncEffect(async () => {
     if (totalPage.current && page > totalPage.current) return;
@@ -66,11 +79,11 @@ function Bazaar() {
   }, [list.length]);
 
   return (
-    <div className="bg-slate-200 mt-6 mx-32 px-8 pt-8 rounded-md">
+    <div className="bg-slate-200 mt-6 mx-32 px-8 pt-8 rounded-md ">
       <Masonry
         className="my-masonry-grid"
         columnClassName="my-masonry-grid_column"
-        breakpointCols={5}
+        breakpointCols={isPhone ? 2 : 5}
       >
         {list.map((item, index) => (
           <Task key={index} item={item} />

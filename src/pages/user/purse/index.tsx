@@ -10,7 +10,7 @@ const Deposit = useLazy(import("./deposit/index"));
 const ContentLeft = ({ choose, setChoose }: any) => {
   return (
     <div
-      className="flex flex-col w-32  h-full"
+      className="flex flex-col w-32   h-full md:flex md:flex-row  md:border-b-2  md:px-8  md:w-full md:h-20 md:justify-between md:items-center   md:border-gray-300"
       style={{ borderRight: "2px solid #E2E2E2" }}
     >
       <Button
@@ -19,7 +19,7 @@ const ContentLeft = ({ choose, setChoose }: any) => {
             ? { backgroundColor: "#F6B76C" }
             : { backgroundColor: "#895DC3" }
         }
-        className="shadow-xl  w-24 h-10  mt-6 text-white text-base font-semibold"
+        className="shadow-xl  w-24 h-10  mt-6 text-white text-base font-semibold md:mt-0"
         onClick={() => {
           if (!choose) setChoose(true);
         }}
@@ -35,7 +35,7 @@ const ContentLeft = ({ choose, setChoose }: any) => {
             ? { backgroundColor: "#F6B76C" }
             : { backgroundColor: "#895DC3" }
         }
-        className="shadow-xl w-24 mt-12 h-10 text-white font-semibold"
+        className="shadow-xl  w-24 h-10  mt-6 text-white text-base font-semibold md:mt-0"
       >
         押金会员
       </Button>
@@ -55,6 +55,7 @@ export default function Purse() {
           height: "100vh",
           padding: "4vh 5vw",
         }}
+        className="md:mb-4 md:h-auto "
       >
         <Button
           className="shadow-sm w-24 mb-2 h-10 text-base bg-white text-main font-semibold -translate-y-1"
@@ -66,7 +67,7 @@ export default function Purse() {
         </Button>
         <Header purse={true} />
         <div
-          className="flex  mt-6 h-4/5"
+          className="flex  mt-6 h-4/5 md:flex-col md:h-auto md:mb-12"
           style={{
             backgroundColor: "#FFFFFF",
             padding: "2.6vh 2.2vw",

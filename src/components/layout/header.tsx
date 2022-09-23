@@ -45,11 +45,11 @@ function Head({
   return (
     <>
       <div className="header">
-        <div className="w-full flex justify-center items-center">
+        <div className="w-full flex justify-center items-center md:hidden">
           <Image preview={false} src={require("@/assets/backIcon.png")} />
         </div>
         <div
-          className="head flex items-center justify-between px-12 pt-8 pb-6 "
+          className="head flex items-center justify-between px-12 pt-8 pb-6 md:pb-4 md:pt-6"
           ref={headerContainer}
         >
           <div className=" flex justify-between md:hidden">
@@ -89,7 +89,14 @@ function Head({
               </p>
               <p
                 onClick={() => {
-                  navigate("/user/person");
+                  if (user.hasLogin) {
+                    // @ts-ignore
+                    navigate(`/publish?uid=${user.userInfo.id}`);
+                  } else {
+                    import("antd/es/message/index").then((m) => {
+                      m.default.error("请先登录");
+                    });
+                  }
                   onClose();
                 }}
               >
@@ -114,7 +121,7 @@ function Head({
               </p>
             </Drawer>
           </div>
-          <div className="w-96 md:relative md:-left-5 ">
+          <div className="w-96 md:relative md:self-center ">
             <HeaderInput />
           </div>
           <div className="flex items-center md:hidden">
@@ -124,8 +131,8 @@ function Head({
           </div>
         </div>
         {pathname === "/home" && (
-          <div className="flex flex-col items-center w-full py-8">
-            <div className="w-2/3 rounded-md h-[300px]">
+          <div className="flex flex-col items-center w-full py-8 md:py-0">
+            <div className="w-2/3 rounded-md h-[300px] md:w-full md:h-[200px]">
               <Carousel autoplay style={{ height: 300 }}>
                 {!loading &&
                   data!.data.list.map((item: any, index: any) => (
@@ -133,7 +140,10 @@ function Head({
                       key={index}
                       className="w-full flex items-center justify-center"
                     >
-                      <img src={item.coverUrl} className="w-full h-[300px]" />
+                      <img
+                        src={item.coverUrl}
+                        className="w-full h-[300px]  md:h-[200px] "
+                      />
                     </div>
                   ))}
               </Carousel>
