@@ -5,11 +5,12 @@ export default function Balance() {
   const imgs = useRef(null);
   useEffect(() => {}, []);
   return (
-    <div className="w-full relative " style={{ height: "100%" }}>
+    <div className="w-full relative " id="balance" style={{ height: "100%" }}>
       <img
+        id="balanceImg"
         ref={imgs}
         src={purse}
-        className=" absolute left-1/3 top-1/3 -translate-x-1/3 -translate-y-1/3"
+        className=" absolute left-1/3 top-1/3 -translate-x-1/3 -translate-y-1/3 "
         style={{
           width: "40vw",
         }}
@@ -22,10 +23,15 @@ export default function Balance() {
         }}
         className="absolute left-1/3 top-1/3 -translate-x-1/3 -translate-y-1/3"
       >
-        <div className=" absolute text-3xl" style={{ top: "40%", left: "30%" }}>
+        <div
+          id="balanceDiv1"
+          className=" absolute text-3xl "
+          style={{ top: "40%", left: "30%" }}
+        >
           当前余额：
         </div>
         <div
+          id="balanceDiv2"
           className=" absolute text-3xl"
           style={{ top: "70%", left: "30%", color: "#F6B66E" }}
         >

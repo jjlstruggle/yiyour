@@ -2,9 +2,10 @@ import deposit from "@/assets/userIconTemp/deposit.png";
 import { Divider } from "antd";
 export default function Deposit() {
   return (
-    <div className="flex flex-1 ml-10 relative">
+    <div id="deposit" className="flex flex-1 ml-10 relative ">
       <img
-        className="absolute"
+        id="depositImg"
+        className="absolute "
         style={{ width: "16vw", top: "0" }}
         src={deposit}
       />
@@ -16,10 +17,15 @@ export default function Deposit() {
           height: `${(16 * 106.39) / 151.49}vw`,
         }}
       >
-        <div className="text-2xl absolute" style={{ top: "30%", left: "22%" }}>
+        <div
+          id="depositDiv1"
+          className="text-2xl absolute "
+          style={{ top: "30%", left: "22%" }}
+        >
           押金：
         </div>
         <div
+          id="depositDiv2"
           className=" absolute text-3xl"
           style={{ top: "64%", left: "30%", color: "#F6B66E" }}
         >
