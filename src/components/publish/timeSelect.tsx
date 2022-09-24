@@ -40,16 +40,16 @@ function TimeSelect(props: {
 
   return (
     <div className="mb-12">
-      <div className="flex items-center mb-4">
-        <div className="bg-ger w-3 h-7 mr-2"></div>
-        <div className="mr-16">
+      <div className="flex items-center mb-4 md:flex-col md:items-start">
+        <div className="bg-ger w-3 h-7 mr-2 md:hidden"></div>
+        <div className="mr-16 md:mb-3">
           请选择任务截止时间
-          <span className="font-normal text-sm">
+          <span className="font-normal text-sm md:text-base">
             （截止后请在72小时内确定获奖作品，超时将由后台随机评定）
           </span>
         </div>
       </div>
-      <div className="flex mb-4">
+      <div className="flex mb-4 md:flex-col">
         <TimePicker
           // @ts-ignore
           defaultValue={

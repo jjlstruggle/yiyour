@@ -235,14 +235,14 @@ export default function Publish() {
   return (
     <div className="bg-slate-50">
       <div className="w-4/5 shadow-xl mx-auto pt-4 px-6 text-2xl font-bold mt-8 mb-10 pb-6 bg-white">
-        <div className="flex items-center mb-6">
-          <div className="bg-ger w-3 h-7 mr-2"></div>
-          <div className="mr-16">您选择发布一个</div>
+        <div className="flex items-center mb-6 md:flex-col md:items-start ">
+          <div className="bg-ger w-3 h-7 mr-2 md:hidden"></div>
+          <div className="mr-16 md:mb-2">您选择发布一个</div>
           <Select item={task} ref={taskRef} change={update} />
         </div>
-        <div className="flex items-center">
-          <div className="bg-ger w-3 h-7 mr-2"></div>
-          <div className="mr-16">您需要哪类作品</div>
+        <div className="flex items-center md:flex-col md:items-start ">
+          <div className="bg-ger w-3 h-7 mr-2 md:hidden"></div>
+          <div className="mr-16 md:mb-2">您需要哪类作品</div>
           <Select item={type} ref={typeRef} change={updateType} />
         </div>
       </div>
@@ -277,18 +277,20 @@ export default function Publish() {
           <TimeSelect ref={timeRef} initalDate={formateDate!} />
         </Hide>
         <div className="mb-12">
-          <div className="flex items-center mb-4">
-            <div className="bg-ger w-3 h-7 mr-2"></div>
-            <div className="mr-16">请尽可能详细的描述您的需求</div>
+          <div className="flex items-center mb-4 md:flex-col md:items-start">
+            <div className="bg-ger w-3 h-7 mr-2 md:hidden"></div>
+            <div className="mr-16 md:w-[100vw] md:text-xl">
+              请尽可能详细的描述您的需求
+            </div>
           </div>
           <Text ref={textRef} initalText={formateText} />
         </div>
       </div>
       <div className="w-4/5 shadow-xl mx-auto pt-4 px-6 text-2xl font-bold mt-8 mb-10 pb-6 bg-white">
         <div className="mb-12">
-          <div className="flex items-center mb-6">
-            <div className="bg-ger w-3 h-7 mr-2"></div>
-            <div className="mr-16">
+          <div className="flex items-center mb-6 md:flex-col md:items-start">
+            <div className="bg-ger w-3 h-7 mr-2 md:hidden "></div>
+            <div className="mr-16 md:mb-4">
               请输入{value == 0 ? "您理想的价格" : "悬赏金额"}
             </div>
             <InputNumber
@@ -306,16 +308,16 @@ export default function Publish() {
             <div>金额1500--2999，奖项限定3，最小参与数6，奖金比例5:3:2</div>
             <div>金额3000+，奖项限定4，最小参与数8，奖金比例4:3:2:1</div>
           </div>
-          <div className="ml-4 flex justify-between items-center text-xl font-normal mb-12">
+          <div className="ml-4 flex justify-between items-center text-xl font-normal mb-12 md:flex-col md:items-start">
             <div>首页广告位展示（15天）</div>
-            <div className="flex items-center">
+            <div className="flex items-center md:mt-4">
               <div>￥ 1000</div>
               <AddNumber ad={topAd} change={setTopAd} />
             </div>
           </div>
-          <div className="ml-4 flex justify-between items-center text-xl font-normal mb-12">
+          <div className="ml-4 flex justify-between items-center text-xl font-normal mb-12 md:flex-col md:items-start">
             <div>底部广告位展示（15天）</div>
-            <div className="flex items-center">
+            <div className="flex items-center md:mt-4">
               <div>￥ 800</div>
               <AddNumber ad={bottomAd} change={setBottomAd} />
             </div>
@@ -324,10 +326,10 @@ export default function Publish() {
             （提示：广告内容如需更换，请联系我们）
           </div>
         </div>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between md:flex-col md:items-start">
           <div>
             <Checkbox>
-              <div className="flex items-center">
+              <div className="flex items-center md:mb-4">
                 <div className="text-gray-400 text-base font-normal">
                   我已同意
                 </div>

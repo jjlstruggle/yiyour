@@ -161,13 +161,14 @@ function Detail() {
     <div className="flex flex-col ">
       <div
         style={{ width: "100vw" }}
-        className="flex justify-between  box-border my-14"
+        className="flex justify-between  box-border my-14 md:flex-col"
       >
         <div className=" relative w-1/2">
-          <div className="absolute text-xl -top-8 left-1/4  flex">
+          <div className="absolute text-xl -top-8 left-1/4  flex md:hidden">
             /任务集市/{detailInfo.type}
           </div>
           <img
+            className="md:w-[100vw] md:h-[360px]"
             src={detailInfo.taskPicture}
             style={{
               borderRadius: "0 30% 30% 0 / 0  50%  50%  0",
@@ -177,18 +178,20 @@ function Detail() {
             }}
           ></img>
         </div>
-        <div className="flex flex-col ml-20 justify-around w-1/2 ">
+        <div className="flex flex-col ml-20 justify-around w-1/2  md:flex-row md:flex-wrap md:ml-0 md:w-full md:mt-5 md:items-center ">
           <div className="text-3xl font-bold">{detailInfo.taskName}</div>
           <div className="flex items-center">
             <Avatar size={48} src={detailInfo.publisherAvatar} />{" "}
             <div className="text-2xl ml-5">{detailInfo.publisherName} </div>
           </div>
-          <div className="text-2xl font-bold">￥ {detailInfo.taskPrice}元</div>
-          <div className="text-2xl">截止日期：{detailInfo.taskDeadline}</div>
-          <Button className="w-52 h-10 bg-main text-amber-50 font-semibold">
+          <div className="text-2xl font-bold ">￥ {detailInfo.taskPrice}元</div>
+          <div className="text-2xl md:mt-2">
+            截止日期：{detailInfo.taskDeadline}
+          </div>
+          <Button className="w-52 h-10 bg-main text-amber-50 font-semibold md:mt-2">
             我要提交
           </Button>
-          <Button className="w-52 h-10 bg-yellow-500 font-semibold">
+          <Button className="w-52 h-10 bg-yellow-500 font-semibold md:mt-2">
             添加收藏
           </Button>
         </div>

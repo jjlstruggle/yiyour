@@ -7,9 +7,9 @@ function NameInput(props: {
 }) {
   const [name, setName] = useState(props.initalName || "");
   return (
-    <div className="flex items-center mb-12 ">
-      <div className="bg-ger w-3 h-7 mr-2"></div>
-      <div className="mr-16">请填写任务标题</div>
+    <div className="flex items-center mb-12 md:flex-col md:items-start">
+      <div className="bg-ger w-3 h-7 mr-2 md:hidden"></div>
+      <div className="mr-16 md:mb-4">请填写任务标题</div>
       <Input
         style={{ width: 300 }}
         value={name}

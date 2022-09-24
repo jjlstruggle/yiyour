@@ -5,7 +5,7 @@ const Call = () => {
     <div className="flex flex-col" style={{ padding: "0 6vw" }}>
       <div className=" flex justify-between md:flex-col md:items-center">
         <div
-          className="flex items-center  justify-around md:justify-start md:px-10"
+          className="flex items-center  justify-around md:justify-center md:px-10"
           style={{ width: "400px" }}
         >
           电话 <Input style={{ width: "260px" }} />
