@@ -8,16 +8,19 @@ const Call = () => {
           className="flex items-center  justify-around md:justify-center md:px-10"
           style={{ width: "400px" }}
         >
-          电话 <Input style={{ width: "260px" }} />
-          <Button className="md:hidden">绑定电话</Button>
+          <div>电话</div>{" "}
+          <Input className="callInput" style={{ width: "260px" }} />
+          <Button className="md:hidden ">绑定电话</Button>
         </div>
         <div
-          className=" md:w-full"
+          className="md:w-[90vw] md:items-center md:justify-between md:mt-4 md:px-8"
           style={{ width: "200px", display: "flex", justifyContent: "center" }}
         >
-          <Button className="hidden md:flex">绑定电话</Button>
-          在主页展示电话{" "}
-          <Switch style={{ marginLeft: "10px" }} defaultChecked />
+          <Button className="hidden md:flex ">绑定电话</Button>
+          <div>
+            <span> 在主页展示电话</span>
+            <Switch style={{ marginLeft: "10px" }} defaultChecked />
+          </div>
         </div>
       </div>
       <div
@@ -25,19 +28,22 @@ const Call = () => {
         style={{ marginTop: "20px" }}
       >
         <div
-          className="flex items-center  justify-around "
+          className="flex items-center  justify-around md:justify-center md:px-10"
           style={{ width: "400px" }}
         >
-          邮箱
-          <Input style={{ width: "260px" }} />
+          <div>邮箱</div>
+          <Input className="callInput" style={{ width: "260px" }} />
           <Button className="md:hidden">绑定邮箱</Button>
         </div>
         <div
+          className="md:w-[90vw] md:items-center md:justify-between md:mt-4 md:px-8"
           style={{ width: "200px", display: "flex", justifyContent: "center" }}
         >
           <Button className="hidden md:flex">绑定邮箱</Button>
-          在主页展示邮箱{" "}
-          <Switch style={{ marginLeft: "10px" }} defaultChecked />
+          <div>
+            <span> 在主页展示邮箱</span>
+            <Switch style={{ marginLeft: "10px" }} defaultChecked />
+          </div>
         </div>
       </div>
     </div>

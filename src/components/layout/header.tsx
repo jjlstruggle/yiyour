@@ -89,14 +89,7 @@ function Head({
               </p>
               <p
                 onClick={() => {
-                  if (user.hasLogin) {
-                    // @ts-ignore
-                    navigate(`/publish?uid=${user.userInfo.id}`);
-                  } else {
-                    import("antd/es/message/index").then((m) => {
-                      m.default.error("请先登录");
-                    });
-                  }
+                  navigate(`/user`);
                   onClose();
                 }}
               >
