@@ -2,11 +2,7 @@ import { Input, Button, message } from "antd";
 import { useState, useRef, Dispatch, SetStateAction } from "react";
 import { register, sendCode } from "@/api/auth";
 
-const Register = ({
-  setVisble,
-}: {
-  setVisble: Dispatch<SetStateAction<boolean>>;
-}) => {
+const Register = () => {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [psword, setPassword] = useState("");
@@ -55,7 +51,6 @@ const Register = ({
         setCodee({ e: true, t: "验证码错误" });
       } else if (res.code === "0") {
         message.success("注册成功");
-        setVisble(false);
         // 暂且不处理
       } else if (res.code == "1002") {
         message.warn("手机号已被占用");

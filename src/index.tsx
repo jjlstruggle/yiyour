@@ -15,6 +15,7 @@ import "dayjs/locale/zh-cn";
 import dayjs from "dayjs";
 import { Provider as UserProvider } from "./context/user";
 import store from "@/redux";
+import Account from "./pages/account";
 dayjs.locale("zh-cn");
 
 const root = ReactDOM.createRoot(
@@ -32,6 +33,7 @@ root.render(
                 <Route path="/*" element={<Layout />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/console/*" element={<Console />} />
+                <Route path="/account/*" element={<Account />} />
               </Routes>
             </BrowserRouter>
           </LocaleProvider>

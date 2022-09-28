@@ -1,0 +1,22 @@
+.loginPage {
+  background: url("../../assets/image/login/bg.png") no-repeat;
+  background-size: 100% 100%;
+}
+
+.friendText {
+  font-family: "Microsoft YaHei";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 64px;
+  line-height: 84px;
+
+  background: linear-gradient(
+    90deg,
+    #d8c4e1 37.38%,
+    rgba(145, 128, 153, 0) 106.93%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}

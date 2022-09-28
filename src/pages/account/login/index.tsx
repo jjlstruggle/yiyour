@@ -1,22 +1,16 @@
+import { useRef, useState, useContext } from "react";
+import UserContext from "@/context/user";
 import { Input, Tabs, Button, message } from "antd";
-import { CloseOutlined } from "@ant-design/icons";
-import img from "@/assets/temp/icon.avif";
-import { Dispatch, SetStateAction, useRef, useState, useContext } from "react";
 import { login } from "@/api/auth";
 import useLazy from "@/hooks/useLazy";
-import UserContext from "@/context/user";
+import { useNavigate } from "react-router-dom";
 const { TabPane } = Tabs;
-const Register = useLazy(import("./register"));
-const Forget = useLazy(import("./forget"));
+const Forget = useLazy(import("@/components/layout/header/forget"));
 
-export default function Login({
-  setVisble,
-}: {
-  setVisble: Dispatch<SetStateAction<boolean>>;
-}) {
-  const [mode, setMode] = useState<
-    "code" | "password" | "register" | "forgetPassword"
-  >("code");
+export default function Login() {
+  const [mode, setMode] = useState<"code" | "password" | "forgetPassword">(
+    "code"
+  );
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
@@ -26,9 +20,8 @@ export default function Login({
   const timer = useRef<ReturnType<typeof setTimeout>>();
   const [emaile, setEmaile] = useState({ e: false, t: "" });
   const [psworde, setPsworde] = useState({ e: false, t: "" });
-
   const { dispatchUserInfo } = useContext(UserContext);
-
+  const navigate = useNavigate();
   const handleLogin = async () => {
     let can = true;
 
@@ -54,7 +47,6 @@ export default function Login({
             hasLogin: true,
             userInfo: res.data,
           });
-          setVisble(false);
         } else if (res.code == "1000") {
           setPsworde({ e: true, t: res.msg });
         } else {
@@ -66,23 +58,10 @@ export default function Login({
   };
 
   return (
-    <div>
-      <div className="flex items-center relative">
-        <img src={img} className="w-full" />
-        <div
-          className="absolute right-4 text-white text-2xl font-bold cursor-pointer hover:text-3xl transition-all duration-100"
-          onClick={() => {
-            setVisble(false);
-          }}
-        >
-          <CloseOutlined />
-        </div>
-      </div>
+    <>
       <div className="px-24">
         {mode === "forgetPassword" ? (
-          <Forget setVisble={setVisble} />
-        ) : mode === "register" ? (
-          <Register setVisble={setVisble} />
+          <Forget />
         ) : (
           <>
             <Tabs
@@ -182,7 +161,7 @@ export default function Login({
               </div>
               <div
                 className="cursor-pointer hover:text-main transition-colors duration-200"
-                onClick={() => setMode("register")}
+                onClick={() => navigate("/account/register")}
               >
                 立即注册
               </div>
@@ -190,6 +169,9 @@ export default function Login({
           </>
         )}
       </div>
-    </div>
+      <div className="text-center text-gray-500 text-xs mb-4">
+        未注册手机验证后自动登录，注册即代表同意《隐私保护指引》
+      </div>
+    </>
   );
 }

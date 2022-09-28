@@ -1,12 +1,10 @@
 import { Input, Button, message } from "antd";
-import { useState, useRef, Dispatch, SetStateAction } from "react";
-import { sendCode } from "@/api/auth";
+import { useState, useRef, useContext } from "react";
+import { sendCode, register } from "@/api/auth";
+import { useNavigate } from "react-router-dom";
+import UserContext from "@/context/user";
 
-const Register = ({
-  setVisble,
-}: {
-  setVisble: Dispatch<SetStateAction<boolean>>;
-}) => {
+export default function Register() {
   const [phone, setPhone] = useState("");
   const [psword, setPassword] = useState("");
   const [twePsword, setTwePassword] = useState("");
@@ -18,9 +16,10 @@ const Register = ({
   const [hasSendCode, setHasSendCode] = useState(false);
   const [time, setTime] = useState(60);
   const timer = useRef<ReturnType<typeof setTimeout>>();
-
+  const [email, setEmail] = useState("");
+  const navigate = useNavigate();
   const $temp = useRef<string>();
-
+  const { dispatchUserInfo } = useContext(UserContext);
   const submit = async () => {
     let can = true;
     if (!phone) {
@@ -42,27 +41,42 @@ const Register = ({
     if (can) {
       const close = message.loading("注册中", 0);
 
-      // const res = await register(phone, psword, email, $temp.current!);
+      const res = await register(phone, psword, email, $temp.current!);
       close();
 
-      /* if (res.code === "1003") {
+      if (res.code === "1003") {
         setCodee({ e: true, t: "验证码错误" });
       } else if (res.code === "0") {
         message.success("注册成功");
-        setVisble(false);
-        // 暂且不处理
+        localStorage.setItem("token", res.data.token.token);
+        localStorage.setItem("header", res.data.token.tokenHead);
+        localStorage.setItem("user", JSON.stringify(res.data));
+        dispatchUserInfo({
+          hasLogin: true,
+          userInfo: res.data,
+        });
+        navigate("/home");
       } else if (res.code == "1002") {
         message.warn("手机号已被占用");
       } else if (res.code == "1005") {
         message.warn("邮箱已被占用");
       } else {
         message.warn("new error wait to handle");
-      } */
+      }
     }
   };
   return (
-    <div className="pb-6">
-      <div className="text-xl text-center mt-4 mb-2">忘记密码</div>
+    <div className="pb-6 px-12">
+      <div className="text-xl text-center mt-4 mb-2">注册账号</div>
+      <div className="my-3">
+        <Input
+          placeholder="请填写邮箱"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+          }}
+        />
+      </div>
       <div className="my-3">
         <Input
           status={phonee.e ? "error" : ""}
@@ -157,8 +171,17 @@ const Register = ({
       <Button type="primary" block className="mt-4" onClick={submit}>
         注册
       </Button>
+      <div
+        className="text-sm cursor-pointer mt-1 hover:text-blue-400"
+        onClick={() => {
+          navigate("/account/login");
+        }}
+      >
+        返回去登录？
+      </div>
+      <div className="text-center text-gray-500 text-xs mt-4">
+        注册即代表同意《隐私保护指引》
+      </div>
     </div>
   );
-};
-
-export default Register;
+}
