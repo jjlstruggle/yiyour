@@ -5,8 +5,9 @@ import bottom from "@/assets/image/login/bottom.png";
 import useLazy from "@/hooks/useLazy";
 import { Navigate, Route, Routes } from "react-router-dom";
 const Register = useLazy(import("./register"));
-const Forget = useLazy(import("@/components/layout/header/forget"));
+const Forget = useLazy(import("./forget"));
 const Login = useLazy(import("./login"));
+
 export default function Account() {
   return (
     <div className="loginPage w-full h-full relative">
@@ -85,6 +86,7 @@ export default function Account() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forget" element={<Forget />} />
           <Route path="*" element={<Navigate to="/account/login" />} />
         </Routes>
       </div>
