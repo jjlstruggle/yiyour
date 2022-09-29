@@ -1,12 +1,40 @@
-import React, { Dispatch, useEffect, useRef, useState } from "react";
+import React, {
+  Dispatch,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { useLocation } from "react-router-dom";
 import { UploadOutlined } from "@ant-design/icons";
 import { Avatar, UploadProps } from "antd";
 import { Button, Divider, message, Upload } from "antd";
 import useLazy from "@/hooks/useLazy";
 import img1 from "../../../assets/temp/shell.jpg";
-import { getTaskInfo } from "@/api/task";
-
+import { getTaskInfo, getRecommend } from "@/api/task";
+import { TaskListInfo } from "@/interface/api";
+import Card from "@/common/card";
+import { useNavigate } from "react-router-dom";
+const Task = ({ item }: { item: TaskListInfo }) => {
+  const navigate = useNavigate();
+  return (
+    <div
+      className="mb-5 relative mt-1  "
+      onClick={() => {
+        navigate("/home/detail", { state: { cardId: item.id } });
+      }}
+    >
+      <Card
+        title={item.taskName}
+        price={item.taskPrice}
+        img={item.taskPicture}
+        tag={item.type}
+        linked={false}
+        ddl={item.taskDeadline}
+      />
+    </div>
+  );
+};
 function Detail() {
   const [detailInfo, setDetailInfo]: [any, Dispatch<any>] = useState({
     id: 29,
@@ -115,6 +143,16 @@ function Detail() {
     );
   };
   const Result: React.FC = () => {
+    const [listData, setListData] = useState([]);
+    useLayoutEffect(() => {
+      let fn = async () => {
+        let res = await getRecommend();
+        if (res.code == "0") {
+          setListData(res.data);
+        }
+      };
+      fn();
+    }, []);
     return (
       <div
         className=" w-full h-3/5"
@@ -125,35 +163,40 @@ function Detail() {
           发布推荐
         </div>
         <Divider />
-        <div className="flex w-full h-full box-border justify-between mb-20">
-          <div className="w-60 h-80 " style={{ backgroundColor: "#FFFFFF" }}>
-            <img className="w-60 h-40 " src={img1} />
-            <div className="w-60 h-40 flex flex-col justify-around ">
-              <div className="font-bold text-base">收一份情书模板</div>
-              <div className="text-xs text-gray-400">2022/5/12 12:00截止 </div>
-              <div className="text-xs text-gray-400">文本/文案</div>
-              <div className="text-main text-base">悬赏： 20元</div>
-            </div>
-          </div>
-          <div className="w-60 h-80 " style={{ backgroundColor: "#FFFFFF" }}>
-            <img className="w-60 h-40 " src={img1} />
-            <div className="w-60 h-40 flex flex-col justify-around ">
-              <div className="font-bold text-base">收一份情书模板</div>
-              <div className="text-xs text-gray-400">2022/5/12 12:00截止 </div>
-              <div className="text-xs text-gray-400">文本/文案</div>
-              <div className="text-main text-base">悬赏： 20元</div>
-            </div>
-          </div>
-          <div className="w-60 h-80 " style={{ backgroundColor: "#FFFFFF" }}>
-            <img className="w-60 h-40 " src={img1} />
-            <div className="w-60 h-40 flex flex-col justify-around ">
-              <div className="font-bold text-base">收一份情书模板</div>
-              <div className="text-xs text-gray-400">2022/5/12 12:00截止 </div>
-              <div className="text-xs text-gray-400">文本/文案</div>
-              <div className="text-main text-base">悬赏： 20元</div>
-            </div>
-          </div>
+        <div className="flex w-full box-border justify-between mb-20 md:flex-col">
+          {listData.map((item, index) => (
+            <Task key={index} item={item} />
+          ))}
         </div>
+        {/* <div className="flex w-full h-full box-border justify-between mb-20">
+          <div className="w-60 h-80 " style={{ backgroundColor: "#FFFFFF" }}>
+            <img className="w-60 h-40 " src={img1} />
+            <div className="w-60 h-40 flex flex-col justify-around ">
+              <div className="font-bold text-base">收一份情书模板</div>
+              <div className="text-xs text-gray-400">2022/5/12 12:00截止 </div>
+              <div className="text-xs text-gray-400">文本/文案</div>
+              <div className="text-main text-base">悬赏： 20元</div>
+            </div>
+          </div>
+          <div className="w-60 h-80 " style={{ backgroundColor: "#FFFFFF" }}>
+            <img className="w-60 h-40 " src={img1} />
+            <div className="w-60 h-40 flex flex-col justify-around ">
+              <div className="font-bold text-base">收一份情书模板</div>
+              <div className="text-xs text-gray-400">2022/5/12 12:00截止 </div>
+              <div className="text-xs text-gray-400">文本/文案</div>
+              <div className="text-main text-base">悬赏： 20元</div>
+            </div>
+          </div>
+          <div className="w-60 h-80 " style={{ backgroundColor: "#FFFFFF" }}>
+            <img className="w-60 h-40 " src={img1} />
+            <div className="w-60 h-40 flex flex-col justify-around ">
+              <div className="font-bold text-base">收一份情书模板</div>
+              <div className="text-xs text-gray-400">2022/5/12 12:00截止 </div>
+              <div className="text-xs text-gray-400">文本/文案</div>
+              <div className="text-main text-base">悬赏： 20元</div>
+            </div>
+          </div>
+        </div> */}
       </div>
     );
   };
