@@ -26,7 +26,7 @@ import { DDate } from "@/interface/type";
 import { SmileOutlined } from '@ant-design/icons';
 import type { RcFile } from "antd/es/upload";
 import { TextAreaRef } from "antd/lib/input/TextArea";
-
+import Hide from "@/common/hideComponent"; 
 import Text from "@/components/publish/text";
 import TimeSelect from "@/components/publish/timeSelect";
 import NameInput from "@/components/publish/nameInput";
@@ -102,212 +102,217 @@ function resolveImage(file: Blob) {
     };
   });
 }
-
 function AddWorksList (){
-  let storage: PublishStorage = JSON.parse(
-    localStorage.getItem("publishTemp")!
-  );
-  const shouldLoadFromStorage = storage === null ? false : true;
-  
-  let formateDate = shouldLoadFromStorage
-    ? storage!.date
-      ? formate(dayjs(storage!.date))
-      : formate(dayjs())
-    : formate(dayjs());
-  let formateName = shouldLoadFromStorage
-    ? storage?.name
-      ? storage.name
-      : ""
-    : "";
-  let formateTask = shouldLoadFromStorage
-    ? storage?.task
-      ? storage.task
-      : 0
-    : 0;
-  let formateType = shouldLoadFromStorage
-    ? storage?.type
-      ? storage.type
-      : 0
-    : 0;
-  let formateText = shouldLoadFromStorage
-    ? storage?.text
-      ? storage.text
-      : ""
-    : "";
-  let formatPrice = shouldLoadFromStorage
-    ? storage?.price
-      ? storage.price
-      : 0
-    : 0;
-  let formatTopAd = shouldLoadFromStorage
-    ? storage?.topAd
-      ? storage.topAd
-      : 0
-    : 0;
-  let formatBottomAd = shouldLoadFromStorage
-    ? storage?.bottomAd
-      ? storage.bottomAd
-      : 0
-    : 0;
-  // let tempParams:OperateWorksParams = {
-  //   previewUrl: "",
-  //   realUrl: "",
-  //   remark: "",
-  //   subtype: "",
-  //   subtypeId: "",
-  //   type: "",
-  //   typeId: "",
-  //   worksCover: "",
-  //   worksDeadline: "",
-  //   worksDemand: "",
-  //   worksName: "",
-  //   worksPrice:0,
-  //   worksProcess: "",
-  //   worksStatus:0
-  // }
-  const [visible, setVisible] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-  const [addParams, setAddParams] = useState();
-  const [modalText, setModalText] = useState('Content of the modal');
-  
-  const timeRef = useRef<{ date: DDate }>(null);
-  const nameRef = useRef<InputRef>(null);
-  const taskRef = useRef(formateTask);
-  const typeRef = useRef(formateType);
-  const textRef = useRef<TextAreaRef>(null);
-  const [price, setPrice] = useState(formatPrice);
-  const [topAd, setTopAd] = useState(formatTopAd);
-  const [bottomAd, setBottomAd] = useState(formatBottomAd);
-  const [file, setFile] = useState<RcFile[]>([]);
-  const [file2, setFile2] = useState<RcFile[]>([]);
-  const [value, update] = useState<number|string>(formateTask);
-  const [typeValue, updateType] = useState<number|string>(formateType);
-  const data = useSelector((redux: ReduxStore) => redux.oss);
-  const navigate = useNavigate();
-  let allPrice = 1000 * topAd + 800 * bottomAd + price;
+                      let storage: PublishStorage = JSON.parse(
+                        localStorage.getItem("publishTemp")!
+                      );
+                      const shouldLoadFromStorage = storage === null ? false : true;
+                      
+                      let formateDate = shouldLoadFromStorage
+                        ? storage!.date
+                          ? formate(dayjs(storage!.date))
+                          : formate(dayjs())
+                        : formate(dayjs());
+                      let formateName = shouldLoadFromStorage
+                        ? storage?.name
+                          ? storage.name
+                          : ""
+                        : "";
+                      let formateTask = shouldLoadFromStorage
+                        ? storage?.task
+                          ? storage.task
+                          : 0
+                        : 0;
+                      let formateType = shouldLoadFromStorage
+                        ? storage?.type
+                          ? storage.type
+                          : 0
+                        : 0;
+                      let formateText = shouldLoadFromStorage
+                        ? storage?.text
+                          ? storage.text
+                          : ""
+                        : "";
+                      let formatPrice = shouldLoadFromStorage
+                        ? storage?.price
+                          ? storage.price
+                          : 0
+                        : 0;
+                      let formatTopAd = shouldLoadFromStorage
+                        ? storage?.topAd
+                          ? storage.topAd
+                          : 0
+                        : 0;
+                      let formatBottomAd = shouldLoadFromStorage
+                        ? storage?.bottomAd
+                          ? storage.bottomAd
+                          : 0
+                        : 0;
+                      // let tempParams:OperateWorksParams = {
+                      //   previewUrl: "",
+                      //   realUrl: "",
+                      //   remark: "",
+                      //   subtype: "",
+                      //   subtypeId: "",
+                      //   type: "",
+                      //   typeId: "",
+                      //   worksCover: "",
+                      //   worksDeadline: "",
+                      //   worksDemand: "",
+                      //   worksName: "",
+                      //   worksPrice:0,
+                      //   worksProcess: "",
+                      //   worksStatus:0
+                      // }
+                      const [visible, setVisible] = useState(false);
+                      const [confirmLoading, setConfirmLoading] = useState(false);
+                      const [addParams, setAddParams] = useState();
+                      const [modalText, setModalText] = useState('Content of the modal');
+                      const timeRef = useRef<{ date: DDate }>(null);
+                      const nameRef = useRef<InputRef>(null);
+                      const taskRef = useRef(formateTask);
+                      const typeRef = useRef(formateType);
+                      const textRef = useRef<TextAreaRef>(null);
+                      const [price, setPrice] = useState(formatPrice);
+                      const [topAd, setTopAd] = useState(formatTopAd);
+                      const [bottomAd, setBottomAd] = useState(formatBottomAd);
+                      const [file, setFile] = useState<RcFile[]>([]);
+                      const [file2, setFile2] = useState<RcFile[]>([]);
+                      const [value, update] = useState<number|string>(formateTask);
+                      const [typeValue, updateType] = useState<number|string>(formateType);
+                      const data= useSelector((redux: ReduxStore) => redux.oss);
+                      const navigate = useNavigate();
+                      let allPrice = 1000 * topAd + 800 * bottomAd + price;
+                      const showModal = () => {
+                        setVisible(true);
+                      };
+                      const map = new Map();
+                      const typeMap: string[] = [];
+                      // @ts-ignore
+                      // data.format.forEach((item) => {
+                      //   typeMap.push(item.id);
+                      //   item.children.forEach(({ id, format }) => {
+                      //     map.set(format, id);
+                      //   });
+                      // });
 
-  const map = new Map();
-  const typeMap: string[] = [];
-  if (!data.format) {
-    return <Spin />;
-  }
-  data.format.forEach((item) => {
-    typeMap.push(item.id);
-    item.children.forEach(({ id, format }) => {
-      map.set(format, id);
-    });
-  });
-  const accept = data.format[typeValue].children.map(
-    (prev: any) => "." + prev.format
-  );
-    //激活模态框
-  const showModal = () => {
-    setVisible(true);
-  };
-  //暂存信息到浏览器
-  const handleSave = () => {
-    let date = timeRef.current?.date;
-    localStorage.setItem(
-      "publishTemp",
-      JSON.stringify({
-        task: taskRef.current,
-        type: typeRef.current,
-        name: nameRef.current!.input!.value,
-        date:
-          date?.year + "-" + date?.month + "-" + date?.date + " " + date?.time,
-        text: textRef.current!.resizableTextArea!.props.value,
-        topAd,
-        bottomAd,
-        price,
-      })
-    );
-  };
-  //提交信息到sql
-  const handleSubmit = async () => {
-    let date = timeRef.current?.date;
+                      // const accept = data.format[typeValue].children.map(
+                      //   (prev: any) => "." + prev.format
+                      // );          
+                      //             //激活模态框
+                                //暂存信息到浏览器
+                                const handleSave = () => {
+                                  let date = timeRef.current?.date;
+                                  localStorage.setItem(
+                                    "publishTemp",
+                                    JSON.stringify({
+                                      task: taskRef.current,
+                                      type: typeRef.current,
+                                      name: nameRef.current!.input!.value,
+                                      date:
+                                        date?.year + "-" + date?.month + "-" + date?.date + " " + date?.time,
+                                      text: textRef.current!.resizableTextArea!.props.value,
+                                      topAd,
+                                      bottomAd,
+                                      price,
+                                    })
+                                  );
+                                };
+                                //提交信息到sql
+                                const handleSubmit = async () => {
+                                  let date = timeRef.current?.date;
 
-    if (taskRef.current == 0) {
-      const pic = await upload(file[0]);
-      const watermarkImg = await resolveImage(file[0]); // 添加水印的图片
-      const res = await operateWorks({
-        previewUrl:"",
-        realUrl:"", 
-        worksName: nameRef.current!.input!.value,
-       
-        worksDeadline:
-          date?.year +
-          "-" +
-          date?.month +
-          "-" +
-          date?.date +
-          " " +
-          date?.time +
-          ":00",
-        worksPrice: allPrice,
-        worksDemand: textRef.current!.resizableTextArea!.props
-          .value as unknown as string,
-        // publisherId: Number(location.search.split("=")[1]),
-        worksCover: pic.data.imageUrl,
-        worksStatus: 1,
-        type: type[typeRef.current!],
-        typeId: String(typeMap[typeRef.current]),
-        subtype:"",
-        subtypeId:"",
-        worksProcess:"",
-        remark:"121"
-        });
-      if (res.code == "0") {
-        message.success("发布成功");
-        localStorage.removeItem("publishTemp");
-        navigate("/");
-      }
-    } else {
-      const pic = await upload(file[0]);
-      const product = await upload(file2[0]);
-    }
-  };
+                                  if (taskRef.current == 0) {
+                                    const pic = await upload(file[0]);
+                                    const watermarkImg = await resolveImage(file[0]); // 添加水印的图片
+                                    const res = await operateWorks({
+                                      previewUrl:"",
+                                      realUrl:"", 
+                                      worksName: nameRef.current!.input!.value,
+                                    
+                                      worksDeadline:
+                                        date?.year +
+                                        "-" +
+                                        date?.month +
+                                        "-" +
+                                        date?.date +
+                                        " " +
+                                        date?.time +
+                                        ":00",
+                                      worksPrice: allPrice,
+                                      worksDemand: textRef.current!.resizableTextArea!.props
+                                        .value as unknown as string,
+                                      // publisherId: Number(location.search.split("=")[1]),
+                                      worksCover: pic.data.imageUrl,
+                                      worksStatus: 1,
+                                      type: type[typeRef.current!],
+                                      typeId: String(typeMap[typeRef.current]),
+                                      subtype:"",
+                                      subtypeId:"",
+                                      worksProcess:"",
+                                      remark:"121"
+                                      });
+                                    if (res.code == "0") {
+                                      message.success("发布成功");
+                                      localStorage.removeItem("publishTemp");
+                                      navigate("/");
+                                    }
+                                  } else {
+                                    const pic = await upload(file[0]);
+                                    const product = await upload(file2[0]);
+                                  }
+                                };
 
-  const handleOk = async () => {
-    setModalText("保存中");
-    setConfirmLoading(true);
-  //  let res =  await operateWorks(addParams)
-  //   if(res.data.code === '0' ){
-  //       setVisible(false)
-  //       setConfirmLoading(false);
-  //   }
-    
-  };
+                                const handleOk = async () => {
+                                  setModalText("保存中");
+                                  setConfirmLoading(true);
+                                //  let res =  await operateWorks(addParams)
+                                //   if(res.data.code === '0' ){
+                                //       setVisible(false)
+                                //       setConfirmLoading(false);
+                                //   }
+                                  
+                                };
 
-  const handleCancel = () => {
-    console.log("Clicked cancel button");
-    setVisible(false);
-  };  
-  const [addForm] = Form.useForm();
-  const  formItemLayout = {
-  labelCol: {
-    xs: { span: 24 },
-    sm: { span: 6 },
-  },
-  wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 14 },
-  },
-};
-const onFinish = (val:any) => {
-  new Promise(  
-  ()=>{}
-  )
-};
-const onFinishFailed = (val:any) => {
-  console.log("onFinishFailed", val);
-};
+                                const handleCancel = () => {
+                                  console.log("Clicked cancel button");
+                                  setVisible(false);
+                                };  
+                                const [addForm] = Form.useForm();
+                                const  formItemLayout = {
+                                labelCol: {
+                                  xs: { span: 24 },
+                                  sm: { span: 6 },
+                                },
+                                wrapperCol: {
+                                  xs: { span: 24 },
+                                  sm: { span: 14 },
+                                },
+                              };
+                              const onFinish = (val:any) => {
+                                new Promise(  
+                                ()=>{}
+                                )
+                              };
+                              const onFinishFailed = (val:any) => {
+                                console.log("onFinishFailed", val);
+                              };
   return (
     <>
-      <Button type="primary" onClick={showModal}>
-        新增
-      </Button>
+       <Button 
+      type="primary"
+      style={{ marginBottom: 16 }}
+      onClick ={
+        ()=>{
+          setVisible(true)
+          console.log('state'+visible)
+        } 
+      }>
+          新增一条
+    </Button> 
 
       <Modal
+        width={"80%"}
         title="作品新增"
         visible={visible}
         confirmLoading={confirmLoading}
@@ -332,12 +337,11 @@ const onFinishFailed = (val:any) => {
              }/> */}
              <NameInput ref={nameRef} initalName={formateName!} />
     </Form.Item>
-
     <Form.Item
       label="作品分类"
       help="请填写作品名称"
     >
-      {/* @ts-ignore */}
+       {/* @ts-ignore  */}
         <Select item={task} ref={taskRef} change={update} />
          {/* @ts-ignore */}
         <Select item={type} ref={typeRef} change={updateType} />
@@ -358,12 +362,12 @@ const onFinishFailed = (val:any) => {
       validateStatus="validating"
       help="请上传作品"
     >   
-       <GoodUpload
+       {/* <GoodUpload
                 type="default"
                 fileList={file2}
                 setFileList={setFile2}
                 accept={accept}
-              />
+              /> */}
     </Form.Item>
              
     <Form.Item
@@ -431,7 +435,7 @@ const onFinishFailed = (val:any) => {
       <Form.Item label="Warning" hasFeedback validateStatus="warning">
         <Input placeholder="Warning" id="warning2" />
       </Form.Item> */}
-      <Form.Item label="Warning" hasFeedback validateStatus="warning">
+      <Form.Item label="操作" hasFeedback validateStatus="warning" >
         <Button type="primary" size="large" htmlType="submit" >保存</Button>
         <Button type="default" size="large" onClick={()=>handleCancel} >取消</Button>
       </Form.Item>

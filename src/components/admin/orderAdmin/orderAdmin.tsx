@@ -32,8 +32,8 @@ const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
     </Form>
   );
 };
-
 const SearchOrder = useLazy(import("@/components/admin/search/searchOrder"));
+const AddListModal = useLazy(import("@/components/admin/addModal/addModalWorks"));
 // const confirm = (worksId: number) => {
 //   const hideLoading = message.loading("请求中");
 //   deleteWork(worksId)  //此处因为缺少权限分级 使用 用户本人删除接口
@@ -61,7 +61,7 @@ const columns: ColumnsType<TaskListInfo> = [
     title: "任务名称",
     dataIndex: "taskName",
     key: "task-name",
-    width: 100,
+    width: 50,
   },
   {
     title: "截止时间",
@@ -80,7 +80,7 @@ const columns: ColumnsType<TaskListInfo> = [
     title: "任务赏金",
     dataIndex: "taskPrice",
     key: "task-Price",
-    width: 50,
+    width: 20,
   },
   {
     title: "任务类型",
@@ -199,9 +199,13 @@ const components = {
     cell: EditableCell,
   },
 };
-const AddOrderHandBy = () => {};
+// const [addModalState,setAddModalState] = useState(true)
+// const AddOrderHandBy = () => {  
+//   setAddModalState(true)
+// };
 export default function OrderTable() {
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(1); 
+ 
   const { data, loading, error } = useRequest(async () => {
     const curRes = await searchList(page);
     const curTask = curRes.data.list;
@@ -213,13 +217,8 @@ export default function OrderTable() {
   let taskList = data as unknown as TaskListInfo[];
   return (
     <>
-      <Button
-        onClick={AddOrderHandBy}
-        type="primary"
-        style={{ marginBottom: 16 }}
-      >
-        新增一条
-      </Button>
+        <AddListModal
+       />
       <SearchOrder></SearchOrder>
       <Table
         columns={columns}

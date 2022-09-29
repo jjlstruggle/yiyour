@@ -13,12 +13,10 @@ const Navigater = useLazy(import("../pages/navigate"));
 const Purse = useLazy(import("../pages/user/purse/index"));
 const Edit = useLazy(import("../pages/user/person/edit/edit"));
 const Search = useLazy(import("../pages/search/index"));
-
 export default function Router() {
   return (
     <Routes>
       <Route path="/" element={<Navigater />} />
-
       <Route path="publish/*" element={<Publish />} />
       <Route path="user/" element={<Person />} />
       <Route path="user/person" element={<Person />} />
@@ -31,7 +29,6 @@ export default function Router() {
       <Route path="home" element={<Home />} />
       <Route path="home/detail" element={<Detail />} />
       <Route path="about" element={<About />} />
-
       <Route path="search" element={<Search />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
