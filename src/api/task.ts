@@ -45,7 +45,13 @@ export const getUserCollected = (page: number) => {
     },
   });
 };
-
+export const postUserCollect = (taskId: number) => {
+  const data = {
+    taskId
+  }
+  return request.post(`/api-task/collect`, JSON.stringify(data));
+}
+export const postUnUserCollect = (taskId: number) => { }
 export const getRecommend = () => {
   return request.get("/api-task/recommend", {
     headers: {

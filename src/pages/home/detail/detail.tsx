@@ -14,12 +14,14 @@ import img1 from "../../../assets/temp/shell.jpg";
 import { getTaskInfo, getRecommend } from "@/api/task";
 import { TaskListInfo } from "@/interface/api";
 import Card from "@/common/card";
+const AddNumber = useLazy(import("@/components/detail/addNumber"));
 import { useNavigate } from "react-router-dom";
+import { UploadIcon, LoveIcon } from "@/assets/svg/index";
 const Task = ({ item }: { item: TaskListInfo }) => {
   const navigate = useNavigate();
   return (
     <div
-      className="mb-5 relative mt-1  "
+      className="mb-5 relative mt-1 w-60 md:w-full"
       onClick={() => {
         navigate("/home/detail", { state: { cardId: item.id } });
       }}
@@ -50,6 +52,13 @@ function Detail() {
     taskWorksNumber: 0,
     type: "",
   });
+  const replace = (str: string) => {
+    console.log(str);
+
+    str.replace(/(\-)/gi, "/");
+    let res = str.slice(0, str.length - 3);
+    return res;
+  };
   const location = useLocation();
   useEffect(() => {
     (async () => {
@@ -84,7 +93,7 @@ function Detail() {
     return (
       <div style={{ width: "100vw", padding: "2vh 6vw" }}>
         <div className="text-xl font-bold flex items-center ">
-          <div className="bg-main w-3 h-6 mr-2"></div>
+          <div className="bg-ger w-3 h-6 mr-2"></div>
           需求描述
         </div>
         <Divider />
@@ -96,11 +105,11 @@ function Detail() {
     return (
       <div style={{ width: "100vw", padding: "2vh 6vw" }}>
         <div className="text-xl font-bold flex items-center ">
-          <div className="bg-main w-3 h-6 mr-2"></div>
-          已经提交的作品数量
+          <div className="bg-ger w-3 h-6 mr-2"></div>
+          出价人数
         </div>
         <Divider />
-        <p className="text-xl">{detailInfo.taskWorksNumber}件</p>
+        <p className="text-xl">{detailInfo.taskWorksNumber}人</p>
       </div>
     );
   };
@@ -108,19 +117,12 @@ function Detail() {
     return (
       <div style={{ width: "100vw", padding: "2vh 6vw" }}>
         <div className="text-xl font-bold flex items-center ">
-          <div className="bg-main w-3 h-6 mr-2"></div>
-          我要提交作品
+          <div className="bg-ger w-3 h-6 mr-2"></div>
+          我要出价
         </div>
         <Divider />
         <div className="flex">
-          <Upload {...props}>
-            <Button className="bg-slate-300" icon={<UploadOutlined />}>
-              点击上传作品
-            </Button>
-          </Upload>
-          <Button className="bg-main ml-10 text-xs text-zinc-50">
-            确认提交
-          </Button>
+          <AddNumber />
         </div>
       </div>
     );
@@ -129,7 +131,7 @@ function Detail() {
     return (
       <div style={{ width: "100vw", padding: "2vh 6vw" }}>
         <div className="text-xl font-bold flex items-center ">
-          <div className="bg-main w-3 h-6 mr-2"></div>
+          <div className="bg-ger w-3 h-6 mr-2"></div>
           参与流程
         </div>
         <Divider />
@@ -168,49 +170,27 @@ function Detail() {
             <Task key={index} item={item} />
           ))}
         </div>
-        {/* <div className="flex w-full h-full box-border justify-between mb-20">
-          <div className="w-60 h-80 " style={{ backgroundColor: "#FFFFFF" }}>
-            <img className="w-60 h-40 " src={img1} />
-            <div className="w-60 h-40 flex flex-col justify-around ">
-              <div className="font-bold text-base">收一份情书模板</div>
-              <div className="text-xs text-gray-400">2022/5/12 12:00截止 </div>
-              <div className="text-xs text-gray-400">文本/文案</div>
-              <div className="text-main text-base">悬赏： 20元</div>
-            </div>
-          </div>
-          <div className="w-60 h-80 " style={{ backgroundColor: "#FFFFFF" }}>
-            <img className="w-60 h-40 " src={img1} />
-            <div className="w-60 h-40 flex flex-col justify-around ">
-              <div className="font-bold text-base">收一份情书模板</div>
-              <div className="text-xs text-gray-400">2022/5/12 12:00截止 </div>
-              <div className="text-xs text-gray-400">文本/文案</div>
-              <div className="text-main text-base">悬赏： 20元</div>
-            </div>
-          </div>
-          <div className="w-60 h-80 " style={{ backgroundColor: "#FFFFFF" }}>
-            <img className="w-60 h-40 " src={img1} />
-            <div className="w-60 h-40 flex flex-col justify-around ">
-              <div className="font-bold text-base">收一份情书模板</div>
-              <div className="text-xs text-gray-400">2022/5/12 12:00截止 </div>
-              <div className="text-xs text-gray-400">文本/文案</div>
-              <div className="text-main text-base">悬赏： 20元</div>
-            </div>
-          </div>
-        </div> */}
       </div>
     );
   };
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col mb-10">
       <div
         style={{ width: "100vw" }}
         className="flex justify-between  box-border my-14 md:flex-col"
       >
-        <div className=" relative w-1/2">
-          <div className="absolute text-xl -top-8 left-1/4  flex md:hidden">
-            /任务集市/{detailInfo.type}
+        <div className=" relative w-1/2 ">
+          <div className="absolute text-xl -top-8 left-1/4  flex items-center   md:w-full ">
+            <img
+              className="w-8"
+              src={require("../../../assets/house.png")}
+              alt=""
+            />
+            /任务集市/
+            {detailInfo.type}
           </div>
           <img
+            alt=""
             className="md:w-[100vw] md:h-[360px]"
             src={detailInfo.taskPicture}
             style={{
@@ -228,14 +208,22 @@ function Detail() {
             <div className="text-2xl ml-5">{detailInfo.publisherName} </div>
           </div>
           <div className="text-2xl font-bold ">￥ {detailInfo.taskPrice}元</div>
-          <div className="text-2xl md:mt-2">
-            截止日期：{detailInfo.taskDeadline}
+          <div className="text-2xl md:mt-2 flex items-center">
+            <img
+              alt=""
+              src={require("@/assets/calendar.png")}
+              className="w-6 mr-3"
+            />{" "}
+            截止日期：
+            {replace(detailInfo.taskDeadline)}
           </div>
-          <Button className="w-52 h-10 bg-main text-amber-50 font-semibold md:mt-2">
+          <Button className="flex items-center justify-center w-52 h-10 bg-ger text-amber-50 font-semibold md:mt-2">
             我要提交
+            <UploadIcon />
           </Button>
-          <Button className="w-52 h-10 bg-yellow-500 font-semibold md:mt-2">
+          <Button className="flex items-center justify-center  w-52 h-10 bg-yel font-semibold md:mt-2">
             添加收藏
+            <LoveIcon className={`text-white`} />
           </Button>
         </div>
       </div>
