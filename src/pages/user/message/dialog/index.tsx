@@ -2,141 +2,24 @@ import { Input, Button, Avatar, message, Upload, Pagination, Card } from "antd";
 import { UserOutlined, CloseOutlined } from "@ant-design/icons";
 import Draggable from "react-draggable";
 import DialogContext from "@/context/dialog";
-import { useEffect, useState, useContext, useRef } from "react";
+import {
+  useEffect,
+  useState,
+  useContext,
+  useRef,
+  useLayoutEffect,
+} from "react";
 import { getHisMes } from "@/api/mes";
-export default function Dialog({ ws }: any) {
+import { use } from "i18next";
+export default function Dialog({ toUserId }: any) {
   const { Search } = Input;
   const [inputValue, setInputValue] = useState("");
   const { dialog, dispatchDialogInfo } = useContext(DialogContext);
   let user: any = localStorage.getItem("user");
   let { id } = JSON.parse(user);
   const mesDiv: any = useRef(null);
-  console.log(id);
-
-  const [mesHis, setMesHis] = useState([
-    {
-      content: "你好",
-      fromUserId: "",
-      id: "1844",
-      receiveUserId: "1851",
-      sendTime: "2022-01-01 00:00:00",
-    },
-    {
-      content: "你好",
-      fromUserId: "",
-      id: "1844",
-      receiveUserId: "1851",
-      sendTime: "2022-01-01 00:00:00",
-    },
-    {
-      content: "你好",
-      fromUserId: "",
-      id: "1844",
-      receiveUserId: "1851",
-      sendTime: "2022-01-01 00:00:00",
-    },
-    {
-      content: "你好",
-      fromUserId: "",
-      id: "1851",
-      receiveUserId: "1844",
-      sendTime: "2022-01-01 00:00:00",
-    },
-    {
-      content: "你好",
-      fromUserId: "",
-      id: "",
-      receiveUserId: "",
-      sendTime: "2022-01-01 00:00:00",
-    },
-    {
-      content: "你好",
-      fromUserId: "",
-      id: "1851",
-      receiveUserId: "1844",
-      sendTime: "2022-01-01 00:00:00",
-    },
-    {
-      content: "你好",
-      fromUserId: "",
-      id: "1851",
-      receiveUserId: "1844",
-      sendTime: "2022-01-01 00:00:00",
-    },
-    {
-      content: "你好",
-      fromUserId: "",
-      id: "1851",
-      receiveUserId: "1844",
-      sendTime: "2022-01-01 00:00:00",
-    },
-    {
-      content: "你好",
-      fromUserId: "",
-      id: "1851",
-      receiveUserId: "1844",
-      sendTime: "2022-01-01 00:00:00",
-    },
-    {
-      content: "你好",
-      fromUserId: "",
-      id: "1851",
-      receiveUserId: "1844",
-      sendTime: "2022-01-01 00:00:00",
-    },
-    {
-      content: "你好",
-      fromUserId: "",
-      id: "1851",
-      receiveUserId: "1844",
-      sendTime: "2022-01-01 00:00:00",
-    },
-    {
-      content: "你好",
-      fromUserId: "",
-      id: "1851",
-      receiveUserId: "1844",
-      sendTime: "2022-01-01 00:00:00",
-    },
-    {
-      content: "你好",
-      fromUserId: "",
-      id: "1845",
-      receiveUserId: "1851",
-      sendTime: "2022-01-01 00:00:00",
-    },
-    {
-      content: "你好",
-      fromUserId: "",
-      id: "1844",
-      receiveUserId: "1851",
-      sendTime: "2022-01-01 00:00:00",
-    },
-    {
-      content: "你好",
-      fromUserId: "",
-      id: "1851",
-      receiveUserId: "1844",
-      sendTime: "2022-01-01 00:00:00",
-    },
-    {
-      content:
-        "开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!开始聊天沟通!",
-      fromUserId: "",
-      id: "1844",
-      receiveUserId: "1844",
-      sendTime: "2022-01-01 00:00:00",
-    },
-    {
-      content: "。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。",
-      fromUserId: "",
-      id: "1844",
-      receiveUserId: "1851",
-      sendTime: "2022-01-01 00:00:00",
-    },
-  ]);
+  const [mesHis, setMesHis] = useState([]);
   let token: any = localStorage.getItem("token");
-  // var ws: any = new WebSocket("ws://47.96.86.132:88/api-websocket/chat", token);
   var ws: any = new WebSocket("ws://47.96.86.132:88/api-websocket/chat", token);
   ws.onopen = function (res: any) {
     console.log("消息连接成功", res);
@@ -152,7 +35,7 @@ export default function Dialog({ ws }: any) {
       ws.send(
         JSON.stringify({
           isSystem: 0,
-          toUserId: "1",
+          toUserId: toUserId,
           content: inputValue,
           sendTime: "2022-08-22 14:12:21",
         })
@@ -161,39 +44,32 @@ export default function Dialog({ ws }: any) {
         let res = await getHisMes({
           current: 1,
           size: 10,
-          toUserId: "1",
+          toUserId: toUserId,
         });
+        console.log(res.data, "res.datares.datares.datares.data");
         if (res.code === "0") {
           setMesHis(res.data.list);
         }
-        console.log(res.data);
+        mesDiv.current.scrollTop = mesDiv.current.scrollHeight;
       })();
       console.log("消息发送成功");
     }
 
     setInputValue("");
   };
-  useEffect(() => {
+  useLayoutEffect(() => {
     (async () => {
       let res = await getHisMes({
         current: 1,
         size: 10,
-        toUserId: "1",
+        toUserId: toUserId,
       });
       if (res.code === "0") {
         setMesHis(res.data.list);
       }
-      console.log(res.data);
     })();
-  }, []);
-  useEffect(() => {
-    mesDiv.current.scrollTop = 672;
-    // mesDiv.current.onscroll = (e: any) => {
-    //   console.log(e);
-    //   console.log((e.target.scrollTop = 672));
-    //   console.log(scrollHeight);
-    // };
-  }, []);
+  }, [dialog]);
+
   return (
     <div className=" z-50">
       <Draggable handle=".ant-card-head">
@@ -208,13 +84,13 @@ export default function Dialog({ ws }: any) {
                   className="flex justify-center items-center"
                   icon={<UserOutlined />}
                 />
-                <h2 className="ml-7 translate-y-1">用户名</h2>
+                <h2 className="ml-7 translate-y-1">{toUserId}</h2>
               </div>
             }
             bordered={true}
             extra={
               <div
-                onDoubleClick={() => {
+                onClick={() => {
                   dispatchDialogInfo({ open: false });
                 }}
                 onTouchStart={() => {
@@ -223,7 +99,7 @@ export default function Dialog({ ws }: any) {
               >
                 {""}
                 <CloseOutlined
-                  className=" relative -left-6"
+                  className=" relative -left-6 hover:cursor-pointer"
                   style={{ fontSize: "26px", color: "#08c" }}
                 />
               </div>
@@ -243,7 +119,7 @@ export default function Dialog({ ws }: any) {
               className=" overflow-y-auto  h-80 px-3 py-3 flex flex-col text-lg"
             >
               {mesHis.map((item: any, index: number) => {
-                if (id != item.receiveUserId) {
+                if (id == item.receiveUserId) {
                   return (
                     <div key={index} className=" mt-1  self-end">
                       <div>{item.sendTime}</div>

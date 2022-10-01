@@ -2,13 +2,13 @@ import { ConfigProvider } from "antd";
 import { useContext, useState } from "react";
 import I18aContext from "src/context/i18a";
 import zhCN from "antd/lib/locale/zh_CN";
-import resources from "../locale/resources";
+// import resources from "../locale/resources";
 import useAsyncEffect from "src/hooks/useAsyncEffect";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 i18n.use(initReactI18next).init({
   lng: "zh",
-  resources,
+  // resources,
   interpolation: {
     escapeValue: false,
   },

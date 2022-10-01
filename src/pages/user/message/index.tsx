@@ -2,14 +2,19 @@ import useLazy from "@/hooks/useLazy";
 const Header = useLazy(import("../../../components/user/header"));
 const HeaderBack = useLazy(import("@/components/user/headerback"));
 import { Input, Button, Avatar, message, Upload, Pagination } from "antd";
-import { useState, useEffect, useContext } from "react";
-import { getMes } from "../../../api/user";
+import { useState, useEffect, useContext, useLayoutEffect, useId } from "react";
 import UserContext from "@/context/user";
 import DialogContext from "@/context/dialog";
 import { Space, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
+import { getAllMes } from "@/api/mes";
 const Dialog = useLazy(import("./dialog/index"));
-const ContentLeft = ({ choose, setChoose }: any) => {
+const ContentLeft = ({
+  choose,
+  setChoose,
+  setRenderData,
+  setPageData,
+}: any) => {
   const onclickBut = (e: any) => {
     if (e.target.innerText === "全部消息" && choose.all !== true) {
       setChoose({
@@ -17,28 +22,62 @@ const ContentLeft = ({ choose, setChoose }: any) => {
         system: false,
         user: false,
       });
+      (async () => {
+        let res = await getAllMes(1);
+        if (res.code == "0") {
+          setRenderData(res.data.list);
+          setPageData({
+            current: 1,
+            total: res.data.totalCount,
+          });
+        }
+      })();
     } else if (e.target.innerText === "系统消息" && choose.system !== true) {
       setChoose({
         all: false,
         system: true,
         user: false,
       });
+      (async () => {
+        let res = await getAllMes(1);
+        if (res.code == "0") {
+          let data = res.data.list.filter((item: any) => item.isSystem == 1);
+          console.log(res.data);
+
+          setRenderData(data);
+          setPageData({
+            current: 1,
+            total: res.data.totalCount,
+          });
+        }
+      })();
     } else if (e.target.innerText === "用户消息" && choose.user !== true) {
       setChoose({
         all: false,
         system: false,
         user: true,
       });
+      (async () => {
+        let res = await getAllMes(1);
+        if (res.code == "0") {
+          let data = res.data.list.filter((item: any) => item.isSystem == 0);
+          setRenderData(data);
+          setPageData({
+            current: 1,
+            total: res.data.totalCount,
+          });
+        }
+      })();
     }
   };
   return (
     <div
-      className="flex flex-col w-32  h-full"
+      className="flex flex-col w-32   h-full md:flex md:flex-row  md:border-b-2  md:px-8  md:w-[100vw] md:h-20  md:justify-evenly  md:items-center   md:border-gray-300"
       style={{ borderRight: "2px solid #E2E2E2" }}
     >
       <Button
         onClick={onclickBut.bind(this)}
-        className="shadow-xl  w-24 h-10  mt-6 text-white text-base font-semibold"
+        className="shadow-xl  w-24 h-10  mt-6 text-white text-base font-semibold md:mt-0"
         style={
           choose.all
             ? { backgroundColor: "#F6B76C" }
@@ -49,7 +88,7 @@ const ContentLeft = ({ choose, setChoose }: any) => {
       </Button>
       <Button
         onClick={onclickBut.bind(this)}
-        className="shadow-xl  w-24 mt-12 h-10 text-white font-semibold"
+        className="shadow-xl w-24 mt-12 h-10 text-white font-semibold md:mt-0"
         style={
           choose.system
             ? { backgroundColor: "#F6B76C" }
@@ -60,7 +99,7 @@ const ContentLeft = ({ choose, setChoose }: any) => {
       </Button>
       <Button
         onClick={onclickBut.bind(this)}
-        className="shadow-xl w-24 mt-12 h-10 text-white font-semibold"
+        className="shadow-xl w-24 mt-12 h-10 text-white font-semibold md:mt-0"
         style={
           choose.user
             ? { backgroundColor: "#F6B76C" }
@@ -73,41 +112,69 @@ const ContentLeft = ({ choose, setChoose }: any) => {
   );
 };
 const ContentRight = ({
-  mesAllData,
-  mesSystemData,
-  mesUserData,
   pageData,
   setPageData,
-  setMesAllData,
-  setMesSystemData,
-  setMesUserData,
   choose,
   user,
+  setToUserId,
+  dispatchDialogInfo,
+  renderData,
+  setRenderData,
 }: any) => {
-  const onPageChange = async (page: number, pageSize: number) => {
-    console.log(page);
-    if (choose.all) {
-      let res = await getMes(page, user.userInfo.id);
+  useLayoutEffect(() => {
+    let fn = async () => {
+      let res = await getAllMes(1);
       if (res.code == "0") {
-        setMesAllData(res.data.list);
+        setRenderData(res.data.list);
         setPageData({
-          current: page,
+          current: 1,
+          total: res.data.totalCount,
+        });
+      }
+    };
+    fn();
+  }, []);
+  const clickMesBox = (id: any) => {
+    (async () => {
+      await setToUserId(id);
+      dispatchDialogInfo({ open: true });
+    })();
+  };
+  const onPageChange = async (page: number, pageSize: number) => {
+    console.log(page, pageSize);
+    if (choose.all) {
+      let res = await getAllMes(page);
+      console.log(res);
+
+      if (res.code == "0") {
+        console.log(123);
+
+        setRenderData(res.data.list);
+        setPageData({
+          current: res.data.currPage,
           total: res.data.totalCount,
         });
       }
     } else if (choose.system) {
-      let res = await getMes(page, user.userInfo.id);
+      console.log("system");
+
+      let res = await getAllMes(page);
       if (res.code == "0") {
-        setMesSystemData(res.data.list);
+        let data = res.data.list.filter((item: any) => item.isSystem == 1);
+        console.log(res.data);
+
+        setRenderData(data);
         setPageData({
           current: page,
           total: res.data.totalCount,
         });
       }
     } else if (choose.user) {
-      let res = await getMes(page, user.userInfo.id);
+      console.log("user");
+      let res = await getAllMes(page);
       if (res.code == "0") {
-        setMesUserData(res.data.list);
+        let data = res.data.list.filter((item: any) => item.isSystem == 0);
+        setRenderData(data);
         setPageData({
           current: page,
           total: res.data.totalCount,
@@ -115,37 +182,43 @@ const ContentRight = ({
       }
     }
   };
-  const mesRender = (): any => {
-    let fn = async () => {
-      let data: any = [];
-      if (choose.all) {
-        data = mesAllData;
-      } else if (choose.system) {
-        data = mesSystemData;
-      } else if (choose.user) {
-        data = mesUserData;
-      }
 
-      {
-        data ? (
+  return (
+    <div className="flex flex-col relative w-full">
+      <div
+        className="w-full box-border  ml-4 md:ml-0 md:min-h-[200px] md:mb-6"
+        style={{
+          padding: "0 4vw 3vh 3vw",
+          height: "95%",
+          letterSpacing: "1px",
+        }}
+      >
+        {renderData ? (
           <>
-            {data.map((item: any) => {
+            {renderData.map((item: any, index: number) => {
               return (
                 <div
-                  className="flex "
+                  key={index}
+                  // ts-ignore
+                  onClick={() => {
+                    clickMesBox(item.fromUserId);
+                  }}
+                  className="flex hover:cursor-pointer "
                   style={{
                     borderBottom: "1px solid #CCCCCC",
                     padding: "1.5vh 2vw",
                   }}
                 >
-                  <Avatar size={64} />
+                  <Avatar className="md:hidden" size={64} />
                   <div className="text-blank text-xl ml-8 flex flex-col justify-around">
                     <div className="flex justify-between">
-                      <div className=" font-semibold">一云立画</div>
-                      <div className="text-stone-400">2022/05/01</div>
+                      <div className=" font-semibold">{item.fromUserId}</div>
+                      <div className=" md:text-sm text-stone-400 ml-5">
+                        {item.sendTime}
+                      </div>
                     </div>
                     <div className=" font-semibold text-base">
-                      你发布的作品xxxxxx已过审！
+                      {item.content}
                     </div>
                   </div>
                 </div>
@@ -153,32 +226,13 @@ const ContentRight = ({
             })}
           </>
         ) : (
-          () => {
-            return (
-              <Space
-                size="middle"
-                className=" absolute top-1/2 left-1/2  -translate-x-1/2 -translate-y-1/2"
-              >
-                <Spin size="large" />
-              </Space>
-            );
-          }
-        );
-      }
-    };
-    fn();
-  };
-  return (
-    <div className="flex flex-col relative w-full">
-      <div
-        className="w-full box-border  ml-4"
-        style={{
-          padding: "0 4vw 3vh 3vw",
-          height: "95%",
-          letterSpacing: "1px",
-        }}
-      >
-        {mesRender()}
+          <Space
+            size="middle"
+            className=" absolute top-1/2 left-1/2  -translate-x-1/2 -translate-y-1/2"
+          >
+            <Spin size="large" />
+          </Space>
+        )}
       </div>
 
       <Pagination
@@ -201,25 +255,23 @@ const ContentRight = ({
 export default function Message() {
   const navigate = useNavigate();
   const { dialog, dispatchDialogInfo } = useContext(DialogContext);
+  const [toUserId, setToUserId] = useState("");
   const [choose, setChoose] = useState({
     all: true,
     system: false,
     user: false,
   });
-  const [mesAllData, setMesAllData] = useState();
-  const [mesSystemData, setMesSystemData] = useState();
-  const [mesUserData, setMesUserData] = useState();
   const [pageData, setPageData] = useState({
     current: 1,
     total: 5,
   });
   const { user } = useContext(UserContext);
-  useEffect(() => {}, []);
+  const [renderData, setRenderData] = useState([]);
   useEffect(() => {
     let fn = async () => {
       if (choose.all) {
         //@ts-ignore
-        let res = await getMes(1, user.userInfo.id);
+        let res = await getAllMes(1, user.userInfo.id);
         if (res.code == "0") {
           setPageData({
             current: 1,
@@ -254,7 +306,7 @@ export default function Message() {
         </Button>
         <Header message={true} />
         <div
-          className="flex  mt-6 h-4/5 md:flex-col md:h-auto md:mb-12"
+          className="flex  mt-6 h-4/5 md:flex-col md:h-auto md:mb-12 md:items-center"
           style={{
             backgroundColor: "#FFFFFF",
             padding: "2.6vh 2.2vw",
@@ -263,19 +315,22 @@ export default function Message() {
             border: "1px solid  #DEDEDE",
           }}
         >
-          <ContentLeft choose={choose} setChoose={setChoose} />
-          {dialog.open ? <Dialog /> : null}
+          <ContentLeft
+            setPageData={setPageData}
+            setRenderData={setRenderData}
+            choose={choose}
+            setChoose={setChoose}
+          />
+          {dialog.open ? <Dialog toUserId={toUserId} /> : null}
           <ContentRight
-            mesAllData={mesAllData}
-            mesSystemData={mesSystemData}
-            mesUserData={mesUserData}
+            renderData={renderData}
+            setRenderData={setRenderData}
+            setToUserId={setToUserId}
             pageData={pageData}
             setPageData={setPageData}
-            setMesAllData={setMesAllData}
-            setMesSystemData={setMesSystemData}
-            setMesUserData={setMesUserData}
             choose={choose}
             user={user}
+            dispatchDialogInfo={dispatchDialogInfo}
           />
         </div>
       </div>

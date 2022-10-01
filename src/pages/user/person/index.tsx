@@ -3,7 +3,7 @@ const Header = useLazy(import("../../../components/user/header"));
 const PersonEdit = useLazy(import("./personEdit/index"));
 const AccountEdit = useLazy(import("./accountEdit/index"));
 const HeaderBack = useLazy(import("@/components/user/headerback"));
-import { useState, useContext, useRef } from "react";
+import { useState, useContext, useRef, useLayoutEffect } from "react";
 import UserContext from "@/context/user";
 import { useNavigate } from "react-router-dom";
 import { postUser } from "@/api/user";
@@ -16,11 +16,37 @@ import {
 } from "@ant-design/icons";
 import { Input, Button, Avatar, message, Upload } from "antd";
 import type { UploadProps } from "antd";
+import { getUser } from "@/api/user";
 import "./person.css";
 //个人信息
 export default function Person() {
   const navigate = useNavigate();
   const [contentType, setContentType] = useState(false);
+  const [asyncUserInfo, setAsyncUserInfo] = useState({
+    avatar: "",
+    city: "",
+    code: "",
+    cover: "",
+    emailShow: 0,
+    gender: "",
+    id: 0,
+    introduction: "",
+    job: "",
+    organization: "",
+    phone: "",
+    phoneShow: 0,
+    qq: "",
+    username: "",
+    wx: "",
+  });
+  useLayoutEffect(() => {
+    (async () => {
+      let res: any = await getUser();
+      if (res.code === "0") {
+        setAsyncUserInfo(res.data);
+      }
+    })();
+  }, []);
   const Content = () => {
     return (
       <div
@@ -33,7 +59,7 @@ export default function Person() {
           border: "1px solid  #DEDEDE",
         }}
       >
-        <ul className="flex list-none  text-xl">
+        <ul className="flex list-none  text-xl hover:cursor-pointer">
           <li
             onClick={() => {
               if (contentType) setContentType(false);
@@ -53,7 +79,11 @@ export default function Person() {
           </li>
         </ul>
         <div className="flex flex-col w-full   box-border h-full  px-9 mt-5">
-          {contentType ? <AccountEdit /> : <PersonEdit />}
+          {contentType ? (
+            <AccountEdit asyncUserInfo={asyncUserInfo} />
+          ) : (
+            <PersonEdit asyncUserInfo={asyncUserInfo} />
+          )}
         </div>
       </div>
     );

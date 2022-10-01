@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Input, Button, Select, DatePicker, Switch } from "antd";
 const Call = () => {
   return (
-    <div className="flex flex-col" style={{ padding: "0 6vw" }}>
-      <div className=" flex justify-between md:flex-col md:items-center">
+    <div className="flex flex-col md:w-full " style={{ padding: "0 6vw" }}>
+      <div className=" flex justify-between md:flex-col md:items-center ">
         <div
-          className="flex items-center  justify-around md:justify-center md:px-10"
+          className="flex items-center  justify-around md:justify-center  md:px-14 "
           style={{ width: "400px" }}
+          id="Box"
         >
           <div>电话</div>{" "}
           <Input className="callInput" style={{ width: "260px" }} />
@@ -15,6 +16,7 @@ const Call = () => {
         <div
           className="md:w-[90vw] md:items-center md:justify-between md:mt-4 md:px-8"
           style={{ width: "200px", display: "flex", justifyContent: "center" }}
+          id="small"
         >
           <Button className="hidden md:flex ">绑定电话</Button>
           <div>
@@ -29,6 +31,7 @@ const Call = () => {
       >
         <div
           className="flex items-center  justify-around md:justify-center md:px-10"
+          id="Box"
           style={{ width: "400px" }}
         >
           <div>邮箱</div>
@@ -38,6 +41,7 @@ const Call = () => {
         <div
           className="md:w-[90vw] md:items-center md:justify-between md:mt-4 md:px-8"
           style={{ width: "200px", display: "flex", justifyContent: "center" }}
+          id="small"
         >
           <Button className="hidden md:flex">绑定邮箱</Button>
           <div>

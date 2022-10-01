@@ -15,3 +15,11 @@ export const getHisMes = ({ begin = "2022-01-01 00:00:00", current, size, toUser
     };
     return request.post('/api-user/history', JSON.stringify(data))
 }
+export const getAllMes = (current: number) => {
+    return request.get(`/api-user/${current}/5`,
+        {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            }
+        })
+}

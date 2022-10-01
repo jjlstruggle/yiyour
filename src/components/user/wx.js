@@ -20,21 +20,21 @@ export default function Wx() {
           className="flex items-center  justify-around md:flex-col md:items-start"
           style={{ width: "400px" }}
         >
-          <div className="md:flex md:items-center">
+          <div className="flex items-center">
             <div className="mr-4">QQ</div>{" "}
             <Input placeholder="请绑定账号" style={{ width: "260px" }} />
           </div>
-          <Button className="mt-2">绑定QQ</Button>
+          <Button className="md:mt-2 mr:4">绑定QQ</Button>
         </div>
         <div
           className="flex items-center  justify-around md:flex-col md:items-start md:mt-4"
           style={{ width: "400px" }}
         >
-          <div className="md:flex md:items-center">
+          <div className="flex items-center">
             <div className="mr-4">微信</div>{" "}
             <Input placeholder="请绑定账号" style={{ width: "260px" }} />
           </div>
-          <Button className="mt-2">绑定账号</Button>
+          <Button className="md:mt-2 mr:4">绑定账号</Button>
         </div>
       </div>
     </div>
