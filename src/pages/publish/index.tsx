@@ -89,9 +89,15 @@ function resolveImage(file: Blob) {
           ctx.fillText("一隅立画", targetX, targetY);
         }
       }
-      cvs.toBlob((blob) => {
-        resolve(blob);
-      });
+      const newBase64 = cvs.toDataURL("image/jpeg", 0.9);
+      const bytes = window.atob(newBase64.split(",")[1]);
+      const arr = [];
+      const bytesLength = bytes.length;
+      for (let i = 0; i < bytesLength; i += 1) {
+        arr.push(bytes.charCodeAt(i));
+      }
+      const blob = new Blob([new Uint8Array(arr)], { type: "image/jpeg" });
+      resolve(blob);
     };
   });
 }
@@ -226,9 +232,41 @@ export default function Publish() {
         navigate("/");
       }
     } else {
-      const pic = await upload(file[0]);
-      const product = await upload(file2[0]);
-      const watermarkImg = await resolveImage(file[0]); // 添加水印的图片
+      const pic = (await upload(file[0])).data.imageUrl;
+      const product = (await upload(file2[0])).data;
+      let preview;
+      if (typeRef.current == 1) {
+        const watermarkImg = await resolveImage(file2[0]); // 添加水印的图片
+        preview = (await upload(watermarkImg as Blob)).data.imageUrl;
+      } else {
+        preview = product.previewUrl;
+      }
+
+      await operateWorks({
+        previewUrl: preview,
+        realUrl: product.realUrl,
+        remark: String(file2[0].size),
+        subtype: file2[0].type,
+        subtypeId: map.get(file2[0].type),
+        type: type[typeRef.current],
+        typeId: typeMap[typeRef.current],
+        worksName: nameRef.current!.input!.value,
+        worksPrice: price,
+        worksCover: pic,
+        worksDeadline:
+          date?.year +
+          "-" +
+          date?.month +
+          "-" +
+          date?.date +
+          " " +
+          date?.time +
+          ":00",
+        worksDemand: textRef.current!.resizableTextArea!.props
+          .value as unknown as string,
+        worksProcess: "",
+        worksStatus: 0,
+      });
     }
   };
 
