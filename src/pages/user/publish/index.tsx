@@ -93,6 +93,7 @@ const ContentRight = ({
   setUseWork,
   setPage,
 }: ContentRightParams) => {
+  const navigate = useNavigate();
   const data = !choose ? userWork : userTask;
   const onPageChange = async (page: number, pageSize: number) => {
     console.log(page);
@@ -131,7 +132,10 @@ const ContentRight = ({
               return (
                 <div
                   key={index}
-                  className="flex rounded-lg bg-white  shadow-lg flex-col"
+                  className="flex rounded-lg bg-white  shadow-lg flex-col hover:cursor-pointer"
+                  onClick={() => {
+                    navigate("/home/detail", { state: { cardId: item.id } });
+                  }}
                 >
                   <img
                     src={item.taskPicture}

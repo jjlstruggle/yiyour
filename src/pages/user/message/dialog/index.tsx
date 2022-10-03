@@ -43,7 +43,7 @@ export default function Dialog({ toUserId }: any) {
       (async () => {
         let res = await getHisMes({
           current: 1,
-          size: 10,
+          size: 100,
           toUserId: toUserId,
         });
         console.log(res.data, "res.datares.datares.datares.data");
@@ -61,7 +61,7 @@ export default function Dialog({ toUserId }: any) {
     (async () => {
       let res = await getHisMes({
         current: 1,
-        size: 10,
+        size: 100,
         toUserId: toUserId,
       });
       if (res.code === "0") {
@@ -71,7 +71,7 @@ export default function Dialog({ toUserId }: any) {
   }, [dialog]);
 
   return (
-    <div className=" z-50">
+    <div className=" z-50 md:w-full">
       <Draggable handle=".ant-card-head">
         <div>
           <Card
@@ -111,7 +111,7 @@ export default function Dialog({ toUserId }: any) {
               border: "2px solid #787878",
               backgroundColor: "#FEFEFE",
             }}
-            className=" z-50 b ml-7 absolute l-1/2 t-1/2 translate-x-20 -translate-y-10"
+            className="md:w-[92vw] md:translate-x-0 z-50 b ml-7 absolute l-1/2 t-1/2 translate-x-20 -translate-y-10"
             loading={false}
           >
             <div
