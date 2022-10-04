@@ -43,6 +43,7 @@ export default function Login() {
             hasLogin: true,
             userInfo: res.data,
           });
+          navigate("/home");
         } else if (res.code == "1000") {
           setPsworde({ e: true, t: res.msg });
         } else {
