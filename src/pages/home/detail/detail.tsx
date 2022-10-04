@@ -4,19 +4,32 @@ import React, {
   useLayoutEffect,
   useRef,
   useState,
+  useContext,
 } from "react";
-import { useLocation } from "react-router-dom";
-import { UploadOutlined } from "@ant-design/icons";
-import { Avatar, UploadProps } from "antd";
-import { Button, Divider, message, Popconfirm } from "antd";
-import useLazy from "@/hooks/useLazy";
-import { getTaskInfo, getRecommend } from "@/api/task";
-import { TaskListInfo } from "@/interface/api";
 import Card from "@/common/card";
+import useLazy from "@/hooks/useLazy";
+import { useLocation } from "react-router-dom";
+import {
+  Button,
+  Divider,
+  message,
+  Popconfirm,
+  Avatar,
+  UploadProps,
+  Upload,
+} from "antd";
+import {
+  getTaskInfo,
+  getRecommend,
+  postUserCollect,
+  postUserCommit,
+} from "@/api/task";
+import { upload } from "@/api/oss";
+import { TaskListInfo } from "@/interface/api";
 const AddNumber = useLazy(import("@/components/detail/addNumber"));
 import { useNavigate } from "react-router-dom";
 import { UploadIcon, LoveIcon } from "@/assets/svg/index";
-import { postUserCollect } from "@/api/task";
+import UserContext from "@/context/user";
 const Task = ({ item }: { item: TaskListInfo }) => {
   const navigate = useNavigate();
   return (
@@ -52,7 +65,7 @@ function Detail() {
     taskWorksNumber: 0,
     type: "",
   });
-
+  const { user, dispatchUserInfo } = useContext(UserContext);
   const handleOk = () => {
     let fn = async () => {
       let res = await postUserCollect(detailInfo.id);
@@ -82,24 +95,41 @@ function Detail() {
     })();
   }, []);
   // 上传
-  const props: UploadProps = {
-    name: "file",
-    action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-    headers: {
-      authorization: "authorization-text",
-    },
+  const uploadProps: UploadProps = {
+    maxCount: 1,
+    action: "http://47.96.86.132:88/api-oss/",
+    accept: "image/*",
     onChange(info) {
       if (info.file.status !== "uploading") {
-        console.log(info.file, info.fileList);
+        console.log(123);
       }
       if (info.file.status === "done") {
-        message.success(`${info.file.name} file uploaded successfully`);
+        message.success(`${info.file.name} 上传成功`);
+        console.log(info.file.response.data.realUrl);
+
+        const handleClickCommit = (
+          taskId: number,
+          url: string,
+          userId: number
+        ) => {
+          let fn = async () => {
+            let res: any = await handleClickCommit(taskId, url, userId);
+            if (res.code == 0) {
+            }
+          };
+          fn();
+        };
+        handleClickCommit(
+          detailInfo.id,
+          info.file.response.data.realUrl,
+          // @ts-ignore
+          user.userInfo.id
+        );
       } else if (info.file.status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
+        message.error(`${info.file.name} 上传失败.`);
       }
     },
   };
-  // 上传
   const Demand: React.FC = () => {
     return (
       <div style={{ width: "100vw", padding: "2vh 6vw" }}>
@@ -235,10 +265,11 @@ function Detail() {
             截止日期：
             {replace(detailInfo.taskDeadline)}
           </div>
-          <Button className="flex items-center justify-center w-52 h-10 bg-ger text-amber-50 font-semibold md:mt-2">
-            我要提交
-            <UploadIcon />
-          </Button>
+          <Upload className=" min-w-[50px]" {...uploadProps}>
+            <Button className="flex items-center justify-center w-52 h-10 bg-ger text-amber-50 font-semibold md:mt-2">
+              我要提交
+            </Button>
+          </Upload>
           <Popconfirm
             placement="top"
             title="是否确认收藏?"

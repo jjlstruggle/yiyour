@@ -31,6 +31,14 @@ export const getUserPublish = (page: number, id: string) => {
     },
   });
 };
+export const postUserCommit = (taskId: number, url: string, userId: number) => {
+  const data = {
+    taskId,
+    url,
+    userId
+  }
+  return request.post("/api-task/commit", JSON.stringify(data))
+}
 export const getUserCommitted = (page: number) => {
   return request.get(`/api-task/committed/${page}/8`, {
     headers: {
