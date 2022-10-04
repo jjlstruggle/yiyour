@@ -7,13 +7,29 @@ export const getMes = (page: number, id: string) => {
     })
 }
 export const postUser = (user: any) => {
-    const { avatar, code, id, organization, password, phone, username } = user
-    const data: any = {
-        avatar, code, id, organization, password, phone, username
-    }
+    const { avatar, city, cover, emailShow, gender, introduction, job, organization, password, phone, phoneShow, qq, username, wx } = user
+    const users: any = localStorage.getItem("user")
+    const userInfo: any = JSON.parse(users)
+    console.log(userInfo.id);
 
-    return request.post("/api-user/update", JSON.stringify(data))
+    const data: any = {
+        // @ts-ignore
+        avatar, city, cover, emailShow, gender, introduction, job, organization, password, phone, phoneShow, qq, username, wx, id: userInfo.id
+    }
+    console.log(data);
+
+    return request.post("/api-user/update", JSON.stringify(data), {
+        // @ts-ignore
+        headers: {
+            token: localStorage.getItem("token")
+        }
+    })
 }
 export const getUser = () => {
-    return request.get("/api-user/info")
+    return request.get("/api-user/info", {
+        // @ts-ignore
+        headers: {
+            token: localStorage.getItem("token")
+        }
+    })
 }

@@ -39,18 +39,20 @@ export default function PersonEdit({ asyncUserInfo }) {
             className="absolute "
             style={{ left: "-36px", color: "#636363" }}
           >
-            昵称
+            昵称:
           </div>
           {isEdit ? (
             <Input style={{ width: "240px" }} />
           ) : (
-            <div className="h-10">{asyncUserInfo.username}</div>
+            <div className="h-10 flex justify-center items-center  text-base ">
+              {asyncUserInfo.username}
+            </div>
           )}
         </div>
         <div className=" relative flex items-center">
           {" "}
           <div className="absolute " style={{ left: "-36px" }}>
-            性别
+            性别:
           </div>
           {isEdit ? (
             <Select
@@ -63,54 +65,64 @@ export default function PersonEdit({ asyncUserInfo }) {
               <Option value="女">女</Option>
             </Select>
           ) : (
-            <div className="h-10">{asyncUserInfo.gender}</div>
+            <div className="h-10 flex justify-center items-center text-base ">
+              {asyncUserInfo.gender ? asyncUserInfo.gender : "保密"}
+            </div>
           )}
         </div>
-        {/* <div className=" relative flex items-center">
-          <div className="absolute " style={{ left: "-36px" }}>
-            生日
+        {asyncUserInfo.emailShow ? (
+          <div className=" relative flex items-center">
+            <div className="absolute " style={{ left: "-36px" }}>
+              邮箱:
+            </div>
+            <div>{}</div>
           </div>
-          {isEdit ? (
-            <DatePicker
-              placeholder="请输入生日…"
-              //   onChange={onChange}
-              style={{ width: "240px" }}
-            />
-          ) : (
-            <div></div>
-          )}
-        </div> */}
+        ) : null}
+        {asyncUserInfo.phoneShow ? (
+          <div className=" relative flex items-center">
+            <div className="absolute " style={{ left: "-36px" }}>
+              手机号:
+            </div>
+            <div>{asyncUserInfo.phone}</div>
+          </div>
+        ) : null}
         <div className=" relative flex items-center">
           {" "}
           <div className="absolute " style={{ left: "-36px" }}>
-            城市
+            城市:
           </div>
           {isEdit ? (
             <Input placeholder="请输入城市…" style={{ width: "240px" }} />
           ) : (
-            <div className="h-10">{asyncUserInfo.city}</div>
+            <div className="h-10 flex justify-center items-center text-base ">
+              {asyncUserInfo.city ? asyncUserInfo.city : "外星"}
+            </div>
           )}
         </div>
         <div className=" relative flex items-center">
           {" "}
           <div className="absolute " style={{ left: "-36px" }}>
-            职业
+            职业:
           </div>
           {isEdit ? (
             <Input placeholder="请输入职业…" style={{ width: "240px" }} />
           ) : (
-            <div></div>
+            <div>{asyncUserInfo.job ? asyncUserInfo.job : "保密"}</div>
           )}
         </div>
         <div className=" relative flex items-center md:mt-2">
           {" "}
           <div className="absolute " style={{ left: "-72px" }}>
-            单位/学校
+            单位/学校:
           </div>
           {isEdit ? (
             <Input placeholder="请输入单位/学校…" style={{ width: "240px" }} />
           ) : (
-            <div className="h-10 ">{asyncUserInfo.organization}</div>
+            <div className="h-10 flex justify-center items-center text-base ">
+              {asyncUserInfo.organization
+                ? asyncUserInfo.organization
+                : "神秘组织"}
+            </div>
           )}
         </div>
       </div>
@@ -130,7 +142,9 @@ export default function PersonEdit({ asyncUserInfo }) {
             placeholder="介绍一下自己…"
           />
         ) : (
-          <div>{asyncUserInfo.introduction}</div>
+          <div className="h-10 flex justify-center items-center text-base ">
+            {asyncUserInfo.introduction}
+          </div>
         )}
       </div>
       <div
@@ -150,6 +164,9 @@ export default function PersonEdit({ asyncUserInfo }) {
           {isEdit ? "保存" : "修改"}
         </Button>
         <Button
+          onClick={() => {
+            setIsEdit(false);
+          }}
           style={{
             color: "#636363",
             backgroundColor: "#FFFFFF",

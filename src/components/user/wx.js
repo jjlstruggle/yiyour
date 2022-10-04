@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Input, Button, Select, DatePicker, Switch } from "antd";
-export default function Wx() {
+import { postUser } from "@/api/user";
+export default function Wx({ asyncUserInfo }) {
+  const bindMess = (type) => {
+    let fn = () => {
+      let res;
+    };
+  };
   return (
     <div
       className="md:flex-col "
@@ -22,7 +28,11 @@ export default function Wx() {
         >
           <div className="flex items-center">
             <div className="mr-4">QQ</div>{" "}
-            <Input placeholder="请绑定账号" style={{ width: "260px" }} />
+            <Input
+              defaultValue={asyncUserInfo.qq ? asyncUserInfo.qq : undefined}
+              placeholder="请绑定账号"
+              style={{ width: "260px" }}
+            />
           </div>
           <Button className="md:mt-2 mr:4">绑定QQ</Button>
         </div>
@@ -32,7 +42,11 @@ export default function Wx() {
         >
           <div className="flex items-center">
             <div className="mr-4">微信</div>{" "}
-            <Input placeholder="请绑定账号" style={{ width: "260px" }} />
+            <Input
+              defaultValue={asyncUserInfo.wx ? asyncUserInfo.wx : undefined}
+              placeholder="请绑定账号"
+              style={{ width: "260px" }}
+            />
           </div>
           <Button className="md:mt-2 mr:4">绑定账号</Button>
         </div>
