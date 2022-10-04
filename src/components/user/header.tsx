@@ -66,7 +66,7 @@ function UserHeader(props: any) {
               justifyContent: "center",
               width: "13vw",
             }}
-            className=" md:w-full   md:justify-start"
+            className=" md:w-full   md:justify-start hover:cursor-pointer"
           >
             <img
               className="md:w-5"

@@ -5,7 +5,8 @@ import React, {
   Dispatch,
   SetStateAction,
 } from "react";
-import { Input, Button } from "antd";
+import { Input, Button, message } from "antd";
+import { type } from "os";
 
 export default function AddNumber({
   ad,
@@ -24,9 +25,9 @@ export default function AddNumber({
           ￥
           <Input
             bordered={false}
-            className="w-1/2 bg-[#E2E2E2]"
+            className="w-5/6 bg-[#E2E2E2]"
             value={ad}
-            defaultValue={123}
+            defaultValue={defaultValue}
             onChange={(e) => {
               if (!isNaN(e.target.value as unknown as number))
                 change(Number(e.target.value));
@@ -36,7 +37,9 @@ export default function AddNumber({
         <div className="flex flex-col justify-between h-full">
           <div
             onClick={() => {
-              if (ad) {
+              if (typeof ad == "number") {
+                console.log(123);
+
                 change(ad + 1);
               }
             }}
@@ -44,6 +47,10 @@ export default function AddNumber({
           ></div>
           <div
             onClick={() => {
+              if (ad == 0) {
+                message.error("不能再减了");
+                return;
+              }
               if (ad) {
                 change(ad - 1);
               }

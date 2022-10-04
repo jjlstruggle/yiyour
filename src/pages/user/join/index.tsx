@@ -119,6 +119,7 @@ const ContentRight = ({
       }
     }
   };
+  const navigate = useNavigate();
   return (
     <div className="flex flex-col relative w-full">
       <div
@@ -132,6 +133,9 @@ const ContentRight = ({
                 <div
                   key={index}
                   className="flex rounded-lg bg-white  shadow-lg flex-col"
+                  onClick={() => {
+                    navigate("/home/detail", { state: { cardId: item.id } });
+                  }}
                 >
                   <img
                     src={item.taskPicture}

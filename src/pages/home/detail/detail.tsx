@@ -8,15 +8,15 @@ import React, {
 import { useLocation } from "react-router-dom";
 import { UploadOutlined } from "@ant-design/icons";
 import { Avatar, UploadProps } from "antd";
-import { Button, Divider, message, Upload } from "antd";
+import { Button, Divider, message, Popconfirm } from "antd";
 import useLazy from "@/hooks/useLazy";
-import img1 from "../../../assets/temp/shell.jpg";
 import { getTaskInfo, getRecommend } from "@/api/task";
 import { TaskListInfo } from "@/interface/api";
 import Card from "@/common/card";
 const AddNumber = useLazy(import("@/components/detail/addNumber"));
 import { useNavigate } from "react-router-dom";
 import { UploadIcon, LoveIcon } from "@/assets/svg/index";
+import { postUserCollect } from "@/api/task";
 const Task = ({ item }: { item: TaskListInfo }) => {
   const navigate = useNavigate();
   return (
@@ -52,6 +52,17 @@ function Detail() {
     taskWorksNumber: 0,
     type: "",
   });
+
+  const handleOk = () => {
+    let fn = async () => {
+      let res = await postUserCollect(detailInfo.id);
+      if (res.code == "0") {
+        message.success("收藏成功!");
+      }
+    };
+    fn();
+  };
+
   const replace = (str: string) => {
     console.log(str);
 
@@ -114,6 +125,7 @@ function Detail() {
     );
   };
   const Oups: React.FC = () => {
+    const [value, setValue] = useState(detailInfo.taskPrice);
     return (
       <div style={{ width: "100vw", padding: "2vh 6vw" }}>
         <div className="text-xl font-bold flex items-center ">
@@ -122,7 +134,13 @@ function Detail() {
         </div>
         <Divider />
         <div className="flex">
-          <AddNumber />
+          <AddNumber
+            ad={value}
+            change={(e: any) => {
+              setValue(e);
+            }}
+            defaultValue={detailInfo.taskPrice}
+          />
         </div>
       </div>
     );
@@ -221,10 +239,23 @@ function Detail() {
             我要提交
             <UploadIcon />
           </Button>
-          <Button className="flex items-center justify-center  w-52 h-10 bg-yel font-semibold md:mt-2">
-            添加收藏
-            <LoveIcon className={`text-white`} />
-          </Button>
+          <Popconfirm
+            placement="top"
+            title="是否确认收藏?"
+            onConfirm={handleOk}
+            okText="确定"
+            cancelText="取消"
+          >
+            <Button
+              onClick={() => {
+                console.log(123);
+              }}
+              className="flex items-center justify-center  w-52 h-10 bg-yel font-semibold md:mt-2"
+            >
+              添加收藏
+              <LoveIcon className={`text-white`} />
+            </Button>
+          </Popconfirm>
         </div>
       </div>
       <Demand />
