@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Input, Button, Select, DatePicker, Switch } from "antd";
+import { Input, Button, Select, DatePicker, Switch, message } from "antd";
 import { postUser } from "@/api/user";
 export default function Wx({ asyncUserInfo }) {
-  const bindMess = (type) => {
-    let fn = () => {
-      let res;
+  const [qqValue, setQQValue] = useState(asyncUserInfo.qq);
+  const [wxValue, setWXValue] = useState(asyncUserInfo.wx);
+  const bindMess = (value, type) => {
+    let fn = async () => {
+      let data = {
+        [type]: value,
+      };
+      let res = await postUser(data);
+      if (res.code == "0") {
+        message.success(type + "绑定成功！");
+      }
     };
+    fn();
   };
   return (
     <div
@@ -29,12 +38,23 @@ export default function Wx({ asyncUserInfo }) {
           <div className="flex items-center">
             <div className="mr-4">QQ</div>{" "}
             <Input
+              value={qqValue}
+              onChange={(e) => {
+                setQQValue(e.target.value);
+              }}
               defaultValue={asyncUserInfo.qq ? asyncUserInfo.qq : undefined}
               placeholder="请绑定账号"
               style={{ width: "260px" }}
             />
           </div>
-          <Button className="md:mt-2 mr:4">绑定QQ</Button>
+          <Button
+            onClick={() => {
+              bindMess(qqValue, "qq");
+            }}
+            className="md:mt-2 mr:4"
+          >
+            绑定QQ
+          </Button>
         </div>
         <div
           className="flex items-center  justify-around md:flex-col md:items-start md:mt-4"
@@ -43,12 +63,23 @@ export default function Wx({ asyncUserInfo }) {
           <div className="flex items-center">
             <div className="mr-4">微信</div>{" "}
             <Input
+              value={wxValue}
+              onChange={(e) => {
+                setWXValue(e.target.value);
+              }}
               defaultValue={asyncUserInfo.wx ? asyncUserInfo.wx : undefined}
               placeholder="请绑定账号"
               style={{ width: "260px" }}
             />
           </div>
-          <Button className="md:mt-2 mr:4">绑定账号</Button>
+          <Button
+            onClick={() => {
+              bindMess(wxValue, "wx");
+            }}
+            className="md:mt-2 mr:4"
+          >
+            绑定账号
+          </Button>
         </div>
       </div>
     </div>

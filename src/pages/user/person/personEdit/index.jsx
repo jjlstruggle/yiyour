@@ -1,18 +1,49 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Input, Button, Select, DatePicker, Avatar } from "antd";
+import { Input, Button, Select, DatePicker, Avatar, message } from "antd";
 import UserContext from "@/context/user";
 import useLazy from "@/hooks/useLazy";
 const Myavatar = useLazy(import("@/components/user/upload"));
+import { postUser } from "@/api/user";
 const { TextArea } = Input;
 export default function PersonEdit({ asyncUserInfo }) {
   const { user, dispatchUserInfo } = useContext(UserContext);
-  const [avatarUrl, setAvatarUrl] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState(asyncUserInfo.avatar);
   const [isEdit, setIsEdit] = useState(false);
+  const [nameValue, setNameValue] = useState(asyncUserInfo.username);
+  const [genderValue, setGenderValue] = useState(asyncUserInfo.gender);
+  const [cityValue, setCityValue] = useState(asyncUserInfo.city);
+  const [jobValue, setJobValue] = useState(asyncUserInfo.job);
+  const [organizationValue, setOrganizationValue] = useState(
+    asyncUserInfo.organization
+  );
+  const [introductionValue, setIntroductionValue] = useState(
+    asyncUserInfo.introduction
+  );
   useEffect(() => {
     console.log(user);
   }, []);
   const editButton = () => {
     setIsEdit(!isEdit);
+  };
+  const onClickSubmit = () => {
+    let fn = async () => {
+      let data = {
+        username: nameValue,
+        gender: genderValue,
+        job: jobValue,
+        city: cityValue,
+        organization: organizationValue,
+        introduction: introductionValue,
+        avatar: avatarUrl,
+      };
+      let res = await postUser(data);
+      if (res.code == "0") {
+        message.success("修改成功", 2000);
+        setIsEdit(!isEdit);
+      } else {
+        message.error("修改出错");
+      }
+    };
   };
   return (
     <div>
@@ -42,7 +73,13 @@ export default function PersonEdit({ asyncUserInfo }) {
             昵称:
           </div>
           {isEdit ? (
-            <Input style={{ width: "240px" }} />
+            <Input
+              onChange={(e) => {
+                setNameValue(e.target.value);
+              }}
+              defaultValue={asyncUserInfo.username}
+              style={{ width: "240px" }}
+            />
           ) : (
             <div className="h-10 flex justify-center items-center  text-base ">
               {asyncUserInfo.username}
@@ -56,7 +93,12 @@ export default function PersonEdit({ asyncUserInfo }) {
           </div>
           {isEdit ? (
             <Select
-              defaultValue="保密"
+              onChange={(e) => {
+                setGenderValue(e.target.value);
+              }}
+              defaultValue={
+                asyncUserInfo.gender ? asyncUserInfo.gender : "保密"
+              }
               style={{ width: "240px" }}
               // onChange={handleChange}
             >
@@ -75,7 +117,9 @@ export default function PersonEdit({ asyncUserInfo }) {
             <div className="absolute " style={{ left: "-36px" }}>
               邮箱:
             </div>
-            <div>{}</div>
+            <div className="h-10 flex justify-center items-center text-base ">
+              {asyncUserInfo.email}
+            </div>
           </div>
         ) : null}
         {asyncUserInfo.phoneShow ? (
@@ -83,7 +127,9 @@ export default function PersonEdit({ asyncUserInfo }) {
             <div className="absolute " style={{ left: "-36px" }}>
               手机号:
             </div>
-            <div>{asyncUserInfo.phone}</div>
+            <div className="h-10 flex justify-center items-center text-base ">
+              {asyncUserInfo.phone}
+            </div>
           </div>
         ) : null}
         <div className=" relative flex items-center">
@@ -92,7 +138,14 @@ export default function PersonEdit({ asyncUserInfo }) {
             城市:
           </div>
           {isEdit ? (
-            <Input placeholder="请输入城市…" style={{ width: "240px" }} />
+            <Input
+              onChange={(e) => {
+                setCityValue(e.target.value);
+              }}
+              defaultValue={asyncUserInfo.city}
+              placeholder="请输入城市…"
+              style={{ width: "240px" }}
+            />
           ) : (
             <div className="h-10 flex justify-center items-center text-base ">
               {asyncUserInfo.city ? asyncUserInfo.city : "外星"}
@@ -105,7 +158,14 @@ export default function PersonEdit({ asyncUserInfo }) {
             职业:
           </div>
           {isEdit ? (
-            <Input placeholder="请输入职业…" style={{ width: "240px" }} />
+            <Input
+              onChange={(e) => {
+                setJobValue(e.target.value);
+              }}
+              defaultValue={asyncUserInfo.job}
+              placeholder="请输入职业…"
+              style={{ width: "240px" }}
+            />
           ) : (
             <div>{asyncUserInfo.job ? asyncUserInfo.job : "保密"}</div>
           )}
@@ -116,7 +176,14 @@ export default function PersonEdit({ asyncUserInfo }) {
             单位/学校:
           </div>
           {isEdit ? (
-            <Input placeholder="请输入单位/学校…" style={{ width: "240px" }} />
+            <Input
+              onChange={(e) => {
+                setOrganizationValue(e.target.value);
+              }}
+              defaultValue={asyncUserInfo.organization}
+              placeholder="请输入单位/学校…"
+              style={{ width: "240px" }}
+            />
           ) : (
             <div className="h-10 flex justify-center items-center text-base ">
               {asyncUserInfo.organization
@@ -137,6 +204,10 @@ export default function PersonEdit({ asyncUserInfo }) {
       >
         {isEdit ? (
           <TextArea
+            onChange={(e) => {
+              setIntroductionValue(e.target.value);
+            }}
+            defaultValue={asyncUserInfo.introduction}
             autoSize={{ minRows: "4" }}
             style={{ width: "520px" }}
             placeholder="介绍一下自己…"

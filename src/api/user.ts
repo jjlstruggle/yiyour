@@ -7,14 +7,14 @@ export const getMes = (page: number, id: string) => {
     })
 }
 export const postUser = (user: any) => {
-    const { avatar, city, cover, emailShow, gender, introduction, job, organization, password, phone, phoneShow, qq, username, wx } = user
+    const { avatar, city, cover, email, emailShow, gender, introduction, job, organization, password, phone, phoneShow, qq, username, wx } = user
     const users: any = localStorage.getItem("user")
     const userInfo: any = JSON.parse(users)
     console.log(userInfo.id);
 
     const data: any = {
         // @ts-ignore
-        avatar, city, cover, emailShow, gender, introduction, job, organization, password, phone, phoneShow, qq, username, wx, id: userInfo.id
+        avatar, city, cover, email, emailShow, gender, introduction, job, organization, password, phone, phoneShow, qq, username, wx, id: userInfo.id
     }
     console.log(data);
 
