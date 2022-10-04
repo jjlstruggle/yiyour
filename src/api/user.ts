@@ -15,9 +15,5 @@ export const postUser = (user: any) => {
     return request.post("/api-user/update", JSON.stringify(data))
 }
 export const getUser = () => {
-    return request.get("/api-user/info"), {
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
-    }
+    return request.get("/api-user/info")
 }
