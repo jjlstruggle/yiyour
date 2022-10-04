@@ -89,7 +89,11 @@ function Head({
               </p>
               <p
                 onClick={() => {
-                  navigate(`/user`);
+                  if (localStorage.getItem("token")) {
+                    navigate(`/user`);
+                  } else {
+                    navigate("/account/login");
+                  }
                   onClose();
                 }}
               >
