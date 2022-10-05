@@ -119,10 +119,15 @@ export default function Dialog({ toUserId }: any) {
               className=" overflow-y-auto  h-80 px-3 py-3 flex flex-col text-lg"
             >
               {mesHis.map((item: any, index: number) => {
+                // let sendTime = item.sendTime.match(/(\d*)\-(\d*)\-(\d*)/);
+                let sendTime = item.sendTime
+                  .replace(/(\-)/g, "/")
+                  .match(/\d*.\d*.\d*....../);
+
                 if (id == item.receiveUserId) {
                   return (
                     <div key={index} className=" mt-1  self-end">
-                      <div>{item.sendTime}</div>
+                      <div>{sendTime}</div>
                       <div
                         style={{
                           border: "1px solid #3333",
@@ -140,7 +145,7 @@ export default function Dialog({ toUserId }: any) {
                 } else {
                   return (
                     <div key={index} className=" mt-1  self-start ">
-                      <div>{item.sendTime}</div>
+                      <div>{sendTime}</div>
                       <div
                         style={{
                           border: "1px solid #3333",

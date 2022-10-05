@@ -196,6 +196,9 @@ const ContentRight = ({
         {renderData ? (
           <>
             {renderData.map((item: any, index: number) => {
+              let sendTime = item.sendTime
+                .replace(/(\-)/g, "/")
+                .match(/\d*.\d*.\d*....../);
               return (
                 <div
                   key={index}
@@ -214,7 +217,7 @@ const ContentRight = ({
                     <div className="flex justify-between">
                       <div className=" font-semibold">{item.fromUserId}</div>
                       <div className=" md:text-sm text-stone-400 ml-5">
-                        {item.sendTime}
+                        {sendTime}
                       </div>
                     </div>
                     <div className=" font-semibold text-base">
