@@ -78,11 +78,7 @@ function Detail() {
   };
 
   const replace = (str: string) => {
-    console.log(str);
-
-    str.replace(/(\-)/gi, "/");
-    let res = str.slice(0, str.length - 3);
-    return res;
+    return str.replace(/(\-)/g, "/").match(/\d*.\d*.\d*....../);
   };
   const location = useLocation();
   useEffect(() => {
