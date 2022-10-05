@@ -18,9 +18,12 @@ export default function GoodCard({
   tag,
   img,
 }: GoodCardProps) {
+  const replace = (str: string) => {
+    return str.replace(/(\-)/g, "/").match(/\d*.\d*.\d*....../);
+  };
   return (
     <Card hoverable cover={<img src={img} loading="lazy" />}>
-      <Meta title={title} description={ddl} />
+      <Meta title={title} description={replace(ddl)} />
       <div className="text-xs text-gray-400">{tag}</div>
       <div className="flex justify-between items-end">
         <div className="text-main text-base mt-2">悬赏： {price}元</div>
