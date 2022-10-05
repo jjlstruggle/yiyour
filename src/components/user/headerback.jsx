@@ -47,9 +47,11 @@ export default function HeaderBack() {
         height: "32vh",
         backgroundColor: "#86775D",
         background: `url(${
-          imgUrl ? imgUrl : asyncUserInfo.cover
-        }) no-repeat center`,
-        backgroundSize: "100% 100%",
+          asyncUserInfo.cover
+            ? asyncUserInfo.cover
+            : require("@/assets/image/login/bg.png")
+        }) no-repeat center `,
+        backgroundSize: "100% ",
       }}
     >
       <div className="flex items-center ">

@@ -44,6 +44,7 @@ export default function PersonEdit({ asyncUserInfo }) {
         message.error("修改出错");
       }
     };
+    fn();
   };
   return (
     <div>
@@ -94,7 +95,8 @@ export default function PersonEdit({ asyncUserInfo }) {
           {isEdit ? (
             <Select
               onChange={(e) => {
-                setGenderValue(e.target.value);
+                console.log(e);
+                setGenderValue(e);
               }}
               defaultValue={
                 asyncUserInfo.gender ? asyncUserInfo.gender : "保密"
@@ -229,7 +231,13 @@ export default function PersonEdit({ asyncUserInfo }) {
         }}
       >
         <Button
-          onClick={editButton}
+          onClick={() => {
+            if (!isEdit) {
+              editButton();
+            } else {
+              onClickSubmit();
+            }
+          }}
           style={{ backgroundColor: "#62D7D6", color: "#FFFFFF" }}
         >
           {isEdit ? "保存" : "修改"}
