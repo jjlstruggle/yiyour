@@ -27,6 +27,7 @@ import {
 import { upload } from "@/api/oss";
 import { TaskListInfo } from "@/interface/api";
 const AddNumber = useLazy(import("@/components/detail/addNumber"));
+const Back = useLazy(import("@/components/user/back"));
 import { useNavigate } from "react-router-dom";
 import { UploadIcon, LoveIcon } from "@/assets/svg/index";
 import UserContext from "@/context/user";
@@ -223,12 +224,15 @@ function Detail() {
   };
   return (
     <div className="flex flex-col mb-10">
+      <div className="mt-10 ml-10 md:mt-6 md:ml-5">
+        <Back />
+      </div>
       <div
         style={{ width: "100vw" }}
         className="flex justify-between  box-border my-14 md:flex-col"
       >
         <div className=" relative w-1/2 ">
-          <div className="absolute text-xl -top-8 left-1/4  flex items-center   md:w-full ">
+          <div className="absolute text-xl -top-8 left-1/4  flex items-center   md:w-[100vw] ">
             <img
               className="w-8"
               src={require("../../../assets/house.png")}

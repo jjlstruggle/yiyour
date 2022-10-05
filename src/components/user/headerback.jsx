@@ -28,16 +28,18 @@ export default function HeaderBack() {
     username: "",
     wx: "",
   });
-  const [base64, setBase64] = useState("");
-  const [imgUrl, setImgUrl] = useState("");
+  const [imgUrl, setImgUrl] = useState(asyncUserInfo.avatar);
   useLayoutEffect(() => {
-    (async () => {
-      let res = await getUser();
-      if (res.code === "0") {
-        setAsyncUserInfo(res.data);
-      }
-    })();
-  }, []);
+    if (!asyncUserInfo.avatar) {
+      (async () => {
+        let res = await getUser();
+        if (res.code === "0") {
+          setAsyncUserInfo(res.data);
+        }
+      })();
+    }
+    setImgUrl(asyncUserInfo.avatar);
+  }, [asyncUserInfo]);
   const { user, dispatchUserInfo } = useContext(UserContext);
   const uploadUrl = () => {};
   return (
@@ -55,7 +57,7 @@ export default function HeaderBack() {
       }}
     >
       <div className="flex items-center ">
-        <Avatar src={asyncUserInfo.avatar} size={72} />
+        <Avatar src={imgUrl} size={72} />
         <span className="ml-10 text-white text-2xl">
           {asyncUserInfo.username}
         </span>
@@ -67,21 +69,11 @@ export default function HeaderBack() {
         // listType={"picture-card"}
         accept={"image/*"}
         showUploadList={false}
-        beforeUpload={async (file) => {
-          const base64 = await getBase64(file);
-          setBase64(base64);
-
-          // return false;
-        }}
         onChange={async (info) => {
           if (info.file.status !== "uploading") {
             console.log(info);
           }
           if (info.file.status === "done") {
-            console.log(123);
-
-            message.success(`${info.file.name} 文件上传成功`);
-            setImgUrl(info.file.response.data.imageUrl);
             let data = {
               cover: info.file.response.data.imageUrl,
             };
@@ -89,7 +81,11 @@ export default function HeaderBack() {
               "/api-user/update",
               JSON.stringify(data)
             );
-            console.log(res);
+            if (res.status == 500) {
+              return message.error(`更新出错`);
+            }
+            setImgUrl(info.file.response.data.imageUrl);
+            message.success(`${info.file.name} 文件上传成功`);
             console.log(
               "info.file.response.data.imageUrl",
               info.file.response.data.imageUrl
