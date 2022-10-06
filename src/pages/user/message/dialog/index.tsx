@@ -1,4 +1,13 @@
-import { Input, Button, Avatar, message, Upload, Pagination, Card } from "antd";
+import {
+  Input,
+  Button,
+  Avatar,
+  message,
+  Upload,
+  Pagination,
+  Card,
+  InputRef,
+} from "antd";
 import { UserOutlined, CloseOutlined } from "@ant-design/icons";
 import Draggable from "react-draggable";
 import DialogContext from "@/context/dialog";
@@ -201,6 +210,11 @@ export default function Dialog({ toUserId }: any) {
               })}
             </div>
             <Input
+              onKeyDown={(e) => {
+                if (e.keyCode == 13) {
+                  sendMes();
+                }
+              }}
               value={inputValue}
               onChange={(e: any) => {
                 setInputValue(e.target.value);
