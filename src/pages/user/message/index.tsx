@@ -204,7 +204,7 @@ const ContentRight = ({
                   key={index}
                   // ts-ignore
                   onClick={() => {
-                    clickMesBox(item.fromUserId);
+                    clickMesBox(item.receiveUserId);
                   }}
                   className="flex hover:cursor-pointer "
                   style={{
@@ -215,7 +215,7 @@ const ContentRight = ({
                   <Avatar className="md:hidden" size={64} />
                   <div className="text-blank text-xl ml-8 flex flex-col justify-around">
                     <div className="flex justify-between">
-                      <div className=" font-semibold">{item.fromUserId}</div>
+                      <div className=" font-semibold">{item.receiveUserId}</div>
                       <div className=" md:text-sm text-stone-400 ml-5">
                         {sendTime}
                       </div>

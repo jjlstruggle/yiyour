@@ -8,66 +8,96 @@ import {
   useContext,
   useRef,
   useLayoutEffect,
+  useCallback,
 } from "react";
 import { getHisMes } from "@/api/mes";
 import { use } from "i18next";
+import { resolve } from "path";
 export default function Dialog({ toUserId }: any) {
-  const { Search } = Input;
   const [inputValue, setInputValue] = useState("");
   const { dialog, dispatchDialogInfo } = useContext(DialogContext);
   let user: any = localStorage.getItem("user");
   let { id } = JSON.parse(user);
   const mesDiv: any = useRef(null);
-  const [mesHis, setMesHis] = useState([]);
+  const [mesHis, setMesHis]: [any, any] = useState([]);
   let token: any = localStorage.getItem("token");
-  var ws: any = new WebSocket("ws://47.96.86.132:88/api-websocket/chat", token);
-  ws.onopen = function (res: any) {
-    console.log("消息连接成功", res);
-  };
-  ws.onmessage = function (res: any) {
-    if (JSON.parse(res.data).code === 1) {
-      // 刷新统计数据
-      console.log("获取数据成功", res.data);
-    }
-  };
+  const ws = useRef<WebSocket | null>(null);
   const sendMes = () => {
-    if (ws.readyState === 1) {
-      ws.send(
-        JSON.stringify({
-          isSystem: 0,
-          toUserId: toUserId,
-          content: inputValue,
-          sendTime: "2022-08-22 14:12:21",
-        })
-      );
-      (async () => {
-        let res = await getHisMes({
-          current: 1,
-          size: 100,
-          toUserId: toUserId,
-        });
-        console.log(res.data, "res.datares.datares.datares.data");
-        if (res.code === "0") {
-          setMesHis(res.data.list);
-        }
+    let sendTime = `${new Date()
+      .toLocaleDateString()
+      .replace(/\//g, "-")} ${new Date().toTimeString().match(/.{8}/)}`;
+    console.log(toUserId, "toUserId");
+
+    if (ws.current?.readyState === 1) {
+      let data = JSON.stringify({
+        isSystem: 0,
+        toUserId: toUserId,
+        content: inputValue,
+        sendTime: sendTime,
+      });
+      ws.current.send(data);
+      let mockData = {
+        content: inputValue,
+        fromUserId: id,
+        receiveUserId: toUserId,
+        sendTime: sendTime,
+      };
+      new Promise((resolve, rejected) => {
+        resolve(123);
+        setMesHis([...mesHis, mockData]);
+      }).then((res) => {
         mesDiv.current.scrollTop = mesDiv.current.scrollHeight;
-      })();
+      });
       console.log("消息发送成功");
     }
-
     setInputValue("");
   };
-  useLayoutEffect(() => {
+  const flushed = () => {
     (async () => {
       let res = await getHisMes({
         current: 1,
-        size: 100,
+        size: 200,
         toUserId: toUserId,
       });
       if (res.code === "0") {
-        setMesHis(res.data.list);
+        new Promise((resolve, rejected) => {
+          setMesHis(() => {
+            resolve(123);
+            return res.data.list;
+          });
+        }).then((res) => {
+          setTimeout(() => {
+            mesDiv.current.scrollTop = mesDiv.current.scrollHeight;
+          });
+        });
       }
     })();
+  };
+  useLayoutEffect(() => {
+    ws.current = new WebSocket(
+      "ws://47.96.86.132:88/api-websocket/chat",
+      token
+    );
+    ws.current.onopen = function () {
+      console.log("消息连接成功");
+      console.log(ws.current?.readyState);
+    };
+    console.log(ws);
+    if (id != toUserId) {
+      ws.current.onmessage = (e: any) => {
+        flushed();
+      };
+    } else {
+      message.error("不能给自己发信息！");
+    }
+    console.log(mesHis, "mesHis");
+    mesDiv.current.scrollTop = mesDiv.current.scrollHeight;
+    return () => {
+      ws.current?.close();
+    };
+  }, [ws.current]);
+  useLayoutEffect(() => {
+    flushed();
   }, [dialog]);
 
   return (
@@ -75,7 +105,9 @@ export default function Dialog({ toUserId }: any) {
       <Draggable handle=".ant-card-head">
         <div>
           <Card
-            headStyle={{ borderBottom: "2px solid #787878" }}
+            headStyle={{
+              boxShadow: "0px 3px 8px #787878",
+            }}
             title={
               <div className="flex items-center">
                 {" "}
@@ -108,8 +140,9 @@ export default function Dialog({ toUserId }: any) {
               width: "70vw",
               maxWidth: 800,
               height: 520,
-              border: "2px solid #787878",
+
               backgroundColor: "#FEFEFE",
+              boxShadow: "0px 3px 6px #787878",
             }}
             className="md:w-[92vw] md:translate-x-0 z-50 b ml-7 absolute l-1/2 t-1/2 translate-x-20 -translate-y-10"
             loading={false}
@@ -120,15 +153,18 @@ export default function Dialog({ toUserId }: any) {
             >
               {mesHis.map((item: any, index: number) => {
                 // let sendTime = item.sendTime.match(/(\d*)\-(\d*)\-(\d*)/);
-                let sendTime = item.sendTime
-                  .replace(/(\-)/g, "/")
-                  .match(/\d*.\d*.\d*....../);
+                // let sendTime = item.sendTime
+                //   .replace(/(\-)/g, "/")
+                //   .match(/\d*.\d*.\d*....../)[0];
 
-                if (id == item.receiveUserId) {
+                // console.log(item.sendTime);
+
+                if (id == item.fromUserId) {
                   return (
-                    <div key={index} className=" mt-1  self-end">
-                      <div>{sendTime}</div>
+                    <div key={index} className=" mt-1   self-end">
+                      <div>{item.sendTime}</div>
                       <div
+                        className="bg-[#8FE75C]"
                         style={{
                           border: "1px solid #3333",
                           padding: "5px 30px",
@@ -145,7 +181,7 @@ export default function Dialog({ toUserId }: any) {
                 } else {
                   return (
                     <div key={index} className=" mt-1  self-start ">
-                      <div>{sendTime}</div>
+                      <div>{item.sendTime}</div>
                       <div
                         style={{
                           border: "1px solid #3333",
