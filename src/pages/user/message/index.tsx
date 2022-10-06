@@ -212,15 +212,15 @@ const ContentRight = ({
                     padding: "1.5vh 2vw",
                   }}
                 >
-                  <Avatar className="md:hidden" size={64} />
+                  <Avatar src={item.avatar} className="md:hidden" size={64} />
                   <div className="text-blank text-xl ml-8 flex flex-col justify-around">
-                    <div className="flex justify-between">
+                    <div className="flex justify-between w-[20vw] md:w-[60vw]">
                       <div className=" font-semibold">{item.receiveUserId}</div>
                       <div className=" md:text-sm text-stone-400 ml-5">
                         {sendTime}
                       </div>
                     </div>
-                    <div className=" font-semibold text-base">
+                    <div className=" font-semibold w-[60vw] text-base overflow-hidden text-ellipsis">
                       {item.content}
                     </div>
                   </div>

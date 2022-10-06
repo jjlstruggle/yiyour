@@ -24,8 +24,8 @@ import {
   postUserCollect,
   postUserCommit,
 } from "@/api/task";
-import { upload } from "@/api/oss";
 import { TaskListInfo } from "@/interface/api";
+import request from "@/util/fetch";
 const AddNumber = useLazy(import("@/components/detail/addNumber"));
 const Back = useLazy(import("@/components/user/back"));
 import { useNavigate } from "react-router-dom";
@@ -69,6 +69,26 @@ function Detail() {
     type: "",
   });
   const { user, dispatchUserInfo } = useContext(UserContext);
+  const [collect, setCollect] = useState(false);
+  const isCollect = (id: number) => {
+    let fn = async () => {
+      let res = await request.get(`/api-task/collected/1/100`, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+      if (res.code == "0") {
+        if (res.data.list.map((item: any) => item.id).indexOf(id) != -1) {
+          console.log(123);
+
+          setCollect(false);
+        } else {
+          console.log(456);
+          setCollect(true);
+        }
+      }
+    };
+  };
   const handleOk = () => {
     let fn = async () => {
       let res = await postUserCollect(detailInfo.id);
@@ -76,18 +96,20 @@ function Detail() {
         message.success("收藏成功!");
       }
     };
+
     fn();
+    isCollect(location.state.cardId);
   };
 
   const replace = (str: string) => {
     return str.replace(/(\-)/g, "/").match(/\d*.\d*.\d*....../);
   };
-  const location = useLocation();
+  const location: any = useLocation();
   useEffect(() => {
     (async () => {
       const { cardId }: any = location.state;
       console.log("cardId", cardId);
-
+      isCollect(cardId);
       let res = await getTaskInfo(cardId);
       if (res.code == "0") {
         console.log(res.data);
@@ -288,7 +310,9 @@ function Detail() {
               className="flex items-center justify-center  w-52 h-10 bg-yel font-semibold md:mt-2"
             >
               添加收藏
-              <LoveIcon className={`text-white`} />
+              <LoveIcon
+                style={collect ? { color: "red" } : { color: "white" }}
+              />
             </Button>
           </Popconfirm>
         </div>
