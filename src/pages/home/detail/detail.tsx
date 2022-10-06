@@ -33,11 +33,13 @@ import { UploadIcon, LoveIcon } from "@/assets/svg/index";
 import UserContext from "@/context/user";
 const Task = ({ item }: { item: TaskListInfo }) => {
   const navigate = useNavigate();
+  console.log(item);
+
   return (
     <div
       className="mb-5 relative mt-1 w-60 md:w-full"
       onClick={() => {
-        navigate("/home/detail", { state: { cardId: item.id } });
+        navigate(`/home/detail?id=${item.id}`, { state: { cardId: item.id } });
       }}
     >
       <Card
@@ -84,13 +86,15 @@ function Detail() {
   useEffect(() => {
     (async () => {
       const { cardId }: any = location.state;
+      console.log("cardId", cardId);
+
       let res = await getTaskInfo(cardId);
       if (res.code == "0") {
         console.log(res.data);
         setDetailInfo(res.data);
       }
     })();
-  }, []);
+  }, [location]);
   // 上传
   const uploadProps: UploadProps = {
     maxCount: 1,
