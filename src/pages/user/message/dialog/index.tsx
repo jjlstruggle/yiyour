@@ -183,6 +183,7 @@ export default function Dialog({ toUserId }: any) {
                     <div key={index} className=" mt-1  self-start ">
                       <div>{item.sendTime}</div>
                       <div
+                        className="bg-[#8FE75C]"
                         style={{
                           border: "1px solid #3333",
                           padding: "5px 30px",
