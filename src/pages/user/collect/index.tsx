@@ -132,7 +132,7 @@ const ContentRight = ({
               return (
                 <div
                   key={index}
-                  className="flex rounded-lg bg-white  shadow-lg flex-col"
+                  className="flex rounded-lg bg-white  shadow-lg flex-col hover:cursor-pointer"
                   onClick={() => {
                     navigate("/home/detail", { state: { cardId: item.id } });
                   }}

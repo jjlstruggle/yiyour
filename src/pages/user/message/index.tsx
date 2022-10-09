@@ -120,6 +120,7 @@ const ContentRight = ({
   dispatchDialogInfo,
   renderData,
   setRenderData,
+  dialog,
 }: any) => {
   useLayoutEffect(() => {
     let fn = async () => {
@@ -133,11 +134,11 @@ const ContentRight = ({
       }
     };
     fn();
-  }, []);
-  const clickMesBox = (id: any) => {
+  }, [dialog]);
+  const clickMesBox = (id: number, userInfo: { avatar: string }) => {
     (async () => {
       await setToUserId(id);
-      dispatchDialogInfo({ open: true });
+      dispatchDialogInfo({ open: true, userInfo });
     })();
   };
   const onPageChange = async (page: number, pageSize: number) => {
@@ -204,7 +205,7 @@ const ContentRight = ({
                   key={index}
                   // ts-ignore
                   onClick={() => {
-                    clickMesBox(item.receiveUserId);
+                    clickMesBox(item.receiveUserId, { avatar: item.avatar });
                   }}
                   className="flex hover:cursor-pointer "
                   style={{
@@ -334,6 +335,7 @@ export default function Message() {
             choose={choose}
             user={user}
             dispatchDialogInfo={dispatchDialogInfo}
+            dialog={dialog}
           />
         </div>
       </div>

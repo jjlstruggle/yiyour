@@ -8,7 +8,7 @@ const DialogContext = createContext<any>({
 DialogContext.displayName = "DialogContext";
 
 const Provider = ({ children }: { children: JSX.Element }) => {
-  const [state, setState] = useState({ open: false });
+  const [state, setState] = useState({ open: false, userInfo: {} });
 
   return (
     <DialogContext.Provider

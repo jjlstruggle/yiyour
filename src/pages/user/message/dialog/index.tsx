@@ -124,6 +124,7 @@ export default function Dialog({ toUserId }: any) {
                   size={64}
                   className="flex justify-center items-center"
                   icon={<UserOutlined />}
+                  src={dialog.userInfo.avatar ? dialog.userInfo.avatar : null}
                 />
                 <h2 className="ml-7 translate-y-1">{toUserId}</h2>
               </div>
